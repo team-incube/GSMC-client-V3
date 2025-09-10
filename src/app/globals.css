@@ -1,1 +1,42 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 @import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Pretendard', sans-serif;
+
+  --text-titleLarge: 48px/120% var(--font-sans);
+  --text-titleMedium: 36px/120% var(--font-sans);
+  --text-titleSmall: 24px/130% var(--font-sans);
+
+  --text-body1: 18px/140% var(--font-sans);
+  --text-body2: 16px/140% var(--font-sans);
+  --text-body3: 18px/140% var(--font-sans);
+  --text-body4: 14px/140% var(--font-sans);
+  --text-body5: 14px/140% var(--font-sans);
+  --text-caption: 12px/140% var(--font-sans);
+
+  --color-main-900: #131e32;
+  --color-main-800: #263c65;
+  --color-main-700: #385b97;
+  --color-main-600: #4b79ca;
+  --color-main-500: #5e97fc;
+  --color-main-400: #7eacfd;
+  --color-main-300: #9ec1fd;
+  --color-main-200: #bfd5fe;
+  --color-main-100: #dfeafe;
+  --color-main-50: #eff5ff;
+
+  --color-gray-900: #1a1a1b;
+  --color-gray-800: #343436;
+  --color-gray-700: #4e4f51;
+  --color-gray-600: #68696c;
+  --color-gray-500: #828387;
+  --color-gray-400: #9b9c9f;
+  --color-gray-300: #b4b5b7;
+  --color-gray-200: #cdcdcf;
+  --color-gray-100: #e6e6e7;
+  --color-gray-50: #eff0f2;
+  --color-gray-10: #f5f6f8;
+
+  --color-error: #df454a;
+}
