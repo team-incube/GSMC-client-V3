@@ -22,7 +22,7 @@ export default function Button({
   return (
     <button
       className={cn(
-        'text-body1 flex w-full items-center justify-center rounded-xl py-3',
+        'text-body1 flex w-full cursor-pointer items-center justify-center rounded-xl py-3',
         VARIANT_STYLE[variant],
       )}
       {...props}
