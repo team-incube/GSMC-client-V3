@@ -1,4 +1,4 @@
-import { cn } from '@/shared/util/cn';
+import { cn } from '@/shared/lib/cn';
 
 interface ButtonProps {
   children: React.ReactNode;
