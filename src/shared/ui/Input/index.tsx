@@ -8,7 +8,7 @@ export default function Input({
 }: InputProps & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="body-4" htmlFor={label}>
+      <label className="body-4 text-main-700" htmlFor={label}>
         {label}
       </label>
       <input
