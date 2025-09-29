@@ -4,16 +4,16 @@
 @theme {
   --font-sans: 'Pretendard', sans-serif;
 
-  --text-titleLarge: 48px/120% var(--font-sans);
-  --text-titleMedium: 36px/120% var(--font-sans);
-  --text-titleSmall: 24px/130% var(--font-sans);
+  --text-titleLarge: 600 48px/120% var(--font-sans);
+  --text-titleMedium: 600 36px/120% var(--font-sans);
+  --text-titleSmall: 600 24px/130% var(--font-sans);
 
-  --text-body1: 18px/140% var(--font-sans);
-  --text-body2: 16px/140% var(--font-sans);
-  --text-body3: 18px/140% var(--font-sans);
-  --text-body4: 14px/140% var(--font-sans);
-  --text-body5: 14px/140% var(--font-sans);
-  --text-caption: 12px/140% var(--font-sans);
+  --text-body1: 600 18px/140% var(--font-sans);
+  --text-body2: 600 16px/140% var(--font-sans);
+  --text-body3: 400 16px/140% var(--font-sans);
+  --text-body4: 600 14px/140% var(--font-sans);
+  --text-body5: 400 14px/140% var(--font-sans);
+  --text-caption: 400 12px/140% var(--font-sans);
 
   --color-main-900: #131e32;
   --color-main-800: #263c65;
