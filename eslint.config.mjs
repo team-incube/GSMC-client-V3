@@ -36,7 +36,6 @@ const eslintConfig = [
       'react/jsx-no-leaked-render': 'error',
       'react/jsx-no-useless-fragment': 'error',
       'react/jsx-pascal-case': 'error',
-      'react/jsx-sort-props': ['error', { callbacksLast: true, shorthandFirst: true }],
       'react-hooks/exhaustive-deps': 'error',
       'no-console': 'warn',
     },
