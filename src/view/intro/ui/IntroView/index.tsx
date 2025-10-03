@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import LogoImage from '@/shared/asset/img/logo.png';
 import GoogleLogo from '@/shared/asset/svg/GoogleLogo';
