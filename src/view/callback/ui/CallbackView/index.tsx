@@ -9,6 +9,7 @@ export default function CallbackView() {
   const code = searchParams.get('code');
 
   useEffect(() => {
+    console.log('test');
     async function run() {
       try {
         if (code) {
