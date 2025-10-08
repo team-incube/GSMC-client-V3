@@ -52,7 +52,7 @@ jobs:
         if: ${{ failure() }}
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: ${{ secrets.GWANGSAN_DISCORD_WEBHOOK }}
+          webhook: ${{ secrets.GSMC_FRONT_WEBHOOK }}
           title: "❗️ GSMC-front-CI Fail! ❗️"
           status: ${{ job.status }}
           description: "실패 아으!@@"
