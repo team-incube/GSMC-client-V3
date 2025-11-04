@@ -7,7 +7,7 @@ export default function Header() {
     <header className="flex justify-center items-center w-full h-[70px] mt-5.5 bg-white border-b border-gray-100 ">
       <div className="flex flex-grow-0 flex-shrink-0 text-center justify-between items-center w-150 px-3">
 
-        <Link href={"/"} className="text-xl text-main-800 font-bold">GSMC</Link>
+        <Link href="/" className="text-xl text-main-800 font-bold">GSMC</Link>
 
         <nav className="flex items-center text-sm gap-8">
           {HEADER_NAV.map((item) => (
