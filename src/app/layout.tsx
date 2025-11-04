@@ -2,6 +2,14 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { QueryProvider } from '@/shared/lib/query';
 import { Toaster } from 'sonner';
+import localFont from 'next/font/local'
+
+const pretendard = localFont({
+  src: '../shared/asset/fonts/pretendard/PretendardVariable.woff2',
+  display: 'swap',
+  weight: '100 900',
+  variable: '--font-pretendard',
+})
 
 export const metadata: Metadata = {
   title: 'GSMC',
@@ -15,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={pretendard.variable}>
       <body>
         <QueryProvider>
           {children}
