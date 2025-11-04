@@ -4,7 +4,9 @@ export default function Mainlayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <div className="flex justify-center">
+        <main className="flex min-w-150">{children}</main>
+      </div>
     </>
   )
 }
