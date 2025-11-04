@@ -14,7 +14,7 @@ export default function Header() {
           {HEADER_NAV.map((item) => (
             <Link key={item.path} className="text-gray-500" href={item.path}>{item.label}</Link>
           ))}
-          <p className="text-gray-900 font-semibold">로그아웃</p>
+          <button className="text-gray-900 font-semibold">로그아웃</button>
         </nav>
 
         <Bell />
