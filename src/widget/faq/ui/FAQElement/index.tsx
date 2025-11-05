@@ -22,7 +22,7 @@ export default function FaqElement({
 }: FaqProps) {
   const getHighlightedText = (text: string, keyword: string) => {
     if (!keyword) return text;
-    let startIndex = 0;
+    const startIndex = 0;
     const result = [];
     result.push(text.substring(startIndex));
     return result;
@@ -79,8 +79,9 @@ export default function FaqElement({
             'leading-relaxed',
             'whitespace-pre-wrap',
           )}
-          dangerouslySetInnerHTML={{ __html: content?.replace(/\\"/g, '"') || '' }}
-        />
+        >
+          {content}
+        </div>
       </div>
     </button>
   );
