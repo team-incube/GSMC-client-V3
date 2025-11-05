@@ -4,34 +4,7 @@ import Search from '@/shared/asset/svg/Search';
 import { useState } from 'react';
 import Header from '@/widget/header/ui/Header';
 import FAQElement from '@/widget/faq/ui/FAQElement';
-
-const faqData = [
-  {
-    id: 1,
-    title: '자주 묻는 질문이 뭔가요?',
-    content: '자주 묻는 질문 자주 묻는 질문 자주 묻는 질문 자주 묻는 질문 자주 묻는 질문',
-  },
-  {
-    id: 2,
-    title: '자주 묻는 질문이 뭔가요?',
-    content: '자주 묻는 질문 자주 묻는 질문 자주 묻는 질문 자주 묻는 질문 자주 묻는 질문',
-  },
-  {
-    id: 3,
-    title: '자주 묻는 질문이 뭔가요?',
-    content: '자주 묻는 질문 자주 묻는 질문 자주 묻는 질문 자주 묻는 질문 자주 묻는 질문',
-  },
-  {
-    id: 4,
-    title: '자주 묻는 질문이 뭔가요?',
-    content: '자주 묻는 질문 자주 묻는 질문 자주 묻는 질문 자주 묻는 질문 자주 묻는 질문',
-  },
-  {
-    id: 5,
-    title: '자주 묻는 질문이 뭔가요?',
-    content: '자주 묻는 질문 자주 묻는 질문 자주 묻는 질문 자주 묻는 질문 자주 묻는 질문',
-  },
-];
+import { faqData } from '@/view/faq/mock/faqData';
 
 export default function FAQ() {
   const [openId, setOpenId] = useState<number | null>(null);
