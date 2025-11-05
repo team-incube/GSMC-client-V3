@@ -2,7 +2,6 @@ interface SearchProps {
   width?: number;
   height?: number;
   color?: string;
-  className?: string;
 }
 
 export default function Search({ width = 20, height = 20, color = '#B4B5B7' }: SearchProps) {
