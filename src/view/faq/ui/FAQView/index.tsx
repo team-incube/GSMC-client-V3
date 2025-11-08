@@ -15,10 +15,10 @@ export default function FAQ() {
 
   return (
     <div className="m-0 mx-auto">
-      <div className="m-0 mx-0 mt-0 mb-[41px]">
+      <div className="m-0 mx-0 mt-0 mb-[40px]">
         <Header />
       </div>
-      <p className="font-400 mb-[23px] text-center text-3xl">자주 묻는 질문</p>
+      <p className="font-400 mb-[24px] text-center text-3xl">자주 묻는 질문</p>
       <div className="relative mx-auto mb-8 h-12 w-full max-w-[558px]">
         <input
           type="text"
