@@ -19,7 +19,7 @@ export default function FAQ() {
         <Header />
       </div>
       <p className="font-400 mb-[24px] text-center text-3xl">자주 묻는 질문</p>
-      <div className="relative mx-auto mb-8 h-12 w-full max-w-[558px]">
+      {/* <div className="relative mx-auto mb-8 h-12 w-full max-w-[558px]">
         <input
           type="text"
           placeholder="질문을 검색해 주세요"
@@ -28,7 +28,8 @@ export default function FAQ() {
         <div className="absolute top-1/2 right-4 -translate-y-1/2 transform text-gray-400">
           <Search />
         </div>
-      </div>
+      </div> */}
+
       <div className="mx-auto flex max-w-[588px] flex-col">
         {faqData.map((faq) => (
           <FAQElement
