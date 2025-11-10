@@ -1,6 +1,6 @@
 'use client';
 
-import Search from '@/shared/asset/svg/Search';
+// import Search from '@/shared/asset/svg/Search';
 import { useState } from 'react';
 import Header from '@/widget/header/ui/Header';
 import FAQElement from '@/widget/faq/ui/FAQElement';
