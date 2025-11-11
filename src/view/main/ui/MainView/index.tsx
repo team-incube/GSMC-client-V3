@@ -57,7 +57,7 @@ export default function MainView() {
         <div className="flex flex-wrap gap-4">
           {
             Array.from({ length: 4 }).map((_, index) => (
-              <Post key={index} title="GSMC" category="프로젝트" state="대기중..." />
+              <Post key={index} title="GSMC" category="프로젝트" status="대기중..." />
             ))
           }
         </div>

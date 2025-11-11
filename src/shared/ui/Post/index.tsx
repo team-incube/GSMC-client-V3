@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Post({ title, category, state }: { title: string; category: string; state: string }) {
+export default function Post({ title, category, status }: { title: string; category: string; status: string }) {
   return (
     <article className="flex flex-col w-[188px] h-[276px] rounded-[10px] bg-white overflow-hidden">
       <div className="w-full h-[138px] bg-gray-400" />
@@ -23,7 +23,7 @@ export default function Post({ title, category, state }: { title: string; catego
         <div className="flex justify-center items-center pt-1">
           <div className="flex justify-center items-center px-3 py-1.5 rounded-xl bg-[#cdcdcf]">
             <p className="text-sm text-left text-black">
-              {state}
+              {status}
             </p>
           </div>
         </div>
