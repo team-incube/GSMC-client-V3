@@ -2,7 +2,7 @@
 
 // import Search from '@/shared/asset/svg/Search';
 import { useState } from 'react';
-import Header from '@/widget/header/ui/Header';
+import Header from '@/shared/ui/header/ui/Header';
 import FAQElement from '@/widget/faq/ui/FAQElement';
 import { faqData } from '@/view/faq/mock/faqData';
 
