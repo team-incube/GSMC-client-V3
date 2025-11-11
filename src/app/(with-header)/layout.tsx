@@ -1,4 +1,4 @@
-import Header from "@/widget/header/ui/Header";
+import Header from '@/shared/ui/header/ui/Header';
 
 export default function Mainlayout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,5 +8,5 @@ export default function Mainlayout({ children }: { children: React.ReactNode }) 
         <main className="flex w-full max-w-[600px]">{children}</main>
       </div>
     </>
-  )
+  );
 }
