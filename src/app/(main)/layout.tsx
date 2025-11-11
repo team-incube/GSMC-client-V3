@@ -1,4 +1,4 @@
-import Header from "@/widget/header/ui/Header";
+import Header from '@/shared/ui/header/ui/Header';
 
 export default function Mainlayout({ children }: { children: React.ReactNode }) {
   return (
@@ -6,5 +6,5 @@ export default function Mainlayout({ children }: { children: React.ReactNode }) 
       <Header />
       <main>{children}</main>
     </>
-  )
+  );
 }
