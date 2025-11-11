@@ -1,0 +1,60 @@
+'use client';
+
+import Chain from '@/shared/asset/svg/Chain';
+import { useRef, useState, type InputHTMLAttributes } from 'react';
+
+interface ImageUploaderProps {
+  label?: string;
+}
+
+type Props = ImageUploaderProps & InputHTMLAttributes<HTMLInputElement>;
+
+export default function ImageUploader({ label = '이미지', onChange, ...rest }: Props) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setFileName(file ? file.name : null);
+    onChange?.(e);
+  };
+
+  const openFileDialog = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+      inputRef.current.click();
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openFileDialog();
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-body1 text-main-700">{label}</label>
+      <div
+        role="button"
+        tabIndex={0}
+        className="focus:ring-main-500 flex cursor-pointer items-center gap-2 rounded-xl border border-gray-300 p-3 hover:border-gray-300 focus:outline-none"
+        onClick={openFileDialog}
+        onKeyDown={handleKeyDown}
+      >
+        <span className="text-gray-400">
+          <Chain />
+        </span>
+        <span
+          className="max-w-[220px] truncate text-sm text-gray-400"
+          aria-live="polite"
+          title={fileName ?? undefined}
+        >
+          {fileName ?? '파일 첨부'}
+        </span>
+        <input ref={inputRef} type="file" className="hidden" onChange={handleChange} {...rest} />
+      </div>
+    </div>
+  );
+}
