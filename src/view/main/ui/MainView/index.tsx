@@ -31,7 +31,7 @@ export default function MainView() {
           </div>
 
           <div className="flex flex-col justify-start items-start h-full overflow-y-scroll rounded-xl px-[2.25rem]">
-            <div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 w-[529px] bg-white rounded-xl">
+            <div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 w-full bg-white rounded-xl">
 
               <article className="flex justify-between items-center self-stretch flex-grow-0 flex-shrink-0 px-8 py-6">
                 <p className="text-lg font-semibold text-center text-[#68696c]">TOPCIT</p>
@@ -40,9 +40,6 @@ export default function MainView() {
 
             </div>
           </div>
-
-          {/* <div className="w-1 h-[124px] absolute left-[587px] top-[104px] rounded-md bg-black/25" /> */}
-
         </div>
       </section>
 
