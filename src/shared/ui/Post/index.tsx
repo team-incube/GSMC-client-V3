@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function Post({ title, category, status }: { title: string; category: string; status: string }) {
   return (
     <article className="flex flex-col w-[188px] h-[276px] rounded-[10px] bg-white overflow-hidden">
