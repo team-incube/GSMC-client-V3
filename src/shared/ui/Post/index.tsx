@@ -1,7 +1,7 @@
 export default function Post({ title, category, status }: { title: string; category: string; status: string }) {
   return (
     <article className="flex flex-col w-[188px] h-[276px] rounded-[10px] bg-white overflow-hidden">
-      <div className="w-full h-[138px] bg-gray-400" />
+      <div className="w-full h-[138px] bg-gray-400"></div>
 
       <div className="flex flex-col items-start flex-1 px-3">
         <div className="flex justify-center items-center py-2">
