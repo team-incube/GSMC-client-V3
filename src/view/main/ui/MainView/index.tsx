@@ -1,4 +1,5 @@
 import Search from "@/shared/asset/svg/Search";
+import Button from "@/shared/ui/Button";
 import Evidence from "@/shared/ui/Evidence";
 
 export default function MainView() {
@@ -25,9 +26,9 @@ export default function MainView() {
 
           <div className="flex justify-between items-center py-[1.5rem] bg-[#dfeafe] px-[2.25rem]">
             <p className="text-2xl font-semibold text-[#385b97]">내 점수</p>
-            <button className="flex justify-center items-center px-[22px] py-[13px] rounded-xl bg-[#5e97fc]">
-              <p className="flex-grow-0 flex-shrink-0 text-lg font-semibold text-center text-white">점수 수정</p>
-            </button>
+            <Button variant="active" className="flex justify-center items-center px-[22px] py-[13px] rounded-xl bg-[#5e97fc] text-lg font-semibold text-center text-white">
+              점수 수정
+            </Button>
           </div>
 
           <div className="flex flex-col justify-start items-start h-full overflow-y-scroll rounded-xl px-[2.25rem]">

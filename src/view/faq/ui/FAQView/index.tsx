@@ -2,7 +2,6 @@
 
 // import Search from '@/shared/asset/svg/Search';
 import { useState } from 'react';
-import Header from '@/shared/ui/header/ui/Header';
 import FAQElement from '@/widget/faq/ui/FAQElement';
 import { faqData } from '@/view/faq/mock/faqData';
 
@@ -14,12 +13,13 @@ export default function FAQ() {
   };
 
   return (
-    <div className="m-0 mx-auto">
-      <div className="m-0 mx-0 mt-0 mb-[40px]">
-        <Header />
-      </div>
-      <p className="font-400 mb-[24px] text-center text-3xl">자주 묻는 질문</p>
-      {/* <div className="relative mx-auto mb-8 h-12 w-full max-w-[558px]">
+    <div className="w-full mt-10 mx-auto">
+      <p className="font-400 mb-[24px] text-center text-3xl">
+        자주 묻는 질문
+      </p>
+
+      {/* 
+      <div className="relative mx-auto mb-8 h-12 w-full max-w-[558px]">
         <input
           type="text"
           placeholder="질문을 검색해 주세요"
@@ -28,7 +28,8 @@ export default function FAQ() {
         <div className="absolute top-1/2 right-4 -translate-y-1/2 transform text-gray-400">
           <Search />
         </div>
-      </div> */}
+      </div> 
+      */}
 
       <div className="mx-auto flex max-w-[588px] flex-col">
         {faqData.map((faq) => (
