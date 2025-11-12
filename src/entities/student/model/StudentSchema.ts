@@ -7,7 +7,7 @@ export const StudentSchema = z.object({
   grade: z.number(),
   class: z.number(),
   number: z.number(),
-  role: z.string()  
+  role: z.enum(["UNAUTHORIZED", "STUDENT", "TEACHER", "ROOT"])  
 })
 
 export type StudentType = z.infer<typeof StudentSchema>
