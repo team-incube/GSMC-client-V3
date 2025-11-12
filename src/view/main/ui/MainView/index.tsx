@@ -1,5 +1,5 @@
 import Search from "@/shared/asset/svg/Search";
-import Post from "@/shared/ui/Post";
+import Evidence from "@/shared/ui/Evidence";
 
 export default function MainView() {
   return (
@@ -54,7 +54,7 @@ export default function MainView() {
         <div className="flex flex-wrap gap-4">
           {
             Array.from({ length: 4 }).map((_, index) => (
-              <Post key={index} title="GSMC" category="프로젝트" status="대기중..." />
+              <Evidence key={index} title="GSMC" category="프로젝트" status="대기중..." />
             ))
           }
         </div>
