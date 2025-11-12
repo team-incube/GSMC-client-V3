@@ -44,7 +44,7 @@ export default function MainView() {
       </section>
 
       <section className="mt-6">
-        <div className="flex justify-between items-center w-[588px] relative px-4 py-3 rounded-[10px] bg-white border border-gray-200 mb-[37px]">
+        <div className="flex justify-between items-center w-full px-4 py-3 rounded-[10px] bg-white border border-gray-200 mb-9">
           <p className="flex-grow-0 flex-shrink-0 text-base text-left text-[#a5a6a9]">
             찾는 내 글을 검색해주세요
           </p>
