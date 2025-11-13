@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { instance } from '@/shared/lib/axios';
 
 export default function CallbackView() {
   const searchParams = useSearchParams();
@@ -12,12 +13,7 @@ export default function CallbackView() {
     async function run() {
       try {
         if (code) {
-          await fetch('/api/auth/google/callback', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code }),
-            credentials: 'include',
-          });
+          await instance.post('/auth', { "code": code });
         }
       } catch (e) {
         throw e;
