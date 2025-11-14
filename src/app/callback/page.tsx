@@ -5,8 +5,6 @@ export const dynamic = 'force-dynamic';
 
 export default function CallbackPage() {
   return (
-    <Suspense fallback={null}>
-      <CallbackView />
-    </Suspense>
+    <CallbackView />
   );
 }
