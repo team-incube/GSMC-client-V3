@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { PUBLIC_PAGE } from '../config/protect-page';
-import { deleteCookie, getCookie, setCookie } from './cookie';
 
 export const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -10,20 +9,8 @@ export const instance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
-
-instance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const accessToken = getCookie('accessToken');
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  },
-);
 
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
@@ -36,28 +23,15 @@ instance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = getCookie('refreshToken');
-        if (!refreshToken) {
-          throw new Error('No refresh token');
-        }
-
-        const response = await instance.post<{ accessToken: string; receiveRefreshToken: string }>(
-          '/auth/refresh',
-          {
-            refreshToken,
-          },
-        );
-
-        const { accessToken, receiveRefreshToken } = response.data;
-        setCookie('accessToken', accessToken);
-        setCookie('refreshToken', receiveRefreshToken);
-
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        await axios.post('http://localhost:3000/api/auth/refresh',{},{withCredentials: true});
+        
         return instance(originalRequest);
+
       } catch (error) {
-        deleteCookie('accessToken');
-        deleteCookie('refreshToken');
-        window.location.href = PUBLIC_PAGE;
+        
+        if(typeof window !== 'undefined') {
+          window.location.href = PUBLIC_PAGE;
+        }
         return Promise.reject(error);
       }
     }
