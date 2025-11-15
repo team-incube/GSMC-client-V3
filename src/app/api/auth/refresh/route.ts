@@ -47,7 +47,6 @@ export async function POST() {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Token refresh error:', error);
     
     // 갱신 실패 시 쿠키 삭제
     cookieStore.delete('accessToken');
