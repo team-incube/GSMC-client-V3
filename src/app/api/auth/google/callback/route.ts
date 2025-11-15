@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
+import { AuthTokenResponse } from "@/feature/google-auth/model/AuthResponse";
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 백엔드 API 호출 - 디코딩된 code 전송
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth`, { code: decodedCode });
+    const response = await axios.post<AuthTokenResponse>(`${process.env.NEXT_PUBLIC_API_URL}/auth`, { code: decodedCode });
 
     if (response.status !== 200) {
       return NextResponse.json(
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 토큰과 역할 추출
-    const { accessToken, refreshToken, role } = response.data.data;
+    const { accessToken, refreshToken, role } = response.data;
 
     // 토큰이 없으면 오류 반환
     if (!accessToken || !refreshToken) {
@@ -71,7 +72,7 @@ export async function POST(request: NextRequest) {
       sameSite: "lax",
     });
 
-    // ✅ role도 쿠키에 저장 (middleware에서 체크용)
+    // ✅ role도 쿠키에 저장 (middleware에서 체크용), 나중에 사용자 정보 호출 API로 변경 예정
     res.cookies.set("userRole", role, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

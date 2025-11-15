@@ -51,12 +51,12 @@ export function middleware(request: NextRequest) {
     });
   }
 
-  // ✅ UNAUTHORIZED 사용자가 보호된 페이지 접근 시 회원가입으로
+  // ✅ UNAUTHORIZED 사용자가 보호된 페이지 접근 시 회원가입으로, 나중에 사용자 정보 호출 API로 변경 예정
   if (hasAccessToken && userRole === 'UNAUTHORIZED' && isProtectedPage) {
     return NextResponse.redirect(new URL('/signup', request.url));
   }
 
-  // ✅ 회원가입 완료한 사용자가 회원가입 페이지 접근 시 메인으로
+  // ✅ 회원가입 완료한 사용자가 회원가입 페이지 접근 시 메인으로, 나중에 사용자 정보 호출 API로 변경 예정
   if (hasAccessToken && userRole !== 'UNAUTHORIZED' && isSignupPage) {
     return NextResponse.redirect(new URL('/main', request.url));
   }
