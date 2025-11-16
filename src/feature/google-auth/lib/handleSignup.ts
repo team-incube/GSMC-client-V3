@@ -6,7 +6,6 @@ import { SignupFormState } from '../model/initForm';
 import { SignupSchema } from '../model/SignupSchema';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { setCookie } from '@/shared/lib/cookie';
 import axios from 'axios';
 
 export async function handleSignup(
