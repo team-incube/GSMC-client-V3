@@ -11,6 +11,7 @@ export async function POST() {
     const refreshToken = cookieStore.get('refreshToken')?.value;
 
     if (!refreshToken) {
+      console.log('No refresh token found in cookies');
       return NextResponse.json(
         { error: 'No refresh token' },
         { status: 401 }
@@ -24,7 +25,7 @@ export async function POST() {
       throw new Error('Token refresh failed');
     }
 
-    const { accessToken, refreshToken: newRefreshToken, role } = response.data;
+    const { accessToken, refreshToken: newRefreshToken, role } = response.data.data;
 
     // 새 accessToken 저장
     cookieStore.set('accessToken', accessToken, {
@@ -62,6 +63,7 @@ export async function POST() {
     cookieStore.delete('accessToken');
     cookieStore.delete('refreshToken');
     
+    console.log('Token refresh failed:', error)
     return NextResponse.json(
       { error: 'Token refresh failed' },
       { status: 401 }

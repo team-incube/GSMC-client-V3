@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 토큰과 역할 추출
-    const { accessToken, refreshToken, role } = response.data;
+    const { accessToken, refreshToken, role } = response.data.data;
 
     // 토큰이 없으면 오류 반환
     if (!accessToken || !refreshToken) {
