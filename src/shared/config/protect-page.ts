@@ -1,6 +1,3 @@
-/**
- * @deprecated 선언되었으나 사용되지 않음.
- */
-export const PROTECT_PAGE = [];
+export const PROTECT_PAGE = ['/main', '/project', '/faq'];
 
-export const PUBLIC_PAGE = '/';
+export const PUBLIC_PAGE = '/' ;
