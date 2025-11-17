@@ -8,7 +8,6 @@ import { useGoogleLogin } from '@react-oauth/google';
 
 export default function IntroView() {
   const signin = useGoogleLogin({
-    onSuccess: codeResponse => console.log(codeResponse),
     flow: 'auth-code',
     ux_mode: "redirect",
     redirect_uri: String(process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI),
