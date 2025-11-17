@@ -1,8 +1,8 @@
 /**
  * @deprecated
- * @param key 
- * @param value 
- * @returns 
+ * @param key
+ * @param value
+ * @returns
  */
 const setCookie = (key: string, value: string) => {
   if (typeof document === 'undefined') return;
@@ -10,9 +10,8 @@ const setCookie = (key: string, value: string) => {
 };
 
 /**
- * @deprecated
- * @param key 
- * @returns 
+ * @param key
+ * @returns
  */
 const getCookie = (key: string) => {
   if (typeof document === 'undefined') return null;
@@ -29,8 +28,8 @@ const getCookie = (key: string) => {
 
 /**
  * @deprecated
- * @param key 
- * @returns 
+ * @param key
+ * @returns
  */
 const deleteCookie = (key: string) => {
   if (typeof document === 'undefined') return;

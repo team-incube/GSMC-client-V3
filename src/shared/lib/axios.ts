@@ -1,6 +1,6 @@
-import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { PUBLIC_PAGE } from '../config/protect-page';
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { cookies } from 'next/headers';
+import { getCookie } from './cookie';
 
 export const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,7 +16,7 @@ export const instance = axios.create({
 instance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const cookieStore = await cookies();
-    const accessToken = cookieStore.get('accessToken')?.value;
+    const accessToken = cookieStore.get('accessToken')?.value || getCookie('accessToken');
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
