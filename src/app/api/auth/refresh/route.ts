@@ -4,9 +4,9 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function POST() {
-  try {
-    const cookieStore = await cookies();
+  const cookieStore = await cookies();
 
+  try {
     // 서버에서 refreshToken 읽기
     const refreshToken = cookieStore.get('refreshToken')?.value;
 
