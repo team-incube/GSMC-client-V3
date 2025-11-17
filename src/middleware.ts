@@ -24,14 +24,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const hasAccessToken = request.cookies.has('accessToken');
   const accessToken = request.cookies.get('accessToken')?.value;
   let userRole: RoleType | null = null;
 
   if (accessToken) {
     userRole = await decodeTokenRole(accessToken);
-    // 이제 userRole에는 디코딩된 'ADMIN', 'USER', 또는 'null'이 들어갑니다.
-    console.log('Middleware User Role:', userRole);
   }
 
   if (isProtectedRoute) {
