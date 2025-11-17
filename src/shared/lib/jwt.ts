@@ -32,8 +32,7 @@ export async function decodeTokenRole(token: string): Promise<RoleType | null> {
     }
 
     return null;
-  } catch (e) {
-    console.error('JWT Verification failed:', e);
+  } catch {
     return null;
   }
 }
