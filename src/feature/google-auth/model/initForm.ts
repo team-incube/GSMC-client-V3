@@ -1,13 +1,13 @@
 export type SignupFormState = {
   name: string;
-  studentNumber: string;
+  studentNumber: number;
   nameError?: string;
   studentNumberError?: string;
 };
 
 export const initialState: SignupFormState = {
   name: '',
-  studentNumber: '',
+  studentNumber: 0,
   nameError: undefined,
   studentNumberError: undefined,
 };
