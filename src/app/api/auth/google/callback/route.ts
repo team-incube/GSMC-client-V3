@@ -13,23 +13,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Authorization code가 없습니다' }, { status: 400 });
     }
 
-    console.log('Google Authorization Code:', decodedCode);
-
     // 백엔드 API 호출 - 디코딩된 code 전송
     const response = await axios.post<AuthTokenResponse>(
       `${process.env.NEXT_PUBLIC_API_URL}/auth`,
       { code: decodedCode },
     );
-
-    if (response.status !== 200) {
-      return NextResponse.json(
-        {
-          error: '백엔드 인증 실패',
-          details: response.data,
-        },
-        { status: response.status },
-      );
-    }
 
     // 토큰과 역할 추출
     const { accessToken, refreshToken, role } = response.data.data;
@@ -38,8 +26,6 @@ export async function POST(request: NextRequest) {
     if (!accessToken || !refreshToken) {
       return NextResponse.json({ error: '토큰을 받지 못했습니다' }, { status: 500 });
     }
-
-    console.log('ROLE:', role);
 
     const res = NextResponse.json(
       {
