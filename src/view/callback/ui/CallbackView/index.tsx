@@ -32,7 +32,7 @@ export default function CallbackView() {
     if (code) {
       run();
     }
-  }, [searchParams, router, code]);
+  }, [router, code]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
