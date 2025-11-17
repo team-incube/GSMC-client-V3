@@ -12,24 +12,23 @@ export async function POST() {
 
     if (!refreshToken) {
       console.log('No refresh token found in cookies');
-      return NextResponse.json(
-        { error: 'No refresh token' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'No refresh token' }, { status: 401 });
     }
 
     // 백엔드에 토큰 갱신 요청
-    const response = await instance.put<AuthTokenResponse>(`/auth/refresh?refreshToken=${refreshToken}`);
+    const response = await instance.put<AuthTokenResponse>(
+      `/auth/refresh?refreshToken=${refreshToken}`,
+    );
 
     if (response.status !== 200) {
       throw new Error('Token refresh failed');
     }
 
-    const { accessToken, refreshToken: newRefreshToken, role } = response.data.data;
+    const { accessToken, refreshToken: newRefreshToken } = response.data.data;
 
     // 새 accessToken 저장
     cookieStore.set('accessToken', accessToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 60 * 60, // 1시간
@@ -47,26 +46,13 @@ export async function POST() {
       });
     }
 
-    // ✅ role도 쿠키에 저장 (middleware에서 체크용), 나중에 사용자 정보 호출 API로 변경 예정
-    cookieStore.set("userRole", role, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60,
-      path: "/",
-      sameSite: "lax",
-    });
-
     return NextResponse.json({ success: true });
   } catch (error) {
-    
     // 갱신 실패 시 쿠키 삭제
     cookieStore.delete('accessToken');
     cookieStore.delete('refreshToken');
-    
-    console.log('Token refresh failed:', error)
-    return NextResponse.json(
-      { error: 'Token refresh failed' },
-      { status: 401 }
-    );
+
+    console.log('Token refresh failed:', error);
+    return NextResponse.json({ error: 'Token refresh failed' }, { status: 401 });
   }
 }
