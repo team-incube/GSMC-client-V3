@@ -1,0 +1,23 @@
+interface ChevronDownProps {
+  width?: number;
+  height?: number;
+  color?: string;
+}
+
+export default function ChevronDown({
+  width = 32,
+  height = 32,
+  color = '#385B97',
+}: ChevronDownProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M24 13.3335L16 21.3335L8 13.3335" stroke={color} strokeLinecap="round" />
+    </svg>
+  );
+}

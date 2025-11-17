@@ -4,7 +4,9 @@ export default function Mainlayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <div className="flex justify-center px-4">
+        <main className="flex w-full max-w-[600px]">{children}</main>
+      </div>
     </>
   );
 }
