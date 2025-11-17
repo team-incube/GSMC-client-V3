@@ -7,16 +7,14 @@ export async function POST(request: NextRequest) {
     // 요청 바디에서 authorization code 추출
     const { code } = await request.json();
 
-    const decodedCode = decodeURIComponent(code);
-
-    if (!decodedCode) {
-      return NextResponse.json({ error: 'Authorization code가 없습니다' }, { status: 400 });
+    if (!code) {
+      return NextResponse.json({ error: 'Authorization code is missing' }, { status: 400 });
     }
 
     // 백엔드 API 호출 - 디코딩된 code 전송
     const response = await axios.post<AuthTokenResponse>(
       `${process.env.NEXT_PUBLIC_API_URL}/auth`,
-      { code: decodedCode },
+      { code },
     );
 
     // 토큰과 역할 추출
