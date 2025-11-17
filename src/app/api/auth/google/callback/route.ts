@@ -53,15 +53,6 @@ export async function POST(request: NextRequest) {
 
     return res;
   } catch (error) {
-    // 네트워크 또는 기타 오류 처리
-    if (axios.isAxiosError(error)) {
-      console.error('Axios error:', {
-        status: error.response?.status,
-        data: error.response?.data,
-      });
-    }
-
-    // 일반 오류 로그
-    return NextResponse.json({ error: '인증 처리 중 오류가 발생했습니다' }, { status: 500 });
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

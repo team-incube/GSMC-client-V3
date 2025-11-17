@@ -11,7 +11,6 @@ export async function POST() {
     const refreshToken = cookieStore.get('refreshToken')?.value;
 
     if (!refreshToken) {
-      console.log('No refresh token found in cookies');
       return NextResponse.json({ error: 'No refresh token' }, { status: 401 });
     }
 
@@ -49,8 +48,6 @@ export async function POST() {
     // 갱신 실패 시 쿠키 삭제
     cookieStore.delete('accessToken');
     cookieStore.delete('refreshToken');
-
-    console.log('Token refresh failed:', error);
-    return NextResponse.json({ error: 'Token refresh failed' }, { status: 401 });
+    return NextResponse.json({ error: error }, { status: 401 });
   }
 }
