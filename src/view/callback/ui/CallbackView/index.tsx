@@ -8,9 +8,9 @@ import { toast } from 'sonner';
 export default function CallbackView() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const code = searchParams.get('code');
 
   useEffect(() => {
-    const code = searchParams.get('code');
 
     const run = async () => {
       try {
@@ -24,7 +24,7 @@ export default function CallbackView() {
           router.push('/main');
         }
       } catch (error) {
-        toast.error('로그인에 실패했습니다. 다시 시도해주세요.');
+        toast.error(`로그인에 실패했습니다. 다시 시도해주세요. ${error}`);
         router.push('/');
       }
     };
@@ -32,7 +32,7 @@ export default function CallbackView() {
     if (code) {
       run();
     }
-  }, [searchParams, router]);
+  }, [searchParams, router, code]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
