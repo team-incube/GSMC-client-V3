@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     // 쿠키에 토큰 저장
     res.cookies.set('accessToken', accessToken, {
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60,
       path: '/',
