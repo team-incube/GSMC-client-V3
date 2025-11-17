@@ -1,6 +1,7 @@
 'use client';
 
 import Chain from '@/shared/asset/svg/Chain';
+import { useAttachFile } from '@/shared/model/useAttachFile';
 import { useRef, useState, type InputHTMLAttributes } from 'react';
 
 interface FileUploaderProps {
@@ -9,27 +10,21 @@ interface FileUploaderProps {
 
 type Props = FileUploaderProps & InputHTMLAttributes<HTMLInputElement>;
 
-export default function FileUploader({ label = '이미지', onChange, ...rest }: Props) {
+export default function FileUploader({ label = '이미지', ...props }: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const { attachFile, loading } = useAttachFile();
   const [fileName, setFileName] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     setFileName(file ? file.name : null);
-    onChange?.(e);
+    if (file) attachFile(file);
   };
 
   const openFileDialog = () => {
     if (inputRef.current) {
       inputRef.current.value = '';
       inputRef.current.click();
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      openFileDialog();
     }
   };
 
@@ -41,7 +36,6 @@ export default function FileUploader({ label = '이미지', onChange, ...rest }:
         tabIndex={0}
         className="focus:ring-main-500 flex cursor-pointer items-center gap-2 rounded-xl border border-gray-300 p-3 hover:border-gray-300 focus:outline-none"
         onClick={openFileDialog}
-        onKeyDown={handleKeyDown}
       >
         <span className="text-gray-400">
           <Chain />
@@ -51,9 +45,16 @@ export default function FileUploader({ label = '이미지', onChange, ...rest }:
           aria-live="polite"
           title={fileName ?? undefined}
         >
-          {fileName ?? '파일 첨부'}
+          {loading ? '파일 업로드 중...' : (fileName ?? '파일 첨부')}
         </span>
-        <input ref={inputRef} type="file" className="hidden" onChange={handleChange} {...rest} />
+        <input
+          disabled={loading}
+          ref={inputRef}
+          type="file"
+          className="hidden"
+          onChange={handleChange}
+          {...props}
+        />
       </div>
     </div>
   );
