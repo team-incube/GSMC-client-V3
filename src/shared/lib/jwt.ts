@@ -4,7 +4,7 @@ import { jwtVerify, JWTPayload } from 'jose';
 const getSecretKey = () => {
   const secret = process.env.JWT_ACCESS_TOKEN_SECRET;
   if (!secret) {
-    throw new Error('JWT_SECRET_KEY is not defined in environment variables.');
+    throw new Error('JWT_ACCESS_TOKEN_SECRET is not defined in environment variables.');
   }
   return new TextEncoder().encode(secret);
 };
