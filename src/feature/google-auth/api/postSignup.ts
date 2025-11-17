@@ -8,11 +8,9 @@ export const postSignup = async ({ name, studentNumber }: SignupFormValueType) =
       name,
       studentNumber,
     });
-    console.log('Signup Response:', response.data);
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {
-      console.error('Signup Error:', error.response?.data);
       throw error.response?.data.message || 'An error occurred during signup.';
     }
     throw error;

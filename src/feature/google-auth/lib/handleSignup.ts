@@ -5,8 +5,6 @@ import { postSignup } from '../api/postSignup';
 import { SignupFormState } from '../model/initForm';
 import { SignupSchema } from '../model/SignupSchema';
 import { z } from 'zod';
-import { toast } from 'sonner';
-import axios from 'axios';
 
 export async function handleSignup(
   prevState: SignupFormState,
@@ -18,16 +16,9 @@ export async function handleSignup(
 
   if (result.success) {
     const response = await postSignup({ name, studentNumber });
-    console.log('Signup API Response Status:', response.status);
     if (response.code === 202) {
-      // toast.success('회원가입이 완료되었습니다. 다시 로그인해주세요.');
-
-      await axios.post('/api/auth/refresh');
-
-      redirect('/main');
+      redirect('/');
     }
-
-    // toast.error(response.message ?? '회원가입에 실패했습니다.');
 
     return {
       ...prevState,
