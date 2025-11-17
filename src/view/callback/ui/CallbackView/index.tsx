@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 export default function CallbackView() {
   const searchParams = useSearchParams();
@@ -13,21 +14,17 @@ export default function CallbackView() {
 
     const run = async () => {
       try {
-        console.log('Authorization code:', code);
         const res = await axios.post('/api/auth/google/callback', { code });
-        console.log('API Response:', res.data);
 
-        // ✅ role 판단: UNAUTHORIZED면 회원가입, 아니면 메인으로
         if (res.data.needsSignup) {
-          console.log('신규 사용자 → 회원가입 페이지로');
+          toast.success('환영합니다! 회원가입을 완료해주세요.');
           router.push('/signup');
         } else {
-          console.log('기존 사용자 → 메인 페이지로');
+          toast.success('로그인 성공');
           router.push('/main');
         }
       } catch (error) {
-        console.error('OAuth callback failed:', error);
-        // 실패 시 인트로 페이지로
+        toast.error('로그인에 실패했습니다. 다시 시도해주세요.');
         router.push('/');
       }
     };
