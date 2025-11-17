@@ -31,8 +31,6 @@ export default function CallbackView() {
 
     if (code) {
       run();
-    } else {
-      console.error('No authorization code found');
     }
   }, [searchParams, router]);
 

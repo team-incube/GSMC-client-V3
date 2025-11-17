@@ -7,10 +7,6 @@ import type { StudentType } from '../model/StudentSchema';
  * @status UNUSED - 구현됨, 아직 사용되지 않음
  */
 export const getCurrentStudent = async (): Promise<StudentType> => {
-  try {
-    const response = await instance.get('/members/current');
-    return response.data.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await instance.get('/members/current');
+  return response.data.data;
 };
