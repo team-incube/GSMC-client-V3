@@ -3,13 +3,13 @@
 import Chain from '@/shared/asset/svg/Chain';
 import { useRef, useState, type InputHTMLAttributes } from 'react';
 
-interface ImageUploaderProps {
+interface FileUploaderProps {
   label?: string;
 }
 
-type Props = ImageUploaderProps & InputHTMLAttributes<HTMLInputElement>;
+type Props = FileUploaderProps & InputHTMLAttributes<HTMLInputElement>;
 
-export default function ImageUploader({ label = '이미지', onChange, ...rest }: Props) {
+export default function FileUploader({ label = '이미지', onChange, ...rest }: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
 
