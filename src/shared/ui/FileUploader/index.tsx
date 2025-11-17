@@ -18,7 +18,13 @@ export default function FileUploader({ label = '이미지', ...props }: Props) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     setFileName(file ? file.name : null);
-    if (file) attachFile(file);
+    if (file)
+      attachFile(file, {
+        onError: () => {
+          setFileName(null);
+          if (inputRef.current) inputRef.current.value = '';
+        },
+      });
   };
 
   const openFileDialog = () => {
