@@ -13,19 +13,22 @@ export async function handleSignup(
   formData: FormData,
 ): Promise<SignupFormState> {
   const name = String(formData.get('name') ?? '').trim();
-  const studentNumber = String(formData.get('studentNumber') ?? '').trim();
-
+  const studentNumber = Number(formData.get('studentNumber'));
   const result = SignupSchema.safeParse({ name, studentNumber });
+
   if (result.success) {
     const response = await postSignup({ name, studentNumber });
-    if (response.status === 202) {
-      toast.success('회원가입이 완료되었습니다. 다시 로그인해주세요.');
-      
-      axios.post('/api/auth/refresh');
-      
+    console.log('Signup API Response Status:', response.status);
+    if (response.code === 202) {
+      // toast.success('회원가입이 완료되었습니다. 다시 로그인해주세요.');
+
+      await axios.post('/api/auth/refresh');
+
       redirect('/main');
     }
-    toast.error(response.message ?? '회원가입에 실패했습니다.');
+
+    // toast.error(response.message ?? '회원가입에 실패했습니다.');
+
     return {
       ...prevState,
       name,
@@ -36,6 +39,7 @@ export async function handleSignup(
   }
 
   const tree = z.treeifyError(result.error);
+
   return {
     name,
     studentNumber,
