@@ -1,6 +1,6 @@
 import { AuthTokenResponse } from '@/feature/google-auth/model/AuthResponse';
 import { setAuthCookies } from '@/shared/lib/cookie/setAuthCookie';
-import { serverInstance } from '@/shared/lib/http/serverInstance';
+import { instance } from '@/shared/lib/instance';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -16,7 +16,7 @@ export async function POST() {
     }
 
     // 백엔드에 토큰 갱신 요청
-    const response = await serverInstance.put<AuthTokenResponse>(`/auth/refresh`, { refreshToken });
+    const response = await instance.put<AuthTokenResponse>(`/auth/refresh`, { refreshToken });
 
     if (response.status !== 200) {
       throw new Error('Token refresh failed');
