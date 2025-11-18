@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 import { AuthTokenResponse } from '@/feature/google-auth/model/AuthResponse';
+import { setAuthCookies } from '@/shared/lib/cookie/setAuthCookie';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,33 +26,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '토큰을 받지 못했습니다' }, { status: 500 });
     }
 
-    const res = NextResponse.json(
+    // 쿠키 설정
+    await setAuthCookies(accessToken, refreshToken);
+
+    return NextResponse.json(
       {
         success: true,
         needsSignup: role === 'UNAUTHORIZED',
       },
       { status: 200 },
     );
-
-    // 쿠키에 토큰 저장
-    res.cookies.set('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60,
-      path: '/',
-      sameSite: 'lax',
-    });
-
-    // 쿠키에 refreshToken도 저장
-    res.cookies.set('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-      sameSite: 'lax',
-    });
-
-    return res;
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
