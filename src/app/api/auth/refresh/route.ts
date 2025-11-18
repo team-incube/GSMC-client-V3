@@ -25,7 +25,7 @@ export async function POST() {
     const { accessToken, refreshToken: newRefreshToken } = response.data.data;
 
     // 새 accessToken 저장
-    setAuthCookies(accessToken, newRefreshToken);
+    await setAuthCookies(accessToken, newRefreshToken);
 
     return NextResponse.json({ success: true });
   } catch (error) {

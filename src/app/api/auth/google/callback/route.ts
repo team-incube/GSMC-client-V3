@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     );
 
     // 쿠키 설정
-    setAuthCookies(accessToken, refreshToken);
+    await setAuthCookies(accessToken, refreshToken);
 
     return res;
   } catch (error) {
