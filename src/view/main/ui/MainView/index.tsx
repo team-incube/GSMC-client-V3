@@ -1,20 +1,27 @@
+"use client"
+
+import { useGetCurrentStudent } from "@/entities/student/model/useGetCurrentStudent";
 import Search from "@/shared/asset/svg/Search";
+import { useGetTotalScore } from "@/shared/model/useGetTotalScore";
 import Button from "@/shared/ui/Button";
 import Evidence from "@/shared/ui/Evidence";
 
 export default function MainView() {
+  const { data: student } = useGetCurrentStudent();
+  const { data: score } = useGetTotalScore();
+
   return (
     <div className="flex flex-col mt-15.5 w-full">
 
       <section className="flex justify-start w-full">
         <div className="flex flex-col font-semibold w-72 h-[145px] gap-[27px]">
           <div className="flex items-baseline gap-3">
-            <p className="text-4xl text-center text-main-700">모태환</p>
+            <p className="text-4xl text-center text-main-700">{student?.name}</p>
             <p className="text-2xl text-left text-black">님의 인증제 점수는</p>
           </div>
           <div className="flex items-baseline gap-4.5">
             <div className="flex justify-center items-center gap-2.5 px-9 py-3 rounded-full bg-[#f3f3f3]">
-              <p className="flex-grow-0 flex-shrink-0 text-5xl text-center text-main-500">100점</p>
+              <p className="flex-grow-0 flex-shrink-0 text-5xl text-center text-main-500">{score?.totalScore}점</p>
             </div>
             <p className="text-2xl text-black">입니다.</p>
           </div>
