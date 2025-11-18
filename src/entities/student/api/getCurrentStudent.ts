@@ -1,4 +1,4 @@
-import { instance } from '@/shared/lib/axios';
+import { clientInstance } from '@/shared/lib/http/clientInstance';
 import type { StudentType } from '../model/StudentSchema';
 
 /**
@@ -7,6 +7,6 @@ import type { StudentType } from '../model/StudentSchema';
  * @status UNUSED - 구현됨, 아직 사용되지 않음
  */
 export const getCurrentStudent = async (): Promise<StudentType> => {
-  const response = await instance.get('/members/current');
+  const response = await clientInstance.get('/members/current');
   return response.data.data;
 };

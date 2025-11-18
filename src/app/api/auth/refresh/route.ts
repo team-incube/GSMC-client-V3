@@ -1,5 +1,6 @@
 import { AuthTokenResponse } from '@/feature/google-auth/model/AuthResponse';
-import { instance } from '@/shared/lib/axios';
+import { setAuthCookies } from '@/shared/lib/cookie/setAuthCookie';
+import { serverInstance } from '@/shared/lib/http/serverInstance';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -15,7 +16,7 @@ export async function POST() {
     }
 
     // 백엔드에 토큰 갱신 요청
-    const response = await instance.put<AuthTokenResponse>(`/auth/refresh`, { refreshToken });
+    const response = await serverInstance.put<AuthTokenResponse>(`/auth/refresh`, { refreshToken });
 
     if (response.status !== 200) {
       throw new Error('Token refresh failed');
@@ -24,24 +25,7 @@ export async function POST() {
     const { accessToken, refreshToken: newRefreshToken } = response.data.data;
 
     // 새 accessToken 저장
-    cookieStore.set('accessToken', accessToken, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60, // 1시간
-      path: '/',
-    });
-
-    // refreshToken도 갱신되는 경우
-    if (newRefreshToken) {
-      cookieStore.set('refreshToken', newRefreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7, // 7일
-        path: '/',
-      });
-    }
+    setAuthCookies(accessToken, newRefreshToken);
 
     return NextResponse.json({ success: true });
   } catch (error) {
