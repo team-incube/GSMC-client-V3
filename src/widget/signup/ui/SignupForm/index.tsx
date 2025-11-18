@@ -2,19 +2,34 @@
 
 import Button from '@/shared/ui/Button';
 import Input from '@/shared/ui/Input';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 
 import { handleSignup } from '@/feature/google-auth/lib/handleSignup';
-import { initialState } from '@/feature/google-auth/model/initForm';
+import { SignupFormState } from '@/feature/google-auth/model/SignupInitForm';
+import { createInitialState } from '@/shared/lib/createInitialState';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export default function SignupForm() {
-  const [state, formAction, isPending] = useActionState(handleSignup, initialState);
+  const [state, formAction, isPending] = useActionState(handleSignup, createInitialState<SignupFormState>());
+  const router = useRouter()
+
+  useEffect(() => {
+    if (state.message) {
+      if (state.status == "success") {
+        toast.success(state.message);
+        router.push("/")
+      } else {
+        toast.error(state.message);
+      }
+    }
+  }, [state, router]);
 
   return (
     <form className="flex flex-col gap-9" action={formAction}>
       <div>
         <Input name="name" label="이름" placeholder="이름을 입력해주세요" />
-        <small className="text-error pl-1">{state.nameError}</small>
+        <small className="text-error pl-1">{state.fieldErrors?.name}</small>
       </div>
       <div>
         <Input
@@ -25,7 +40,7 @@ export default function SignupForm() {
           type="number"
           name="studentNumber"
         />
-        <small className="text-error pl-1">{state.studentNumberError}</small>
+        <small className="text-error pl-1">{state.fieldErrors?.studentNumber}</small>
       </div>
       <Button type="submit" disabled={isPending}>
         등록하기

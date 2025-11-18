@@ -1,40 +1,46 @@
 'use server';
 
-import { redirect } from 'next/navigation';
 import { postSignup } from '../api/postSignup';
-import { SignupFormState } from '../model/initForm';
 import { SignupSchema } from '../model/SignupSchema';
-import { z } from 'zod';
+import { ActionState } from '@/shared/type/actionState';
+import { SignupFormState } from '../model/SignupInitForm';
+import z from 'zod';
 
 export async function handleSignup(
-  prevState: SignupFormState,
+  prevState: ActionState<SignupFormState>,
   formData: FormData,
-): Promise<SignupFormState> {
-  const name = String(formData.get('name') ?? '').trim();
-  const studentNumber = Number(formData.get('studentNumber'));
-  const result = SignupSchema.safeParse({ name, studentNumber });
+): Promise<ActionState<SignupFormState>> {
+  const currentData: SignupFormState = {
+    name: String(formData.get('name') ?? '').trim(),
+    studentNumber: Number(formData.get('studentNumber')),
+  };
 
-  if (result.success) {
-    const response = await postSignup({ name, studentNumber });
-    if (response.code === 202) {
-      redirect('/');
-    }
+  const result = SignupSchema.safeParse(currentData);
 
+  if (!result.success) {
     return {
-      ...prevState,
-      name,
-      studentNumber,
-      nameError: '',
-      studentNumberError: '',
+      status: 'error',
+      message: '입력값을 확인해주세요.',
+      fieldErrors: z.flattenError(result.error).fieldErrors,
+      data: currentData,
     };
   }
 
-  const tree = z.treeifyError(result.error);
+  const response = await postSignup(currentData);
+
+  if (response.code === 202) {
+    return {
+      status: 'success',
+      message: '회원가입에 성공했습니다. 다시 로그인해주세요.',
+      fieldErrors: null,
+      data: null,
+    };
+  }
 
   return {
-    name,
-    studentNumber,
-    nameError: tree.properties?.name?.errors[0] ?? '',
-    studentNumberError: tree.properties?.studentNumber?.errors[0] ?? '',
+    status: 'error',
+    message: response.message || '회원가입에 실패했습니다.',
+    fieldErrors: null,
+    data: currentData,
   };
 }
