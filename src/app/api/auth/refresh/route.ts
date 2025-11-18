@@ -1,5 +1,7 @@
 import { AuthTokenResponse } from '@/feature/google-auth/model/AuthResponse';
-import { instance } from '@/shared/lib/axios';
+import { deleteAuthCookies } from '@/shared/lib/cookie/deleteCookie';
+import { setAuthCookies } from '@/shared/lib/cookie/setAuthCookie';
+import { instance } from '@/shared/lib/instance';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -24,30 +26,12 @@ export async function POST() {
     const { accessToken, refreshToken: newRefreshToken } = response.data.data;
 
     // 새 accessToken 저장
-    cookieStore.set('accessToken', accessToken, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60, // 1시간
-      path: '/',
-    });
-
-    // refreshToken도 갱신되는 경우
-    if (newRefreshToken) {
-      cookieStore.set('refreshToken', newRefreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7, // 7일
-        path: '/',
-      });
-    }
+    await setAuthCookies(accessToken, newRefreshToken);
 
     return NextResponse.json({ success: true });
   } catch (error) {
     // 갱신 실패 시 쿠키 삭제
-    cookieStore.delete('accessToken');
-    cookieStore.delete('refreshToken');
+    await deleteAuthCookies();
     return NextResponse.json({ error: error }, { status: 401 });
   }
 }
