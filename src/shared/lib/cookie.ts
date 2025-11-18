@@ -1,8 +1,18 @@
+/**
+ * @deprecated
+ * @param key
+ * @param value
+ * @returns
+ */
 const setCookie = (key: string, value: string) => {
   if (typeof document === 'undefined') return;
   document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(value)}; path=/`;
 };
 
+/**
+ * @param key
+ * @returns
+ */
 const getCookie = (key: string) => {
   if (typeof document === 'undefined') return null;
   const name = encodeURIComponent(key) + '=';
@@ -16,6 +26,11 @@ const getCookie = (key: string) => {
   return null;
 };
 
+/**
+ * @deprecated
+ * @param key
+ * @returns
+ */
 const deleteCookie = (key: string) => {
   if (typeof document === 'undefined') return;
   document.cookie = `${encodeURIComponent(key)}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;

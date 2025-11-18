@@ -1,25 +1,21 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
+import { decodeTokenRole } from './shared/lib/jwt';
+import { RoleType } from './entities/student/model/StudentSchema';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   const currentPath = request.nextUrl.pathname;
+  const isProtectedRoute = PROTECT_PAGE.includes(currentPath);
+  const isPublicRoute = PUBLIC_PAGE.includes(currentPath);
 
+  // API 요청인 경우 - Route Handler는 쿠키에 직접 접근 가능하므로 그냥 통과
   if (currentPath.startsWith('/api')) {
-    requestHeaders.set('x-custom-header', 'api-request');
-
-    const accessToken = request.cookies.get('accessToken');
-    if (accessToken) {
-      requestHeaders.set('Authorization', `Bearer ${accessToken.value}`);
-    }
-
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+    return NextResponse.next();
   }
 
+  // 정적 파일 및 Next.js 내부 경로는 무시
   if (
     currentPath.startsWith('/_next') ||
     currentPath.startsWith('/favicon') ||
@@ -28,26 +24,29 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const hasAccessToken = request.cookies.has('accessToken');
-  const hasRefreshToken = request.cookies.has('refreshToken');
+  const accessToken = request.cookies.get('accessToken')?.value;
+  let userRole: RoleType | null = null;
 
-  const isProtectedPage = ['/main'].some((path: string) => currentPath.startsWith(path));
-  const isAuthPage = ['/intro', '/signup'].some((path: string) => currentPath.startsWith(path));
+  if (accessToken) {
+    userRole = await decodeTokenRole(accessToken);
+  }
 
-  if (!hasAccessToken && isProtectedPage) {
-    if (hasRefreshToken) {
-      return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      });
-    } else {
-      return NextResponse.redirect(new URL('/intro', request.url));
+  if (isProtectedRoute) {
+    if (!userRole) {
+      // 토큰이 없거나 유효하지 않으면 로그인 페이지로 리디렉션
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+    if (userRole === 'UNAUTHORIZED') {
+      // 회원가입이 완료되지 않았으면 회원가입 페이지로 리디렉션
+      return NextResponse.redirect(new URL('/signup', request.url));
     }
   }
 
-  if (hasAccessToken && isAuthPage) {
-    return NextResponse.redirect(new URL('/main', request.url));
+  if (isPublicRoute) {
+    if (userRole && userRole !== 'UNAUTHORIZED') {
+      // 로그인 및 회원가입이 완료된 사용자가 공개 페이지 접근 시 메인 페이지로 리디렉션
+      return NextResponse.redirect(new URL('/main', request.url));
+    }
   }
 
   return NextResponse.next({
