@@ -1,4 +1,5 @@
 import { AuthTokenResponse } from '@/feature/google-auth/model/AuthResponse';
+import { deleteAuthCookies } from '@/shared/lib/cookie/deleteCookie';
 import { setAuthCookies } from '@/shared/lib/cookie/setAuthCookie';
 import { instance } from '@/shared/lib/instance';
 import { cookies } from 'next/headers';
@@ -30,8 +31,7 @@ export async function POST() {
     return NextResponse.json({ success: true });
   } catch (error) {
     // 갱신 실패 시 쿠키 삭제
-    cookieStore.delete('accessToken');
-    cookieStore.delete('refreshToken');
+    await deleteAuthCookies();
     return NextResponse.json({ error: error }, { status: 401 });
   }
 }

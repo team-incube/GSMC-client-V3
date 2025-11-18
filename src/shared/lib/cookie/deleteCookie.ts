@@ -1,16 +1,8 @@
-import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
-export function deleteAuthCookies(response: NextResponse) {
-  response.cookies.set('accessToken', '', {
-    path: '/',
-    httpOnly: false,
-    expires: new Date(0),
-  });
+export async function deleteAuthCookies() {
+  const cookieStore = await cookies();
 
-  response.cookies.set('refreshToken', '', {
-    path: '/',
-    httpOnly: true,
-    expires: new Date(0),
-  });
-  return response;
+  cookieStore.delete('accessToken');
+  cookieStore.delete('refreshToken');
 }
