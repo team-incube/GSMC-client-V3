@@ -26,18 +26,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '토큰을 받지 못했습니다' }, { status: 500 });
     }
 
-    const res = NextResponse.json(
+    // 쿠키 설정
+    await setAuthCookies(accessToken, refreshToken);
+
+    return NextResponse.json(
       {
         success: true,
         needsSignup: role === 'UNAUTHORIZED',
       },
       { status: 200 },
     );
-
-    // 쿠키 설정
-    await setAuthCookies(accessToken, refreshToken);
-
-    return res;
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
