@@ -1,4 +1,4 @@
-import { instance } from '../lib/axios';
+import { instance } from '../lib/instance';
 
 export const attachFile = async (file: File) => {
   const formData = new FormData();

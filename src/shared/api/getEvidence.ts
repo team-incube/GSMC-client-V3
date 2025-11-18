@@ -1,4 +1,4 @@
-import { instance } from '../lib/axios';
+import { instance } from '../lib/instance';
 
 export const getEvidence = async (evidenceId: string) => {
   const res = await instance.get(`/evidences/${evidenceId}`);
