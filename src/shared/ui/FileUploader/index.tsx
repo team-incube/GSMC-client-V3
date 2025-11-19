@@ -9,11 +9,9 @@ interface FileUploaderProps extends React.InputHTMLAttributes<HTMLInputElement> 
   label: string;
 }
 
-export default function FileUploader({ label, ...props }: FileUploaderProps) {
+export default function FileUploader({ label, name, ...props }: FileUploaderProps) {
   const { attachFile, loading, uploadedFileIds, removeFileId } = useAttachFile();
-
   const [files, setFiles] = useState<Array<{ id: number; name: string }>>([]);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   const openFileDialog = () => {
@@ -48,9 +46,8 @@ export default function FileUploader({ label, ...props }: FileUploaderProps) {
         <div
           role="button"
           tabIndex={0}
-          className="focus:ring-main-500 flex cursor-pointer items-center gap-2 rounded-xl border border-gray-300 p-3 hover:border-gray-300 focus:outline-none"
+          className={`focus:ring-main-500 flex ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} items-center gap-2 rounded-xl border border-gray-300 p-3 hover:border-gray-300 focus:outline-none`}
           onClick={openFileDialog}
-          style={{ cursor: loading ? 'not-allowed' : 'pointer' }}
         >
           <span className="text-gray-400">
             <Chain />
@@ -66,7 +63,6 @@ export default function FileUploader({ label, ...props }: FileUploaderProps) {
             disabled={loading}
             ref={inputRef}
             type="file"
-            multiple
             className="hidden"
             onChange={handleFileChange}
             {...props}
@@ -97,7 +93,7 @@ export default function FileUploader({ label, ...props }: FileUploaderProps) {
           <input
             key={id}
             type="hidden"
-            name="fileIds"
+            name={name}
             value={id}
             readOnly
           />
