@@ -26,7 +26,7 @@ export async function handleSignup(
     };
   }
 
-  const response = await postSignup(currentData);
+  const response = await postSignup(result.data);
 
   if (response.code === 202) {
     return {
