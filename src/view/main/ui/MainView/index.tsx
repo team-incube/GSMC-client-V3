@@ -3,7 +3,7 @@ import Evidence from "@/shared/ui/Evidence";
 
 export default function MainView() {
   return (
-    <div className="flex flex-col mt-15.5 w-full">
+    <div className="flex flex-col w-full">
 
       <section className="flex justify-start w-full">
         <div className="flex flex-col font-semibold w-72 h-[145px] gap-[27px]">

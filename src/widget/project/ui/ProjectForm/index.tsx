@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  handleProjectSubmit,
-  initialState,
-  type SubmitState,
-} from '@/feature/add-project/lib/handleProjectSubmit';
+import { handleProjectSubmit, initialState, SubmitState } from '@/feature/project-participation/lib/handleProjectSubmit';
 import Button from '@/shared/ui/Button';
 import FileUploader from '@/shared/ui/FileUploader';
 import Input from '@/shared/ui/Input';
@@ -30,7 +26,7 @@ export default function ProjectForm() {
   }, [state.message, state.success]);
 
   return (
-    <form className="flex flex-col gap-16" action={formAction}>
+    <form className="flex flex-col w-full gap-16" action={formAction}>
       <div className="flex flex-col gap-6">
         <Input name="title" placeholder="주제를 입력해주세요" label="주제" />
         {!!state.titleError && <p className="text-xs text-red-500">{state.titleError}</p>}
