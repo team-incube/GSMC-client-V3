@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function ProjectPost({ ...project }: ProjectType) {
   return (
     <article className="flex flex-col w-[188px] h-[276px] rounded-[10px] bg-white overflow-hidden">
-      <Link href={`/project/${project.id}`}>
+      <Link href={`/project-participation/${project.id}`}>
         <div className="w-full h-[138px] bg-gray-400" role="img" aria-label="Post image placeholder" />
 
         <div className="flex flex-col items-start flex-1 px-3">
