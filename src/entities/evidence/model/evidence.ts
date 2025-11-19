@@ -1,4 +1,4 @@
-import { FileType } from './file';
+import { FileType } from '@/entities/file/model/file';
 
 export interface Evidence {
   scoreId: number;
