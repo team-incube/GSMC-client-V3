@@ -1,24 +1,25 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { StudentType } from '@/entities/student/model/StudentSchema';
-import Search from '@/shared/asset/svg/Search';
 import { useGetSearchStudent } from '@/entities/student/model/useGetSearchStudent';
+import SearchBar from '@/shared/ui/SearchBar';
 
-interface SearchDropdownProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface SearchDropdownProps {
   label: string;
+  name?: string;
 }
 
-export default function SearchDropdown({ label, name, ...props }: SearchDropdownProps) {
+export default function SearchDropdown({ label, name }: SearchDropdownProps) {
   const [keyword, setKeyword] = useState('');
+  const [inputValue, setInputValue] = useState('');
   const { data: searchResults = [], isLoading } = useGetSearchStudent({ name: keyword, page: 0, limit: 10 })
 
   const [students, setStudents] = useState<StudentType[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleSearchChange = (value: string) => {
     setKeyword(value);
 
     if (value.trim().length > 0) {
@@ -35,6 +36,7 @@ export default function SearchDropdown({ label, name, ...props }: SearchDropdown
     }
 
     setStudents((prev) => [...prev, student]);
+    setInputValue('');
     setKeyword('');
     setShowDropdown(false);
   };
@@ -49,21 +51,12 @@ export default function SearchDropdown({ label, name, ...props }: SearchDropdown
         <label className="text-body1 text-main-700 font-medium">{label}</label>
 
         <div className="relative">
-          <div className="focus-within:ring-main-500 flex items-center gap-2 rounded-xl border border-gray-300 p-3 focus-within:border-main-500">
-            <span className="text-gray-400">
-              <Search />
-            </span>
-            <input
-              type="text"
-              value={keyword}
-              onChange={handleSearchChange}
-              placeholder="학생 이름을 검색하세요"
-              className="w-full outline-none text-sm text-gray-700 placeholder-gray-400"
-              autoComplete="off"
-              onFocus={() => keyword && setShowDropdown(true)}
-              {...props}
-            />
-          </div>
+          <SearchBar
+            value={inputValue}
+            onSearchChange={handleSearchChange}
+            placeholder="학생 이름을 검색하세요"
+            onFocus={() => inputValue && setShowDropdown(true)}
+          />
 
           {showDropdown ? <div className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg max-h-60 overflow-y-auto">
             {isLoading ? (
