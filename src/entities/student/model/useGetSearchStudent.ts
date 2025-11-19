@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { getSearchStudent, GetSearchStudentRequest } from '../api/getSearchStudent';
+import { getSearchStudent, GetSearchStudentParams } from '../api/getSearchStudent';
 import { useDebouncedValue } from '@/shared/model/useDebouncedValue';
 
-export const useGetSearchStudent = (params: GetSearchStudentRequest) => {
+export const useGetSearchStudent = (params: GetSearchStudentParams) => {
   const debouncedParams = useDebouncedValue(params, 500);
 
   return useQuery({
