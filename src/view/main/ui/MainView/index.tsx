@@ -1,11 +1,17 @@
 "use client"
 
+import { useState } from "react";
 import { useGetProjects } from "@/entities/project/model/useGetProjects";
+import { useGetProjectBySearch } from "@/entities/project/model/useGetProjectBySearch";
 import ProjectPost from "@/shared/ui/ProjectPost";
 import SearchBar from "@/shared/ui/SearchBar";
 
 export default function MainView() {
-  const { data: projects } = useGetProjects()
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const { data: allProjects } = useGetProjects();
+  const { data: searchedProjects } = useGetProjectBySearch({ title: searchKeyword, page: 0, size: 10 });
+  const projects = searchKeyword ? searchedProjects : allProjects;
+
   return (
     <div className="flex flex-col w-full">
 
@@ -48,7 +54,10 @@ export default function MainView() {
       </section>
 
       <section className="flex flex-col gap-6 mt-6">
-        <SearchBar placeholder="찾는 내 프로젝트를 입력해주세요." />
+        <SearchBar
+          placeholder="찾는 내 프로젝트를 입력해주세요."
+          onSearchChange={setSearchKeyword}
+        />
         <div className="flex flex-wrap gap-4">
           {projects?.map((project) => (
             <ProjectPost
