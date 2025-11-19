@@ -9,7 +9,7 @@ import { useActionState } from 'react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 
-export default function ProjectForm() {
+export default function ProjectParticipationForm() {
   const [state, formAction, isPending] = useActionState<SubmitState, FormData>(
     handleProjectSubmit,
     initialState,
