@@ -1,7 +1,7 @@
+import { ParticipationProjectFormValueType } from '@/feature/project-participation/model/ParticipationProjectSchema';
 import { instance } from '../lib/instance';
-import { EvidenceRequestType } from '@/entities/evidence/model/evidence';
 
-export const addEvidence = async (evidenceData: EvidenceRequestType) => {
+export const addEvidence = async (evidenceData: ParticipationProjectFormValueType) => {
   const response = await instance.post('/evidences', evidenceData);
   return response.data;
 };
