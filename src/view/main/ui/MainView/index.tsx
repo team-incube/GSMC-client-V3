@@ -1,7 +1,11 @@
+"use client"
+
+import { useGetProjects } from "@/entities/project/model/useGetProjects";
 import Search from "@/shared/asset/svg/Search";
-import Evidence from "@/shared/ui/Evidence";
+import ProjectPost from "@/shared/ui/ProjectPost";
 
 export default function MainView() {
+  const { data: projects } = useGetProjects()
   return (
     <div className="flex flex-col w-full">
 
@@ -53,8 +57,8 @@ export default function MainView() {
 
         <div className="flex flex-wrap gap-4">
           {
-            Array.from({ length: 4 }).map((_, index) => (
-              <Evidence key={index} title="GSMC" category="프로젝트" status="대기중..." />
+            projects?.map((project) => (
+              <ProjectPost key={project.id} title={project.title} category="aasdasd" status="asdasd" />
             ))
           }
         </div>
