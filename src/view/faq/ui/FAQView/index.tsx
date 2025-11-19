@@ -1,9 +1,9 @@
 'use client';
 
-// import Search from '@/shared/asset/svg/Search';
 import { useState } from 'react';
 import FAQElement from '@/widget/faq/ui/FAQElement';
 import { faqData } from '@/view/faq/mock/faqData';
+import SearchBar from '@/shared/ui/SearchBar';
 
 export default function FAQ() {
   const [openId, setOpenId] = useState<number | null>(null);
@@ -15,18 +15,7 @@ export default function FAQ() {
   return (
     <div className="flex flex-col w-full">
       <p className="font-400 mb-[24px] text-center text-3xl">자주 묻는 질문</p>
-
-      {/* <div className="relative mx-auto mb-8 h-12 w-full max-w-[558px]">
-        <input
-          type="text"
-          placeholder="질문을 검색해 주세요"
-          className="w-full rounded-lg border border-[#cdcdcf] px-4 py-3 pr-12 placeholder:text-[rgb(165,166,169)] focus:outline-none"
-        />
-        <div className="absolute top-1/2 right-4 -translate-y-1/2 transform text-gray-400">
-          <Search />
-        </div>
-      </div> */}
-
+      <SearchBar placeholder='질문을 검색해주세요.' />
       <div className="flex flex-col">
         {faqData.map((faq) => (
           <FAQElement

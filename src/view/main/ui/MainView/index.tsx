@@ -1,8 +1,8 @@
 "use client"
 
 import { useGetProjects } from "@/entities/project/model/useGetProjects";
-import Search from "@/shared/asset/svg/Search";
 import ProjectPost from "@/shared/ui/ProjectPost";
+import SearchBar from "@/shared/ui/SearchBar";
 
 export default function MainView() {
   const { data: projects } = useGetProjects()
@@ -47,14 +47,8 @@ export default function MainView() {
         </div>
       </section>
 
-      <section className="mt-6">
-        <div className="flex justify-between items-center w-full px-4 py-3 rounded-[10px] bg-white border border-gray-200 mb-9">
-          <p className="flex-grow-0 flex-shrink-0 text-base text-left text-[#a5a6a9]">
-            찾는 내 글을 검색해주세요
-          </p>
-          <Search />
-        </div>
-
+      <section className="flex flex-col gap-6 mt-6">
+        <SearchBar placeholder="찾는 내 프로젝트를 입력해주세요." />
         <div className="flex flex-wrap gap-4">
           {
             projects?.map((project) => (
