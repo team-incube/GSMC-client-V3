@@ -1,14 +1,15 @@
+import { FileType } from '@/entities/file/model/file';
 import { instance } from '../lib/instance';
 
-export const attachFile = async (file: File) => {
+export const attachFile = async (file: File): Promise<FileType> => {
   const formData = new FormData();
   formData.append('file', file);
 
-  const res = await instance.post('/files', formData, {
+  const response = await instance.post('/files', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
 
-  return res.data;
+  return response.data.data;
 };
