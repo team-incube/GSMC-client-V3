@@ -58,7 +58,10 @@ export default function MainView() {
         <div className="flex flex-wrap gap-4">
           {
             projects?.map((project) => (
-              <ProjectPost key={project.id} title={project.title} category="aasdasd" status="asdasd" />
+              <ProjectPost
+                key={project.id}
+                {...project}
+              />
             ))
           }
         </div>
