@@ -50,14 +50,12 @@ export default function MainView() {
       <section className="flex flex-col gap-6 mt-6">
         <SearchBar placeholder="찾는 내 프로젝트를 입력해주세요." />
         <div className="flex flex-wrap gap-4">
-          {
-            projects?.map((project) => (
-              <ProjectPost
-                key={project.id}
-                {...project}
-              />
-            ))
-          }
+          {projects?.map((project) => (
+            <ProjectPost
+              key={project.id}
+              {...project}
+            />
+          ))}
         </div>
 
       </section>
