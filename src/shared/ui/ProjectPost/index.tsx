@@ -1,4 +1,4 @@
-export default function Evidence({ title, category, status }: { title: string; category: string; status: string }) {
+export default function ProjectPost({ title, category, status }: { title: string; category: string; status: string }) {
   return (
     <article className="flex flex-col w-[188px] h-[276px] rounded-[10px] bg-white overflow-hidden">
       <div className="w-full h-[138px] bg-gray-400" role="img" aria-label="Post image placeholder" />
