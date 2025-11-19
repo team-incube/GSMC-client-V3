@@ -6,12 +6,12 @@ import { StudentType } from '@/entities/student/model/StudentSchema';
 import { useGetSearchStudent } from '@/entities/student/model/useGetSearchStudent';
 import SearchBar from '@/shared/ui/SearchBar';
 
-interface SearchDropdownProps {
+interface SearchDropdownProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   name?: string;
 }
 
-export default function SearchDropdown({ label, name }: SearchDropdownProps) {
+export default function SearchDropdown({ label, name, ...props }: SearchDropdownProps) {
   const [keyword, setKeyword] = useState('');
   const [inputValue, setInputValue] = useState('');
   const { data: searchResults = [], isLoading } = useGetSearchStudent({ name: keyword, page: 0, limit: 10 })
@@ -56,6 +56,7 @@ export default function SearchDropdown({ label, name }: SearchDropdownProps) {
             onSearchChange={handleSearchChange}
             placeholder="학생 이름을 검색하세요"
             onFocus={() => inputValue && setShowDropdown(true)}
+            {...props}
           />
 
           {showDropdown ? <div className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg max-h-60 overflow-y-auto">
