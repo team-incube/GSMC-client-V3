@@ -14,9 +14,9 @@ export default function CallbackView() {
 
     const run = async () => {
       try {
-        const res = await axios.post('/api/auth/google/callback', { code });
+        const response = await axios.post('/api/auth/google/callback', { code });
 
-        if (res.data.needsSignup) {
+        if (response.data.needsSignup) {
           toast.success('환영합니다! 회원가입을 완료해주세요.');
           router.push('/signup');
         } else {

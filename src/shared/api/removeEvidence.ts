@@ -1,6 +1,6 @@
 import { instance } from '../lib/instance';
 
 export const removeEvidence = async (evidenceId: string) => {
-  const res = await instance.delete(`/evidences/${evidenceId}`);
-  return res.data;
+  const response = await instance.delete(`/evidences/${evidenceId}`);
+  return response.data;
 };

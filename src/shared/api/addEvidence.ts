@@ -1,7 +1,7 @@
 import { instance } from '../lib/instance';
-import { EvidenceRequestType } from '../type/evidence';
+import { EvidenceRequestType } from '@/entities/evidence/model/evidence';
 
 export const addEvidence = async (evidenceData: EvidenceRequestType) => {
-  const res = await instance.post('/evidences', evidenceData);
-  return res.data;
+  const response = await instance.post('/evidences', evidenceData);
+  return response.data;
 };
