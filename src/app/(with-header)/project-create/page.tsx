@@ -1,5 +1,7 @@
+import ProjectCreateView from "@/view/project-create/ui/ProjectCreateView";
+
 export default function ProjectCreatePage() {
   return (
-    <div>page</div>
+    <ProjectCreateView />
   )
 }
