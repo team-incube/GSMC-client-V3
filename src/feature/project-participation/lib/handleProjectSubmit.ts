@@ -1,4 +1,4 @@
-import { EvidenceSchema } from '@/shared/model/EvidenceSchema';
+import { EvidenceSchema } from '@/entities/evidence/model/EvidenceSchema';
 
 export interface SubmitState {
   success: boolean;
