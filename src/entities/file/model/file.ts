@@ -1,5 +1,5 @@
 export interface FileType {
-  id: string;
+  id: number;
   fileOriginalName: string;
   fileStoreName: string;
   fileUri: string;
