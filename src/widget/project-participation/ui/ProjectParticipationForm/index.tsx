@@ -9,24 +9,27 @@ import FileUploader from '@/shared/ui/FileUploader';
 import Input from '@/shared/ui/Input';
 import Textarea from '@/shared/ui/Textarea';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useActionState } from 'react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 export default function ProjectParticipationForm() {
-  const [state, formAction, isPending] = useActionState(handleProjectParticipation, createInitialState<ParticipationProjectFormState>(),);
+  const [state, formAction, isPending] = useActionState(handleProjectParticipation, createInitialState<ParticipationProjectFormState>());
   const { id: projectId } = useParams();
   const { data: project } = useGetProjectById(Number(projectId));
+  const router = useRouter();
 
   useEffect(() => {
     if (state.message) {
       if (state.status == "success") {
         toast.success(state.message);
+        router.push('/main');
       } else {
         toast.error(state.message);
       }
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
     <form className="flex flex-col w-full gap-16" action={formAction}>
