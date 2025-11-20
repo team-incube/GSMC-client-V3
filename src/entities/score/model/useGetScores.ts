@@ -3,7 +3,7 @@ import { getScores, GetScoresParams } from '../api/getScores';
 
 export const useGetScores = (params: GetScoresParams) => {
   return useQuery({
-    queryKey: ['scores'],
+    queryKey: ['score', 'list'],
     queryFn: () => getScores(params),
   });
 };

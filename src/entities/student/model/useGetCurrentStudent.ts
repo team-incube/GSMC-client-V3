@@ -3,7 +3,7 @@ import { getCurrentStudent } from '../api/getCurrentStudent';
 
 export const useGetCurrentStudent = () => {
   return useQuery({
-    queryKey: ['student'],
+    queryKey: ['student', 'current'],
     queryFn: () => getCurrentStudent(),
   });
 };

@@ -3,7 +3,7 @@ import { getEvidence } from '../api/getEvidence';
 
 export const useGetEvidence = (evidenceId: string) => {
   return useQuery({
-    queryKey: [evidenceId, 'evidence'],
+    queryKey: ['evidence', evidenceId],
     queryFn: () => getEvidence(evidenceId),
     enabled: !!evidenceId,
   });

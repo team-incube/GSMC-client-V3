@@ -3,7 +3,7 @@ import { getProjects } from '../api/getProjects';
 
 export const useGetProjects = () => {
   return useQuery({
-    queryKey: ['projects'],
+    queryKey: ['project', 'list'],
     queryFn: getProjects,
     refetchOnMount: true,
   });

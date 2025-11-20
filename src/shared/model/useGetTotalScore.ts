@@ -3,7 +3,7 @@ import { getTotalScore } from '../api/getTotalScore';
 
 export const useGetTotalScore = () => {
   return useQuery({
-    queryKey: ['totalScore'],
+    queryKey: ['score', 'total'],
     queryFn: () => getTotalScore(),
   });
 };
