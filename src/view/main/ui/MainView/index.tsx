@@ -1,17 +1,24 @@
 "use client"
 
 import { useGetCurrentStudent } from "@/entities/student/model/useGetCurrentStudent";
-import Search from "@/shared/asset/svg/Search";
 import { useGetTotalScore } from "@/shared/model/useGetTotalScore";
 import Button from "@/shared/ui/Button";
-import Evidence from "@/shared/ui/Evidence";
+import { useState } from "react";
+import { useGetProjects } from "@/entities/project/model/useGetProjects";
+import { useGetProjectBySearch } from "@/entities/project/model/useGetProjectBySearch";
+import ProjectPost from "@/shared/ui/ProjectPost";
+import SearchBar from "@/shared/ui/SearchBar";
 
 export default function MainView() {
+  const [searchKeyword, setSearchKeyword] = useState('');
   const { data: student } = useGetCurrentStudent();
   const { data: score } = useGetTotalScore();
+  const { data: allProjects } = useGetProjects();
+  const { data: searchedProjects } = useGetProjectBySearch({ title: searchKeyword, page: 0, size: 10 });
+  const projects = searchKeyword ? searchedProjects : allProjects;
 
   return (
-    <div className="flex flex-col mt-15.5 w-full">
+    <div className="flex flex-col w-full">
 
       <section className="flex justify-start w-full">
         <div className="flex flex-col font-semibold w-72 h-[145px] gap-[27px]">
@@ -51,20 +58,18 @@ export default function MainView() {
         </div>
       </section>
 
-      <section className="mt-6">
-        <div className="flex justify-between items-center w-full px-4 py-3 rounded-[10px] bg-white border border-gray-200 mb-9">
-          <p className="flex-grow-0 flex-shrink-0 text-base text-left text-[#a5a6a9]">
-            찾는 내 글을 검색해주세요
-          </p>
-          <Search />
-        </div>
-
+      <section className="flex flex-col gap-6 mt-6">
+        <SearchBar
+          placeholder="찾는 내 프로젝트를 입력해주세요."
+          onSearchChange={setSearchKeyword}
+        />
         <div className="flex flex-wrap gap-4">
-          {
-            Array.from({ length: 4 }).map((_, index) => (
-              <Evidence key={index} title="GSMC" category="프로젝트" status="대기중..." />
-            ))
-          }
+          {projects?.map((project) => (
+            <ProjectPost
+              key={project.id}
+              {...project}
+            />
+          ))}
         </div>
 
       </section>
