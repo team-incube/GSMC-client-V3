@@ -13,8 +13,8 @@ export default function FAQ() {
   };
 
   return (
-    <div className="flex flex-col w-full">
-      <p className="font-400 mb-[24px] text-center text-3xl">자주 묻는 질문</p>
+    <div className="flex flex-col w-full gap-6">
+      <p className="font-400 text-center text-3xl">자주 묻는 질문</p>
       <SearchBar placeholder='질문을 검색해주세요.' />
       <div className="flex flex-col">
         {faqData.map((faq) => (
