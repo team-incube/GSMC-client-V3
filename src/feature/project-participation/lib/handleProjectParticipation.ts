@@ -3,6 +3,8 @@ import { ActionState } from '@/shared/type/actionState';
 import { ParticipationProjectFormState } from '../model/ParticipationProjectForm';
 import z from 'zod';
 import { addEvidence } from '@/shared/api/addEvidence';
+import { addProjectScore } from '../api/addProjectScore';
+import { HttpStatusCode } from 'axios';
 
 export const handleProjectParticipation = async (
   _prevState: ActionState<ParticipationProjectFormState>,
@@ -15,13 +17,17 @@ export const handleProjectParticipation = async (
     .filter((n) => !isNaN(n));
 
   const currentData: ParticipationProjectFormState = {
-    scoreId: Number(formData.get('scoreId') ?? 0),
+    projectId: Number(formData.get('projectId')),
     title: String(formData.get('title') ?? '').trim(),
     content: String(formData.get('content') ?? '').trim(),
     fileIds: fileIds.length ? fileIds : null,
   };
 
+  console.log('Current form data:', currentData);
+
   const result = EvidenceSchema.safeParse(currentData);
+
+  console.log('Parsed result:', result);
 
   if (!result.success) {
     return {
@@ -32,7 +38,37 @@ export const handleProjectParticipation = async (
     };
   }
 
-  const response = await addEvidence(result.data);
+  const projectId = Number(formData.get('projectId'));
+  const scoreResponse = await addProjectScore(projectId);
+
+  console.log('scoreResponse from addProjectScore:', scoreResponse);
+
+  if (scoreResponse.code !== 200) {
+    let errorMessage = '프로젝트 점수 추가에 실패했습니다.';
+    if (scoreResponse.code === HttpStatusCode.Forbidden) {
+      errorMessage = '해당 프로젝트에 참여할 수 있는 권한이 없습니다.';
+    } else if (scoreResponse.code === HttpStatusCode.NotFound) {
+      errorMessage = '존재하지 않는 프로젝트입니다.';
+    } else if (scoreResponse.code === HttpStatusCode.Conflict) {
+      errorMessage = '이미 참여한 프로젝트입니다.';
+    }
+
+    return {
+      status: 'error',
+      message: errorMessage,
+      fieldErrors: null,
+      data: currentData,
+    };
+  }
+
+  const evidenceData = {
+    ...result.data,
+    scoreId: scoreResponse.data.scoreId,
+  };
+
+  const response = await addEvidence(evidenceData);
+
+  console.log('response from addEvidence:', response);
 
   if (response.code === 200) {
     return {
@@ -45,7 +81,7 @@ export const handleProjectParticipation = async (
 
   return {
     status: 'error',
-    message: response.message || '프로젝트 참여글 생성을 실패했습니다.',
+    message: '프로젝트 참여글 생성을 실패했습니다.',
     fieldErrors: null,
     data: currentData,
   };
