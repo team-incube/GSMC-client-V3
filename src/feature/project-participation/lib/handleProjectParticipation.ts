@@ -23,11 +23,7 @@ export const handleProjectParticipation = async (
     fileIds: fileIds.length ? fileIds : null,
   };
 
-  console.log('Current form data:', currentData);
-
   const result = EvidenceSchema.safeParse(currentData);
-
-  console.log('Parsed result:', result);
 
   if (!result.success) {
     return {
@@ -40,8 +36,6 @@ export const handleProjectParticipation = async (
 
   const projectId = Number(formData.get('projectId'));
   const scoreResponse = await addProjectScore(projectId);
-
-  console.log('scoreResponse from addProjectScore:', scoreResponse);
 
   if (scoreResponse.code !== 200) {
     let errorMessage = '프로젝트 점수 추가에 실패했습니다.';
@@ -67,8 +61,6 @@ export const handleProjectParticipation = async (
   };
 
   const response = await addEvidence(evidenceData);
-
-  console.log('response from addEvidence:', response);
 
   if (response.code === 200) {
     return {
