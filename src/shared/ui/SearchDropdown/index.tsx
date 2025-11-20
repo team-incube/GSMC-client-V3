@@ -21,7 +21,10 @@ export default function SearchDropdown({ label, name, ...props }: SearchDropdown
 
   const handleSearchChange = (value: string) => {
     setKeyword(value);
+  };
 
+  const handleValueChange = (value: string) => {
+    setInputValue(value);
     if (value.trim().length > 0) {
       setShowDropdown(true);
     } else {
@@ -54,8 +57,9 @@ export default function SearchDropdown({ label, name, ...props }: SearchDropdown
           <SearchBar
             value={inputValue}
             onSearchChange={handleSearchChange}
+            onValueChange={handleValueChange}
             placeholder="학생 이름을 검색하세요"
-            onFocus={() => inputValue && setShowDropdown(true)}
+            onFocus={() => inputValue.trim().length > 0 && setShowDropdown(true)}
             {...props}
           />
 
