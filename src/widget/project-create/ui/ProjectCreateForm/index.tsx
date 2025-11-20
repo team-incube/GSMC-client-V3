@@ -18,7 +18,7 @@ export default function ProjectCreateForm() {
 
   useEffect(() => {
     if (state.message) {
-      if (state.status == "success") {
+      if (state.status === "success") {
         toast.success(state.message);
         router.push('/main');
       } else {

@@ -22,7 +22,7 @@ export default function ProjectParticipationForm() {
 
   useEffect(() => {
     if (state.message) {
-      if (state.status == "success") {
+      if (state.status === "success") {
         toast.success(state.message);
         router.push('/main');
       } else {

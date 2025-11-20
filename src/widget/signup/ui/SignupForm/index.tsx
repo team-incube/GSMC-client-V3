@@ -16,7 +16,7 @@ export default function SignupForm() {
 
   useEffect(() => {
     if (state.message) {
-      if (state.status == "success") {
+      if (state.status === "success") {
         toast.success(state.message);
         router.push("/")
       } else {
