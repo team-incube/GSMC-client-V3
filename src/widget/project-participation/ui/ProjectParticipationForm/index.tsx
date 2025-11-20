@@ -8,17 +8,25 @@ import Button from '@/shared/ui/Button';
 import FileUploader from '@/shared/ui/FileUploader';
 import Input from '@/shared/ui/Input';
 import Textarea from '@/shared/ui/Textarea';
-import { useParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import { useActionState } from 'react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 export default function ProjectParticipationForm() {
   const [state, formAction, isPending] = useActionState(handleProjectParticipation, createInitialState<ParticipationProjectFormState>());
-  const { id: projectId } = useParams();
-  const { data: project } = useGetProjectById(Number(projectId));
+  const params = useParams();
   const router = useRouter();
+
+  const rawId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const projectId = Number(rawId);
+  const isValidId = !isNaN(projectId) && projectId > 0;
+
+  if (!isValidId) {
+    notFound();
+  }
+
+  const { data: project } = useGetProjectById(projectId);
 
   useEffect(() => {
     if (state.message) {
