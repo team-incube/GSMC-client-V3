@@ -8,21 +8,24 @@ import FileUploader from "@/shared/ui/FileUploader";
 import Input from "@/shared/ui/Input";
 import SearchDropdown from "@/shared/ui/SearchDropdown";
 import Textarea from "@/shared/ui/Textarea";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
 export default function ProjectCreateForm() {
   const [state, formAction, isPending] = useActionState(handleProjectCreate, createInitialState<CreateProjectFormState>())
+  const router = useRouter();
 
   useEffect(() => {
     if (state.message) {
       if (state.status == "success") {
         toast.success(state.message);
+        router.push('/main');
       } else {
         toast.error(state.message);
       }
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
     <form className="flex flex-col w-full gap-16" action={formAction}>
