@@ -5,6 +5,7 @@ import z from 'zod';
 import { CreateProjectFormState } from '../model/CreateProjectInitForm';
 import { CreateProjectSchema } from '../model/CreateProjectSchema';
 import { createProject } from '../api/createProject';
+import { isAxiosError } from 'axios';
 
 export async function handleProjectCreate(
   prevState: ActionState<CreateProjectFormState>,
@@ -40,21 +41,36 @@ export async function handleProjectCreate(
     };
   }
 
-  const response = await createProject(result.data);
+  try {
+    const response = await createProject(result.data);
 
-  if (response.code === 200) {
+    if (response.code === 200) {
+      return {
+        status: 'success',
+        message: '프로젝트를 생성했습니다.',
+        fieldErrors: null,
+        data: null,
+      };
+    }
+
     return {
-      status: 'success',
-      message: '프로젝트를 생성했습니다.',
+      status: 'error',
+      message: response.message || '프로젝트 생성을 실패했습니다.',
       fieldErrors: null,
-      data: null,
+      data: currentData,
+    };
+  } catch (error) {
+    let errorMessage = '프로젝트 생성을 실패했습니다.';
+
+    if (isAxiosError(error)) {
+      errorMessage = error.response?.data?.message || errorMessage;
+    }
+
+    return {
+      status: 'error',
+      message: errorMessage,
+      fieldErrors: null,
+      data: currentData,
     };
   }
-
-  return {
-    status: 'error',
-    message: response.message || '프로젝트 생성을 실패했습니다.',
-    fieldErrors: null,
-    data: currentData,
-  };
 }
