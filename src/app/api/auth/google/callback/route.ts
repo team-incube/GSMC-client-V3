@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import axios from 'axios';
+
 import { AuthTokenResponse } from '@/feature/google-auth/model/AuthResponse';
 import { setAuthCookies } from '@/shared/lib/cookie/setAuthCookie';
 

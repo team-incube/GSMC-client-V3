@@ -1,9 +1,10 @@
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+
 import { AuthTokenResponse } from '@/feature/google-auth/model/AuthResponse';
 import { deleteAuthCookies } from '@/shared/lib/cookie/deleteCookie';
 import { setAuthCookies } from '@/shared/lib/cookie/setAuthCookie';
 import { instance } from '@/shared/lib/instance';
-import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
 
 export async function POST() {
   const cookieStore = await cookies();

@@ -1,5 +1,6 @@
-import { ProjectType } from "@/entities/project/model/project";
 import Link from "next/link";
+
+import { ProjectType } from "@/entities/project/model/project";
 
 export default function ProjectPost({ ...project }: ProjectType) {
   return (

@@ -1,10 +1,12 @@
-import { EvidenceSchema } from '@/entities/evidence/model/EvidenceSchema';
-import { ActionState } from '@/shared/type/actionState';
-import { ParticipationProjectFormState } from '../model/ParticipationProjectForm';
-import z from 'zod';
-import { addEvidence } from '@/shared/api/addEvidence';
-import { addProjectScore } from '../api/addProjectScore';
 import { HttpStatusCode, isAxiosError } from 'axios';
+import z from 'zod';
+
+import { EvidenceSchema } from '@/entities/evidence/model/EvidenceSchema';
+import { addEvidence } from '@/shared/api/addEvidence';
+import { ActionState } from '@/shared/type/actionState';
+
+import { addProjectScore } from '../api/addProjectScore';
+import { ParticipationProjectFormState } from '../model/ParticipationProjectForm';
 
 export const handleProjectParticipation = async (
   _prevState: ActionState<ParticipationProjectFormState>,

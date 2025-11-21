@@ -1,7 +1,8 @@
 'use client';
 
-import Search from "@/shared/asset/svg/Search";
 import React, { useEffect, useState } from "react";
+
+import Search from "@/shared/asset/svg/Search";
 import { useDebouncedValue } from "@/shared/model/useDebouncedValue";
 
 interface SearchBarProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {

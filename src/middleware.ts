@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+
+import { RoleType } from './entities/student/model/StudentSchema';
 import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
 import { decodeTokenRole } from './shared/lib/jwt';
-import { RoleType } from './entities/student/model/StudentSchema';
 
 
 export async function middleware(request: NextRequest) {
