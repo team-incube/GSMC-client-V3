@@ -1,6 +1,10 @@
 import { instance } from '@/shared/lib/instance';
 
-export const getTotalScore = async () => {
-  const response = await instance.get(`/scores/total`);
-  return response.data;
+export interface TotalScore {
+  totalScore: string;
+}
+
+export const getTotalScore = async (): Promise<TotalScore> => {
+  const response = await instance.get('/scores/total');
+  return response.data.data;
 };
