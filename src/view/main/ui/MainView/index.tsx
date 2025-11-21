@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { useGetProjectBySearch } from "@/entities/project/model/useGetProjectBySearch";
 import { useGetProjects } from "@/entities/project/model/useGetProjects";
+import { useGetcoresByCategory } from "@/entities/score/model/useGetScoresByCategory";
 import { useGetCurrentStudent } from "@/entities/student/model/useGetCurrentStudent";
 import { useGetTotalScore } from "@/shared/model/useGetTotalScore";
 import Button from "@/shared/ui/Button";
@@ -14,6 +15,7 @@ export default function MainView() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const { data: student } = useGetCurrentStudent();
   const { data: score } = useGetTotalScore();
+  const { data: scoresByCategory } = useGetcoresByCategory({ status: 'APPROVED' });
   const { data: allProjects } = useGetProjects();
   const { data: searchedProjects } = useGetProjectBySearch({ title: searchKeyword, page: 0, size: 10 });
   const projects = searchKeyword ? searchedProjects : allProjects;
@@ -48,12 +50,12 @@ export default function MainView() {
 
           <div className="flex flex-col justify-start items-start h-full overflow-y-scroll rounded-xl px-[2.25rem]">
             <div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 w-full bg-white rounded-xl">
-
-              <article className="flex justify-between items-center self-stretch flex-grow-0 flex-shrink-0 px-8 py-6">
-                <p className="text-lg font-semibold text-center text-[#68696c]">TOPCIT</p>
-                <p className="text-lg font-semibold text-center text-[#68696c]">100 점</p>
-              </article>
-
+              {scoresByCategory?.map((category) => (
+                <article key={category.categoryType} className="flex justify-between items-center self-stretch flex-grow-0 flex-shrink-0 px-8 py-6">
+                  <p className="text-lg font-semibold text-center text-[#68696c]">{category.categoryNames.koreanName}</p>
+                  <p className="text-lg font-semibold text-center text-[#68696c]">{category.recognizedScore}점</p>
+                </article>
+              ))}
             </div>
           </div>
         </div>
