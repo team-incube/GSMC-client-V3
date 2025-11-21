@@ -1,6 +1,7 @@
+import { FlatCompat } from '@eslint/eslintrc';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,6 +24,9 @@ const eslintConfig = [
   },
   ...compat.extends('next/core-web-vitals', 'next/typescript', 'plugin:react/jsx-runtime'),
   {
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
     rules: {
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
@@ -48,6 +52,20 @@ const eslintConfig = [
       'react/jsx-pascal-case': 'error',
       'react-hooks/exhaustive-deps': 'error',
       'no-console': 'warn',
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            ['^react', '^@react'],
+            ['^next'],
+            ['^@?\\w'],
+            ['^@/'],
+            ['^\\.\\.(?!/?$)', '^\\.\\./?$', '^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+            ['^.+\\.?(css)$'],
+          ],
+        },
+      ],
+      'simple-import-sort/exports': 'error',
     },
   },
 ];
