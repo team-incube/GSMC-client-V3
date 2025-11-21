@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import FAQElement from '@/widget/faq/ui/FAQElement';
-import { faqData } from '@/view/faq/mock/faqData';
+
 import SearchBar from '@/shared/ui/SearchBar';
+import { faqData } from '@/view/faq/mock/faqData';
+import FAQElement from '@/widget/faq/ui/FAQElement';
 
 export default function FAQ() {
   const [openId, setOpenId] = useState<number | null>(null);

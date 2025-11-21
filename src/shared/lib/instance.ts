@@ -1,4 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+
 import { getCookie } from './cookie/cookie';
 
 export const baseURL = process.env.NEXT_PUBLIC_API_URL;

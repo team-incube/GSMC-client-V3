@@ -1,11 +1,13 @@
 'use server';
 
-import { postSignup } from '../api/postSignup';
-import { SignupSchema } from '../model/SignupSchema';
-import { ActionState } from '@/shared/type/actionState';
-import { SignupFormState } from '../model/SignupInitForm';
-import z from 'zod';
 import { isAxiosError } from 'axios';
+import z from 'zod';
+
+import { ActionState } from '@/shared/type/actionState';
+
+import { postSignup } from '../api/postSignup';
+import { SignupFormState } from '../model/SignupInitForm';
+import { SignupSchema } from '../model/SignupSchema';
 
 export async function handleSignup(
   prevState: ActionState<SignupFormState>,

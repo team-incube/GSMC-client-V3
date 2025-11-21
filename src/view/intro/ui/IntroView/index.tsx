@@ -1,10 +1,12 @@
 'use client';
 
+import { useGoogleLogin } from '@react-oauth/google';
+
 import Image from 'next/image';
+
 import LogoImage from '@/shared/asset/img/logo.png';
 import GoogleLogo from '@/shared/asset/svg/GoogleLogo';
 import Button from '@/shared/ui/Button';
-import { useGoogleLogin } from '@react-oauth/google';
 
 export default function IntroView() {
   const signin = useGoogleLogin({

@@ -1,14 +1,16 @@
 'use client';
 
-import Button from '@/shared/ui/Button';
-import Input from '@/shared/ui/Input';
 import { useActionState, useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
+
+import { toast } from 'sonner';
 
 import { handleSignup } from '@/feature/google-auth/lib/handleSignup';
 import { SignupFormState } from '@/feature/google-auth/model/SignupInitForm';
 import { createInitialState } from '@/shared/lib/createInitialState';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import Button from '@/shared/ui/Button';
+import Input from '@/shared/ui/Input';
 
 export default function SignupForm() {
   const [state, formAction, isPending] = useActionState(handleSignup, createInitialState<SignupFormState>());

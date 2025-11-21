@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { getSearchStudent, GetSearchStudentParams } from '../api/getSearchStudent';
 
 export const useGetSearchStudent = (params: GetSearchStudentParams) => {

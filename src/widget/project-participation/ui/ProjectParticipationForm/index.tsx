@@ -1,5 +1,12 @@
 'use client';
 
+import { useActionState } from 'react';
+import { useEffect } from 'react';
+
+import { notFound, useParams, useRouter } from 'next/navigation';
+
+import { toast } from 'sonner';
+
 import { useGetProjectById } from '@/entities/project/model/useGetProjectById';
 import { handleProjectParticipation } from '@/feature/project-participation/lib/handleProjectParticipation';
 import { ParticipationProjectFormState } from '@/feature/project-participation/model/ParticipationProjectForm';
@@ -8,10 +15,6 @@ import Button from '@/shared/ui/Button';
 import FileUploader from '@/shared/ui/FileUploader';
 import Input from '@/shared/ui/Input';
 import Textarea from '@/shared/ui/Textarea';
-import { notFound, useParams, useRouter } from 'next/navigation';
-import { useActionState } from 'react';
-import { useEffect } from 'react';
-import { toast } from 'sonner';
 
 export default function ProjectParticipationForm() {
   const [state, formAction, isPending] = useActionState(handleProjectParticipation, createInitialState<ParticipationProjectFormState>());

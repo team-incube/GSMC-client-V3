@@ -1,8 +1,9 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
+
 import BackArrow from '@/shared/asset/svg/BackArrow';
 import SignupForm from '@/widget/signup/ui/SignupForm';
-import { useRouter } from 'next/navigation';
 
 export default function SignupView() {
   const router = useRouter();

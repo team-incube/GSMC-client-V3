@@ -1,5 +1,6 @@
-import CallbackView from '@/view/callback/ui/CallbackView';
 import { Suspense } from 'react';
+
+import CallbackView from '@/view/callback/ui/CallbackView';
 
 export default function CallbackPage() {
   return (

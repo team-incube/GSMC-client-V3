@@ -1,11 +1,12 @@
 "use client"
 
+import { useState } from "react";
+
+import { useGetProjectBySearch } from "@/entities/project/model/useGetProjectBySearch";
+import { useGetProjects } from "@/entities/project/model/useGetProjects";
 import { useGetCurrentStudent } from "@/entities/student/model/useGetCurrentStudent";
 import { useGetTotalScore } from "@/shared/model/useGetTotalScore";
 import Button from "@/shared/ui/Button";
-import { useState } from "react";
-import { useGetProjects } from "@/entities/project/model/useGetProjects";
-import { useGetProjectBySearch } from "@/entities/project/model/useGetProjectBySearch";
 import ProjectPost from "@/shared/ui/ProjectPost";
 import SearchBar from "@/shared/ui/SearchBar";
 
