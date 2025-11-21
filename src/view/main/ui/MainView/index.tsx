@@ -41,7 +41,7 @@ export default function MainView() {
 
           <div className="flex justify-between items-center py-[1.5rem] bg-[#dfeafe] px-[2.25rem]">
             <p className="text-2xl font-semibold text-[#385b97]">내 점수</p>
-            <Button variant="active" className="flex justify-center items-center px-[22px] py-[13px] rounded-xl bg-[#5e97fc] text-lg font-semibold text-center text-white">
+            <Button variant="active" className="w-auto px-[22px] py-[13px] text-lg font-semibold text-center">
               점수 수정
             </Button>
           </div>
