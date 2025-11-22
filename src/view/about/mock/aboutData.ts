@@ -5,23 +5,6 @@ import Language from '@/shared/asset/svg/Language';
 import People from '@/shared/asset/svg/People';
 import Stars from '@/shared/asset/svg/Stars';
 
-export const ProgramData = [
-  {
-    id: 1,
-    title: '역량인증 기준 설정',
-    content:
-      'GSM 인증제는 영마이스터로서 졸업할 때까지 적정 수준에 도달할 수 있도록\n학교 실정에 맞게 역량인증의 기준을 설정하여 운영됩니다.',
-    highlight1: ['적정 수준에 도달'],
-  },
-  {
-    id: 2,
-    title: '동기 부여 및 책무성 제고',
-    content:
-      '일정 수준에 도달한 학생에게 인증서를 수여함으로써 학생들의 교육 참여 동기를 부여하고\n학교 교육의 책무성을 제고하고자 하는 프로그램입니다.',
-    highlight: ['교육 참여 동기를 부여', '책무성을 제고'],
-  },
-];
-
 export const evaluationData = [
   {
     id: 1,
