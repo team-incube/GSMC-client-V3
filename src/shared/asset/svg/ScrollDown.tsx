@@ -3,18 +3,19 @@ interface ScrollDownProps {
     height?: number;
     color?: string;
     onClick?: React.MouseEventHandler<SVGSVGElement>;
+    className?: string;
 }
 
-export default function ScrollDown({width = 24,height = 15,color = 'white', onClick,}: ScrollDownProps) {
+export default function ScrollDown({width = 24,height = 15,color = 'white', className, onClick,}: ScrollDownProps) {
     return (
         <svg 
             onClick={onClick} 
-            className="cursor-pointer  mb-[63px]"
             width={width} 
             height={height} 
             viewBox="0 0 24 15" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
+            className={className}
         >
             <path 
                 fillRule="evenodd" 

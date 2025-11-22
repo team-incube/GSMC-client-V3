@@ -11,7 +11,7 @@ export default function Section1() {
                     <div className="absolute flex flex-col items-center justify-between inset-0 ">
                         <div></div>
                         <p className="font-extrabold text-[3.5rem] text-white">GSM 인증제란?</p>
-                        <ScrollDown onClick={() => {
+                        <ScrollDown className="cursor-pointar mb-[63px]" onClick={() => {
                             document.getElementById('section2')?.scrollIntoView({ behavior: 'smooth' });
                         }}/>
                     </div>
