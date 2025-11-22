@@ -3,10 +3,11 @@ import ScrollDown from "@/shared/asset/svg/ScrollDown";
 
 
 export default function Section1() {
+    const HEADER_HEIGHT = '4.375rem';
     return (
         <div className="w-full">
             <Header />
-            <div className="relative bg-[url(@/shared/asset/img/aboutImg.png)] h-[calc(100vh-4.375rem)] bg-cover bg-center">
+            <div className="relative bg-[url(@/shared/asset/img/aboutImg.png)] bg-cover bg-center" style={{ height: `calc(100vh - ${HEADER_HEIGHT})` }}>
                 <div className="absolute inset-0 bg-black/60"></div>
                     <div className="absolute flex flex-col items-center justify-center inset-0 ">
                         <p className="font-extrabold text-[3.5rem] text-white">GSM 인증제란?</p>
