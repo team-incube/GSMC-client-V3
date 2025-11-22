@@ -25,7 +25,7 @@ export default function MainView() {
 
   return (
     <div className="flex flex-col w-full">
-      <ScorePatchModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} scoresByCategory={scoresByCategory} />
+      <ScorePatchModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <section className="flex justify-start w-full">
         <div className="flex flex-col font-semibold w-72 h-[145px] gap-[27px]">
           <div className="flex items-baseline gap-3">

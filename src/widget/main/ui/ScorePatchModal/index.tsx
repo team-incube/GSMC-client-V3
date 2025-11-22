@@ -1,9 +1,16 @@
-import { getScoresByCategoryResponse } from "@/entities/score/api/getScoresByCategory";
+import { useGetcoresByCategory } from "@/entities/score/model/useGetScoresByCategory";
 import { cn } from "@/shared/lib/cn";
 import Button from "@/shared/ui/Button";
 import ModalWrapper from "@/shared/ui/ModalWrapper";
 
-export default function ScorePatchModal({ isModalOpen = false, setIsModalOpen, scoresByCategory }: { isModalOpen: boolean; setIsModalOpen: (isOpen: boolean) => void; scoresByCategory: getScoresByCategoryResponse[] | undefined }) {
+interface ScorePatchModalProps {
+  isModalOpen: boolean;
+  setIsModalOpen: (isOpen: boolean) => void;
+}
+
+export default function ScorePatchModal({ isModalOpen = false, setIsModalOpen }: ScorePatchModalProps) {
+  const { data: scoresByCategory } = useGetcoresByCategory({});
+
   return (
     <div>
       {isModalOpen ? <ModalWrapper>
