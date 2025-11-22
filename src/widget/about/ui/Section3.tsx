@@ -8,7 +8,7 @@ export default function Section3() {
             <div className="flex flex-row gap-[5.4375rem]">
                 {evaluationData.map((row) => (
                     <div key={row.id} className="flex items-center flex-col gap-[0.75rem]">
-                        <div className="flex items-center justify-center w-[15.625rem] h-[15.625rem] bg-[#DFEAFE] rounded-[11.25rem]">
+                        <div className="flex items-center justify-center w-[15.625rem] h-[15.625rem] bg-[#DFEAFE] rounded-full">
                             <row.icon/>
                         </div>
                         <p className="font-semibold text-[1.75rem]">{row.title}</p>
