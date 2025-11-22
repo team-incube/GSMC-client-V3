@@ -29,6 +29,7 @@ export default function Section2() {
                     <p className="flex items-center justify-center w-[7.9375rem] h-[2.75rem] bg-[#BFD5FE] text-[#385B97] text-xl rounded-[1.125rem]"># 책무성 제고</p>
                 </div>
             </div>
+            <hr className="w-[800px] mt-[7.5rem] mb-[10rem] border border-[#CDCDCF]"/>
         </section>
     )
 }

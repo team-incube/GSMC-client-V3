@@ -16,6 +16,7 @@ export default function Section3() {
                     </div>
                 ))}
             </div>
+            <hr className="w-[800px] mt-[8.4375rem] mb-[10rem]  border border-[#CDCDCF]"/>
         </section>
     )
 }

@@ -13,6 +13,7 @@ export default function Section4() {
                     </div>
                 ))}
             </div>
+            <hr className="w-[800px] mt-[6rem] mb-[10rem]  border border-[#CDCDCF]"/>
         </section>
     )
 }

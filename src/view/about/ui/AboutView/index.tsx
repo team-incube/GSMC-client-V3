@@ -11,17 +11,11 @@ export default function AboutView() {
     return(
         <div className="flex flex-col">
             <Section1 />
-            <div className="flex flex-col justify-center items-center gap-[160px]">
-                <Section2 />
-                <hr className="w-[800px] border border-[#CDCDCF]"/>
-                <Section3 />
-                <hr className="w-[800px] border border-[#CDCDCF]"/>
-                <Section4 />
-                <hr className="w-[800px] border border-[#CDCDCF]"/>
-                <Section5 />
-                <hr className="w-[800px] border border-[#CDCDCF]"/>
-                <Section6 />
-            </div>
+            <Section2 />
+            <Section3 />
+            <Section4 />
+            <Section5 />
+            <Section6 />
         </div>
     )
 }
