@@ -10,7 +10,7 @@ import { useGetCurrentStudent } from "@/entities/student/model/useGetCurrentStud
 import Button from "@/shared/ui/Button";
 import ProjectPost from "@/shared/ui/ProjectPost";
 import SearchBar from "@/shared/ui/SearchBar";
-import ScorePatchModal from "@/widget/main/ui/ScorePatchModal";
+import ScoreManagementModal from "@/widget/main/ui/ScoreManagementModal";
 
 export default function MainView() {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -25,7 +25,7 @@ export default function MainView() {
 
   return (
     <div className="flex flex-col w-full">
-      <ScorePatchModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <ScoreManagementModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <section className="flex justify-start w-full">
         <div className="flex flex-col font-semibold w-72 h-[145px] gap-[27px]">
           <div className="flex items-baseline gap-3">

@@ -8,7 +8,7 @@ interface ScorePatchModalProps {
   setIsModalOpen: (isOpen: boolean) => void;
 }
 
-export default function ScorePatchModal({ isModalOpen = false, setIsModalOpen }: ScorePatchModalProps) {
+export default function ScoreManagementModal({ isModalOpen = false, setIsModalOpen }: ScorePatchModalProps) {
   const { data: scoresByCategory } = useGetcoresByCategory({});
 
   return (
