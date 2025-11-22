@@ -8,10 +8,9 @@ export default function Section1() {
             <Header />
             <div className="relative bg-[url(@/shared/asset/img/aboutImg.png)] h-[calc(100vh-4.375rem)] bg-cover bg-center">
                 <div className="absolute inset-0 bg-black/60"></div>
-                    <div className="absolute flex flex-col items-center justify-between inset-0 ">
-                        <div></div>
+                    <div className="absolute flex flex-col items-center justify-center inset-0 ">
                         <p className="font-extrabold text-[3.5rem] text-white">GSM 인증제란?</p>
-                        <ScrollDown className="cursor-pointar mb-[63px]" onClick={() => {
+                        <ScrollDown className="cursor-pointar absolute bottom-[63px]" onClick={() => {
                             document.getElementById('section2')?.scrollIntoView({ behavior: 'smooth' });
                         }}/>
                     </div>
