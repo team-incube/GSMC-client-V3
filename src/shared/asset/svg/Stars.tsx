@@ -8,8 +8,8 @@ interface StarsProps {
 export default function Stars({ width = 60, height = 80, color = 'black', className }: StarsProps) {
     return (
         <svg 
-            width={60}
-            height={80} 
+            width={width}
+            height={height}
             viewBox="0 0 60 80" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
