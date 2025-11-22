@@ -7,7 +7,7 @@ export default function Section5() {
             <div className="flex justify-center flex-wrap flex-row gap-[4.25rem] w-full max-w-[100rem]">
                 {operateorderData.map((row) => (
                     <div key={row.id} className="flex flex-row items-center w-[47.3125rem] h-[9.75rem] rounded-[5rem] bg-[#131E32] px-[2.25rem] py-[1.75rem] gap-[1.25rem]">
-                        <div className="flex items-center justify-center w-[6.25rem] h-[6.25rem] font-semibold text-[2.5rem] text-[#385B97] bg-[#DFEAFE] rounded-[11.25rem]">
+                        <div className="flex items-center justify-center w-[6.25rem] h-[6.25rem] font-semibold text-[2.5rem] text-[#385B97] bg-[#DFEAFE] rounded-full">
                             {row.id}
                         </div>
                         <div className="flex flex-col gap-[0.75rem]">
