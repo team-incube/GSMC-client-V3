@@ -1,9 +1,9 @@
-import Award from "@/shared/asset/svg/Award";
+import Trophy from "@/shared/asset/svg/Trophy";
 import Book from "@/shared/asset/svg/Book";
 import File from "@/shared/asset/svg/File";
 import Language from "@/shared/asset/svg/Language";
 import People from "@/shared/asset/svg/People";
-import Shiny from "@/shared/asset/svg/Shiny";
+import Stars from "@/shared/asset/svg/Stars";
 
 export const ProgramData = [
     {
@@ -50,13 +50,13 @@ export const operateData = [
     },
     {
         id: 2,
-        icon: Shiny,
+        icon: Stars,
         title: "학년 단위 평가 및 시상",
         content: "역량인증 내용을 성실하게 관리한\n학생을 평가하여 시상합니다.",
     },
     {
         id: 3,
-        icon: Award,
+        icon: Trophy,
         title: "자발적 참여 동기 부여",
         content: "학생들의 자발적 참여와 동기부여를\n통해 교육의 질을 향상시킵니다"
     }
