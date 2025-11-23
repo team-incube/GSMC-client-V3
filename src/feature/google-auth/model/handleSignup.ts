@@ -3,7 +3,7 @@
 import { isAxiosError } from 'axios';
 import z from 'zod';
 
-import { ActionState } from '@/shared/type/actionState';
+import { ActionState } from '@/shared/model/actionState';
 
 import { postSignup } from '../api/postSignup';
 import { SignupFormType, SignupSchema } from '../model/SignupSchema';

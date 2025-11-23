@@ -1,5 +1,5 @@
+import { CategoryKey, CategoryNames } from '@/entities/category/model/category';
 import { EvidenceType } from '@/entities/evidence/model/evidence';
-import { CategoryKey, CategoryNames } from '@/shared/type/category';
 
 export type ScoreStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 

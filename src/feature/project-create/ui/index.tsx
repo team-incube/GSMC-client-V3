@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { handleProjectCreate } from "@/feature/project-create/lib/handleProjectCreate";
-import { CreateProjectFormState } from "@/feature/project-create/model/CreateProjectInitForm";
 import { createInitialState } from "@/shared/lib/createInitialState";
 import Button from "@/shared/ui/Button";
 import FileUploader from "@/shared/ui/FileUploader";
@@ -15,8 +14,10 @@ import Input from "@/shared/ui/Input";
 import SearchDropdown from "@/shared/ui/SearchDropdown";
 import Textarea from "@/shared/ui/Textarea";
 
+import { CreateProjectFormValueType } from "../model/CreateProjectSchema";
+
 export default function ProjectCreateForm() {
-  const [state, formAction, isPending] = useActionState(handleProjectCreate, createInitialState<CreateProjectFormState>())
+  const [state, formAction, isPending] = useActionState(handleProjectCreate, createInitialState<CreateProjectFormValueType>())
   const router = useRouter();
 
   useEffect(() => {

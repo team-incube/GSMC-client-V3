@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { attachFile } from '@/shared/api/attachFile';
+import { attachFile } from '../api/attachFile';
 
 export const useAttachFile = () => {
   const [uploadedFileIds, setUploadedFileIds] = useState<number[]>([]);

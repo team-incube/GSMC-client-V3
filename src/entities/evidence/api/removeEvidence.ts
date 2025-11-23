@@ -1,4 +1,4 @@
-import { instance } from '../lib/instance';
+import { instance } from '@/shared/lib/instance';
 
 export const removeEvidence = async (evidenceId: string) => {
   const response = await instance.delete(`/evidences/${evidenceId}`);

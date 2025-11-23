@@ -2,10 +2,12 @@
 
 import z from 'zod';
 
-import { editEvidenceById } from '@/shared/api/editEvidenceById';
-import { ActionState } from '@/shared/type/actionState';
-
-import { EvidenceFormSchema, EvidenceFormValueType } from '../model/ScoreEditSchema';
+import { editEvidenceById } from '@/entities/evidence/api/editEvidenceById';
+import {
+  EvidenceFormSchema,
+  EvidenceFormValueType,
+} from '@/feature/score-edit/model/ScoreEditSchema';
+import { ActionState } from '@/shared/model/actionState';
 
 export async function handleEvidenceEdit(
   _prevState: ActionState<EvidenceFormValueType>,

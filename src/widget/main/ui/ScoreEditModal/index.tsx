@@ -1,12 +1,11 @@
 'use client';
 
+import { useGetCategoryBySearch } from '@/entities/category/model/useGetCategoryBySearch';
 import { useGetEvidenceById } from '@/entities/evidence/model/useGetEvidenceById';
 import { useGetScoreById } from '@/entities/score/model/useGetScoreById';
-import { useGetCategoryBySearch } from '@/shared/model/useGetCategoryBySearch';
+import EvidenceEditForm from '@/feature/evidence-edit/ui';
+import ScoreEditForm from '@/feature/score-edit/ui';
 import ModalWrapper from '@/shared/ui/ModalWrapper';
-
-import EvidenceEditForm from '../EvidenceEditForm';
-import ScoreEditForm from '../ScoreEditForm';
 
 interface ScoreEditModalProps {
   setIsEditModalOpen: (isOpen: boolean) => void;

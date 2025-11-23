@@ -1,5 +1,5 @@
+import { CategoryKey } from '@/entities/category/model/category';
 import { instance } from '@/shared/lib/instance';
-import { CategoryKey } from '@/shared/type/category';
 
 import { ScoreStatus, ScoreType } from '../model/score';
 

@@ -8,3 +8,5 @@ export interface EvidenceType {
   updatedAt: string;
   files: FileType[] | null;
 }
+
+export type RequiredEvidenceType = 'EVIDENCE' | 'FILE' | 'UNREQUIRED';

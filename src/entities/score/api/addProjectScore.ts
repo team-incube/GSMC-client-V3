@@ -1,6 +1,10 @@
 import { instance } from '@/shared/lib/instance';
 
-export const addProjectScore = async (projectId: number) => {
+export interface addProjectScoreRequest {
+  projectId: number;
+}
+
+export const addProjectScore = async ({ projectId }: addProjectScoreRequest) => {
   const response = await instance.post('/scores/project-participation', {
     projectId,
   });

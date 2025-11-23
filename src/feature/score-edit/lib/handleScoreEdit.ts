@@ -2,9 +2,9 @@
 
 import z from 'zod';
 
-import { addScoreByCategoryType } from '@/shared/api/addScoreByCategoryType';
-import { ActionState } from '@/shared/type/actionState';
-import { CategoryEndpoint, CategoryKey } from '@/shared/type/category';
+import { CategoryEndpoint, CategoryKey } from '@/entities/category/model/category';
+import { addScoreByCategoryType } from '@/entities/score/api/addScoreByCategoryType';
+import { ActionState } from '@/shared/model/actionState';
 
 import { ScoreFormSchema, ScoreFormValueType } from '../model/ScoreEditSchema';
 

@@ -1,10 +1,10 @@
 import { HttpStatusCode, isAxiosError } from 'axios';
 import z from 'zod';
 
-import { addEvidence } from '@/shared/api/addEvidence';
-import { ActionState } from '@/shared/type/actionState';
+import { addEvidence } from '@/entities/evidence/api/addEvidence';
+import { addProjectScore } from '@/entities/score/api/addProjectScore';
+import { ActionState } from '@/shared/model/actionState';
 
-import { addProjectScore } from '../api/addProjectScore';
 import {
   ParticipationProjectFormValueType,
   ParticipationProjectSchema,
@@ -40,7 +40,7 @@ export const handleProjectParticipation = async (
 
   try {
     const projectId = Number(formData.get('projectId'));
-    const scoreResponse = await addProjectScore(projectId);
+    const scoreResponse = await addProjectScore({ projectId });
 
     if (scoreResponse.code !== 200) {
       let errorMessage = '프로젝트 점수 추가에 실패했습니다.';

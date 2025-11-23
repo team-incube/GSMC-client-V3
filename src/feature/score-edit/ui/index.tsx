@@ -5,10 +5,10 @@ import { useActionState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { CategoryType } from '@/entities/category/model/category';
 import { ScoreType } from '@/entities/score/model/score';
 import { handleScoreValueEdit } from '@/feature/score-edit/lib/handleScoreEdit';
 import { ScoreFormValueType } from '@/feature/score-edit/model/ScoreEditSchema';
-import { CategoryType } from '@/shared/api/getCategoryBySearch';
 import { createInitialState } from '@/shared/lib/createInitialState';
 import Button from '@/shared/ui/Button';
 import FileUploader from '@/shared/ui/FileUploader';

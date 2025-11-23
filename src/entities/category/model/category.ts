@@ -1,3 +1,5 @@
+import { RequiredEvidenceType } from '@/entities/evidence/model/evidence';
+
 export const Category = {
   VOLUNTEER: '봉사활동',
   TOPCIT: 'TOPCIT',
@@ -36,3 +38,16 @@ export const CategoryEndpoint: Record<CategoryKey, string> = {
   AWARD: 'awards',
   ACADEMIC_GRADE: 'academic-grade',
 };
+
+export interface CategoryType {
+  englishName: string;
+  koreanName: string;
+  weight: number;
+  maxRecordCount: number;
+  isAccumulated: boolean;
+  evidenceType: RequiredEvidenceType;
+  calculationType: CalculationType;
+  isForeignLanguage: boolean;
+}
+
+export type CalculationType = 'COUNT_BASED' | 'SCORE_BASED';

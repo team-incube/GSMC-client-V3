@@ -1,13 +1,18 @@
 import { instance } from '@/shared/lib/instance';
 
-import { CreateProjectFormValueType } from '../model/CreateProjectSchema';
+export interface createProjectRequest {
+  title: string;
+  description: string;
+  fileIds?: number[] | null;
+  participantIds: number[];
+}
 
 export const createProject = async ({
   title,
   description,
   fileIds,
   participantIds,
-}: CreateProjectFormValueType) => {
+}: createProjectRequest) => {
   const response = await instance.post('/projects', {
     title,
     description,

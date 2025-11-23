@@ -1,6 +1,5 @@
 import { ScoreType } from '@/entities/score/model/score';
-
-import { instance } from '../lib/instance';
+import { instance } from '@/shared/lib/instance';
 
 export interface addScoreByCategoryTypeRequest {
   categoryType: string;

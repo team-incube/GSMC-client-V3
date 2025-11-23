@@ -6,13 +6,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { EvidenceType } from '@/entities/evidence/model/evidence';
-import { handleEvidenceEdit } from '@/feature/score-edit/lib/handleEvidenceEdit';
 import { EvidenceFormValueType } from '@/feature/score-edit/model/ScoreEditSchema';
 import { createInitialState } from '@/shared/lib/createInitialState';
 import Button from '@/shared/ui/Button';
 import FileUploader from '@/shared/ui/FileUploader';
 import Input from '@/shared/ui/Input';
 import Textarea from '@/shared/ui/Textarea';
+
+import { handleEvidenceEdit } from '../lib/handleEvidenceEdit';
 
 interface EvidenceEditFormProps {
   evidenceData: EvidenceType;

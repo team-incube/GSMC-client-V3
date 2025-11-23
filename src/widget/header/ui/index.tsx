@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import Bell from '@/shared/asset/svg/Bell';
 
-import { HEADER_NAV } from '../../config/navigation';
+import { HEADER_NAV } from '../config/navigation';
 
 export default function Header() {
   return (

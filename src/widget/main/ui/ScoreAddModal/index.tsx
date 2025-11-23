@@ -1,9 +1,8 @@
 'use client';
 
-import { useGetCategoryBySearch } from '@/shared/model/useGetCategoryBySearch';
+import { useGetCategoryBySearch } from '@/entities/category/model/useGetCategoryBySearch';
+import ScoreAddForm from '@/feature/score-add/ui';
 import ModalWrapper from '@/shared/ui/ModalWrapper';
-
-import ScoreAddForm from '../ScoreAddForm';
 
 interface ScoreAddModalProps {
   setIsAddModalOpen: (isOpen: boolean) => void;
