@@ -19,10 +19,16 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
   const [scoreId, setScoreId] = useState<number>(0);
   const [englishName, setEnglishName] = useState<string>('');
 
+  const handleEditClick = (scoreId: number, englishName: string) => {
+    setIsEditModalOpen(true);
+    setScoreId(scoreId);
+    setEnglishName(englishName);
+  };
+
   return (
     <div>
       {isEditModalOpen ? (
-        <ScoreEditModal setIsEditModalOpen={setIsEditModalOpen} scoreId={scoreId} englishName={englishName} />
+        <ScoreEditModal setIsEditModalOpen={setIsEditModalOpen} scoreId={scoreId} categoryType={englishName} />
       ) : isAddModalOpen ? (
         <ScoreAddModal setIsAddModalOpen={setIsAddModalOpen} categoryType={englishName} />
       ) : (
@@ -54,7 +60,7 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                         </p>
                       </div>
                       <div className="flex items-center gap-[0.75rem]">
-                        <Button variant="border" className="w-auto px-[0.75rem] py-[0.125rem]" onClick={() => { setIsEditModalOpen(true); setScoreId(score.scoreId); setEnglishName(score.categoryNames.englishName); }}>
+                        <Button variant="border" className="w-auto px-[0.75rem] py-[0.125rem]" onClick={() => { handleEditClick(score.scoreId, score.categoryNames.englishName); }}>
                           수정
                         </Button>
                       </div>
