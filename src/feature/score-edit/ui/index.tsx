@@ -38,8 +38,6 @@ export default function ScoreEditForm({ scoreData, category, setIsEditModalOpen 
 
   return (
     <form action={formAction} className="flex min-w-[400px] flex-col gap-4">
-      <h2 className="mb-4 text-xl font-bold">{category.koreanName} 수정</h2>
-
       <input type="hidden" name="categoryType" value={category.englishName} />
       <input type="hidden" name="evidenceType" value={category.evidenceType} />
       <Input
