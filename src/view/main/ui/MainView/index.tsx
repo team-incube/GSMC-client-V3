@@ -17,7 +17,7 @@ export default function MainView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: student } = useGetCurrentStudent();
   const { data: score } = useGetTotalScore({ includeApprovedOnly: true });
-  const { data: scoresByCategory } = useGetcoresByCategory({});
+  const { data: scoresByCategory } = useGetcoresByCategory({ status: 'APPROVED' });
   const { data: allProjects } = useGetProjects();
   const { data: searchedProjects } = useGetProjectBySearch({ title: searchKeyword, page: 0, size: 10 });
   const projects = searchKeyword ? searchedProjects : allProjects;
