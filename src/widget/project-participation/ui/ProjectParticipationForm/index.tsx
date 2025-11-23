@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 
 import { useGetProjectById } from '@/entities/project/model/useGetProjectById';
 import { handleProjectParticipation } from '@/feature/project-participation/lib/handleProjectParticipation';
-import { ParticipationProjectFormState } from '@/feature/project-participation/model/ParticipationProjectForm';
+import { ParticipationProjectFormValueType } from '@/feature/project-participation/model/ParticipationProjectSchema';
 import { createInitialState } from '@/shared/lib/createInitialState';
 import Button from '@/shared/ui/Button';
 import FileUploader from '@/shared/ui/FileUploader';
@@ -17,7 +17,7 @@ import Input from '@/shared/ui/Input';
 import Textarea from '@/shared/ui/Textarea';
 
 export default function ProjectParticipationForm() {
-  const [state, formAction, isPending] = useActionState(handleProjectParticipation, createInitialState<ParticipationProjectFormState>());
+  const [state, formAction, isPending] = useActionState(handleProjectParticipation, createInitialState<ParticipationProjectFormValueType>());
   const params = useParams();
   const router = useRouter();
 
@@ -29,7 +29,7 @@ export default function ProjectParticipationForm() {
     notFound();
   }
 
-  const { data: project } = useGetProjectById(projectId);
+  const { data: project } = useGetProjectById({ projectId });
 
   useEffect(() => {
     if (state.message) {
