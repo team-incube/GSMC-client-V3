@@ -32,14 +32,14 @@ export async function handleScoreValueEdit(
       };
     }
 
-    const response = await addScoreByategoryType({
+    await addScoreByategoryType({
       categoryType: result.data.categoryType,
       value: result.data.value,
       fileId: result.data.fileId || undefined,
     });
 
     return { status: 'success', message: '수정되었습니다.', fieldErrors: null, data: null };
-  } catch (error) {
+  } catch {
     return { status: 'error', message: '수정에 실패했습니다.', fieldErrors: null, data: null };
   }
 }

@@ -36,7 +36,7 @@ export async function handleEvidenceEdit(
       };
     }
 
-    const response = await editEvidenceById({
+    await editEvidenceById({
       evidenceId: result.data.evidenceId,
       title: result.data.title,
       content: result.data.content,
@@ -44,7 +44,7 @@ export async function handleEvidenceEdit(
     });
 
     return { status: 'success', message: '수정되었습니다.', fieldErrors: null, data: null };
-  } catch (error) {
+  } catch {
     return { status: 'error', message: '수정에 실패했습니다.', fieldErrors: null, data: null };
   }
 }
