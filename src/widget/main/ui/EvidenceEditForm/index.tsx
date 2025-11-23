@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { EvidenceType } from '@/entities/evidence/model/evidence';
@@ -21,17 +22,20 @@ interface EvidenceEditFormProps {
 
 export default function EvidenceEditForm({ evidenceData, setIsEditModalOpen, categoryName }: EvidenceEditFormProps) {
   const [state, formAction, isPending] = useActionState(handleEvidenceEdit, createInitialState<EvidenceFormValueType>());
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (state.message) {
       if (state.status === 'success') {
         toast.success(state.message);
+        queryClient.invalidateQueries({ queryKey: ['evidence'] });
+        queryClient.invalidateQueries({ queryKey: ['score'] });
         setIsEditModalOpen(false);
       } else {
         toast.error(state.message);
       }
     }
-  }, [state, setIsEditModalOpen]);
+  }, [state, setIsEditModalOpen, queryClient]);
 
   return (
     <form action={formAction} className="flex min-w-[400px] flex-col gap-4">
@@ -39,8 +43,11 @@ export default function EvidenceEditForm({ evidenceData, setIsEditModalOpen, cat
 
       <input type="hidden" name="evidenceId" value={evidenceData.evidenceId} />
       <Input label="제목" name="title" defaultValue={evidenceData.title} />
+      <small className="pl-1 text-error">{state.fieldErrors?.title}</small>
       <Textarea label="내용" name="content" defaultValue={evidenceData.content} />
+      <small className="pl-1 text-error">{state.fieldErrors?.content}</small>
       <FileUploader label="증빙자료" name="fileIds" />
+      <small className="pl-1 text-error">{state.fieldErrors?.fileIds}</small>
 
       <div className="mt-6 flex gap-2">
         <Button type="button" variant="border" onClick={() => setIsEditModalOpen(false)}>
