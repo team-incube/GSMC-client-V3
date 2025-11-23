@@ -15,3 +15,8 @@ export const Category = {
 } as const;
 
 export type CategoryKey = keyof typeof Category;
+
+export interface CategoryNames {
+  englishName: string;
+  koreanName: string;
+}
