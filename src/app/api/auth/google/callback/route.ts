@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import axios from 'axios';
 
-import { AuthTokenResponse } from '@/feature/google-auth/model/AuthResponse';
+import { AuthTokenType } from '@/feature/google-auth/model/auth';
 import { setAuthCookies } from '@/shared/lib/cookie/setAuthCookie';
 
 export async function POST(request: NextRequest) {
@@ -15,10 +15,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 백엔드 API 호출 - 디코딩된 code 전송
-    const response = await axios.post<AuthTokenResponse>(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth`,
-      { code },
-    );
+    const response = await axios.post<AuthTokenType>(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
+      code,
+    });
 
     // 토큰과 역할 추출
     const { accessToken, refreshToken, role } = response.data.data;

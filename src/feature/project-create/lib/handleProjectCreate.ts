@@ -3,33 +3,29 @@
 import { isAxiosError } from 'axios';
 import z from 'zod';
 
-import { ActionState } from '@/shared/type/actionState';
+import { createProject } from '@/entities/project/api/createProject';
+import getNumericArrayFromFormData from '@/shared/lib/getNumericArrayFromFormData';
+import { ActionState } from '@/shared/model/actionState';
 
-import { createProject } from '../api/createProject';
-import { CreateProjectFormState } from '../model/CreateProjectInitForm';
-import { CreateProjectSchema } from '../model/CreateProjectSchema';
+import { CreateProjectFormValueType, CreateProjectSchema } from '../model/CreateProjectSchema';
 
 export async function handleProjectCreate(
-  prevState: ActionState<CreateProjectFormState>,
+  _prevState: ActionState<CreateProjectFormValueType>,
   formData: FormData,
-): Promise<ActionState<CreateProjectFormState>> {
+): Promise<ActionState<CreateProjectFormValueType>> {
   const participantIds = formData
     .getAll('participantIds')
     .map(String)
     .map(Number)
     .filter((n) => !isNaN(n));
 
-  const fileIds = formData
-    .getAll('fileIds')
-    .map(String)
-    .map(Number)
-    .filter((n) => !isNaN(n));
+  const fileIds = getNumericArrayFromFormData({ formData, key: 'fileIds' });
 
-  const currentData: CreateProjectFormState = {
+  const currentData: CreateProjectFormValueType = {
     title: String(formData.get('title') ?? '').trim(),
     description: String(formData.get('description') ?? '').trim(),
     fileIds: fileIds.length ? fileIds : null,
-    participantIds: participantIds.length ? participantIds : null,
+    participantIds: participantIds,
   };
 
   const result = CreateProjectSchema.safeParse(currentData);

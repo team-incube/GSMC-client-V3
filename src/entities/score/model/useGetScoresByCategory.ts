@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getScoresByCategory, GetScoresByCategoryParams } from '../api/getScoresByCategory';
+import { getScoresByCategory, getScoresByCategoryRequest } from '../api/getScoresByCategory';
 
-export const useGetcoresByCategory = (params: GetScoresByCategoryParams) => {
+export const useGetcoresByCategory = (params: getScoresByCategoryRequest) => {
   return useQuery({
-    queryKey: ['score', 'list', 'category'],
+    queryKey: ['score', 'list', 'category', params],
     queryFn: () => getScoresByCategory(params),
   });
 };

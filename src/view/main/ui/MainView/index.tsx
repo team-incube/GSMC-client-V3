@@ -10,11 +10,13 @@ import { useGetCurrentStudent } from "@/entities/student/model/useGetCurrentStud
 import Button from "@/shared/ui/Button";
 import ProjectPost from "@/shared/ui/ProjectPost";
 import SearchBar from "@/shared/ui/SearchBar";
+import ScoreManagementModal from "@/widget/main/ui/ScoreManagementModal";
 
 export default function MainView() {
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: student } = useGetCurrentStudent();
-  const { data: score } = useGetTotalScore();
+  const { data: score } = useGetTotalScore({ includeApprovedOnly: true });
   const { data: scoresByCategory } = useGetcoresByCategory({ status: 'APPROVED' });
   const { data: allProjects } = useGetProjects();
   const { data: searchedProjects } = useGetProjectBySearch({ title: searchKeyword, page: 0, size: 10 });
@@ -22,7 +24,7 @@ export default function MainView() {
 
   return (
     <div className="flex flex-col w-full">
-
+      {isModalOpen ? <ScoreManagementModal setIsModalOpen={setIsModalOpen} /> : null}
       <section className="flex justify-start w-full">
         <div className="flex flex-col font-semibold w-72 h-[145px] gap-[27px]">
           <div className="flex items-baseline gap-3">
@@ -39,19 +41,23 @@ export default function MainView() {
       </section>
 
       <section className="mt-[3.63rem]">
-        <div className="w-full h-[445px] relative overflow-hidden rounded-[20px] bg-[#dfeafe]">
+        <div className="w-full rounded-2xl bg-main-100 overflow-hidden">
 
-          <div className="flex justify-between items-center py-[1.5rem] bg-[#dfeafe] px-[2.25rem]">
-            <p className="text-2xl font-semibold text-[#385b97]">내 점수</p>
-            <Button variant="active" className="w-auto px-[22px] py-[13px] text-lg font-semibold text-center">
+          <div className="flex justify-between items-center py-[1.5rem] bg-main-100 px-[2.25rem]">
+            <h3 className="text-2xl font-semibold text-main-700">내 점수</h3>
+            <Button
+              variant="active"
+              onClick={() => setIsModalOpen(true)}
+              className="w-auto px-[22px] py-[13px] text-lg font-semibold text-center"
+            >
               점수 수정
             </Button>
           </div>
 
-          <div className="flex flex-col justify-start items-start h-full overflow-y-scroll rounded-xl px-[2.25rem]">
-            <div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 w-full bg-white rounded-xl">
+          <div className="flex h-full rounded-xl px-[2.25rem]">
+            <div className="flex flex-col justify-start items-start w-full max-h-100 overflow-y-auto rounded-xl bg-white">
               {scoresByCategory?.map((category) => (
-                <article key={category.categoryType} className="flex justify-between items-center self-stretch flex-grow-0 flex-shrink-0 px-8 py-6">
+                <article key={category.categoryType} className="flex justify-between items-center w-full px-8 py-6">
                   <p className="text-lg font-semibold text-center text-[#68696c]">{category.categoryNames.koreanName}</p>
                   <p className="text-lg font-semibold text-center text-[#68696c]">{category.recognizedScore}점</p>
                 </article>

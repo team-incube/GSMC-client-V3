@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getProjectById } from '../api/getProjectById';
+import { getProjectById, getProjectByIdRequest } from '../api/getProjectById';
 
-export const useGetProjectById = (projectId: number) => {
+export const useGetProjectById = ({ projectId }: getProjectByIdRequest) => {
   return useQuery({
     queryKey: ['project', projectId],
-    queryFn: () => getProjectById(projectId),
+    queryFn: () => getProjectById({ projectId }),
     enabled: !!projectId,
   });
 };
