@@ -8,7 +8,7 @@ export interface ScoreType {
   categoryNames: CategoryNames;
   scoreStatus: ScoreStatus;
   activityName: string;
-  evidence: EvidenceType[] | null;
+  evidence: EvidenceType | null;
   scoreValue: number;
   rejectionReason: string | null;
 }
