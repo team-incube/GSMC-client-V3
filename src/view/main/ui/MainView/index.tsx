@@ -14,18 +14,17 @@ import ScoreManagementModal from "@/widget/main/ui/ScoreManagementModal";
 
 export default function MainView() {
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: student } = useGetCurrentStudent();
-  const { data: score } = useGetTotalScore();
+  const { data: score } = useGetTotalScore({ includeApprovedOnly: true });
   const { data: scoresByCategory } = useGetcoresByCategory({});
   const { data: allProjects } = useGetProjects();
   const { data: searchedProjects } = useGetProjectBySearch({ title: searchKeyword, page: 0, size: 10 });
   const projects = searchKeyword ? searchedProjects : allProjects;
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <div className="flex flex-col w-full">
-      <ScoreManagementModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      {isModalOpen ? <ScoreManagementModal setIsModalOpen={setIsModalOpen} /> : null}
       <section className="flex justify-start w-full">
         <div className="flex flex-col font-semibold w-72 h-[145px] gap-[27px]">
           <div className="flex items-baseline gap-3">
