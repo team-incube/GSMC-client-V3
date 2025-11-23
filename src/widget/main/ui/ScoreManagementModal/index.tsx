@@ -56,6 +56,9 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                       </div>
                     </article>
                   ))}
+                  <button className="w-full flex items-center justify-center cursor-pointer py-4 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors border-t border-gray-100">
+                    <span className="text-body2 font-medium">추가</span>
+                  </button>
                 </div>
               ))}
             </section>
