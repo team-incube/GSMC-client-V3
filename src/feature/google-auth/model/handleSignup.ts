@@ -6,14 +6,13 @@ import z from 'zod';
 import { ActionState } from '@/shared/type/actionState';
 
 import { postSignup } from '../api/postSignup';
-import { SignupFormState } from '../model/SignupInitForm';
-import { SignupSchema } from '../model/SignupSchema';
+import { SignupFormType, SignupSchema } from '../model/SignupSchema';
 
 export async function handleSignup(
-  prevState: ActionState<SignupFormState>,
+  prevState: ActionState<SignupFormType>,
   formData: FormData,
-): Promise<ActionState<SignupFormState>> {
-  const currentData: SignupFormState = {
+): Promise<ActionState<SignupFormType>> {
+  const currentData: SignupFormType = {
     name: String(formData.get('name') ?? '').trim(),
     studentNumber: Number(formData.get('studentNumber')),
   };

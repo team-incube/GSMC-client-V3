@@ -6,14 +6,14 @@ import { useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
-import { handleSignup } from '@/feature/google-auth/lib/handleSignup';
-import { SignupFormState } from '@/feature/google-auth/model/SignupInitForm';
+import { handleSignup } from '@/feature/google-auth/model/handleSignup';
+import { SignupFormType } from '@/feature/google-auth/model/SignupSchema';
 import { createInitialState } from '@/shared/lib/createInitialState';
 import Button from '@/shared/ui/Button';
 import Input from '@/shared/ui/Input';
 
 export default function SignupForm() {
-  const [state, formAction, isPending] = useActionState(handleSignup, createInitialState<SignupFormState>());
+  const [state, formAction, isPending] = useActionState(handleSignup, createInitialState<SignupFormType>());
   const router = useRouter()
 
   useEffect(() => {
