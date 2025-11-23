@@ -8,13 +8,11 @@ export interface addScoreByCategoryTypeRequest {
   fileId?: number;
 }
 
-export const addScoreByategoryType = async ({
+export const addScoreByCategoryType = async ({
   categoryType,
   value,
   fileId,
 }: addScoreByCategoryTypeRequest): Promise<ScoreType> => {
-  const response = await instance.post(`/scores/${categoryType}`, {
-    params: { value, fileId },
-  });
-  return response.data.data;
+  const response = await instance.post(`/scores/${categoryType}`, { value, fileId });
+  return response.data;
 };
