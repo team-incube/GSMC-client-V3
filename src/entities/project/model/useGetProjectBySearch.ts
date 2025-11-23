@@ -7,5 +7,6 @@ export const useGetProjectBySearch = (params: getProjectBySearchRequest) => {
     queryKey: ['project', 'list', 'search', params.title],
     queryFn: () => getProjectBySearch(params),
     enabled: !!params.title?.trim(),
+    staleTime: 1 * 60 * 1000,
   });
 };

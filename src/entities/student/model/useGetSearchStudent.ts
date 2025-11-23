@@ -7,5 +7,6 @@ export const useGetSearchStudent = (params: getSearchStudentRequest) => {
     queryKey: ['student', 'search', params],
     queryFn: () => getSearchStudent(params),
     enabled: !!params.name?.trim(),
+    staleTime: 1 * 60 * 1000,
   });
 };
