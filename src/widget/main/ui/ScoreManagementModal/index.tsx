@@ -46,7 +46,7 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                           "bg-error": score.scoreStatus === "PENDING",
                         })} />
                         <p className="text-body2">
-                          {score.activityName}
+                          {score.activityName || score.categoryNames.koreanName}
                         </p>
                       </div>
                       <div className="flex items-center gap-[0.75rem]">
