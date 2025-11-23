@@ -6,6 +6,5 @@ export const useGetProjects = () => {
   return useQuery({
     queryKey: ['project', 'list'],
     queryFn: getProjects,
-    refetchOnMount: true,
   });
 };
