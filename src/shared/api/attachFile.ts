@@ -1,4 +1,5 @@
 import { FileType } from '@/entities/file/model/file';
+
 import { instance } from '../lib/instance';
 
 export const attachFile = async (file: File): Promise<FileType> => {

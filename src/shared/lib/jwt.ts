@@ -1,5 +1,6 @@
+import { JWTPayload,jwtVerify } from 'jose';
+
 import { RoleType } from '@/entities/student/model/StudentSchema';
-import { jwtVerify, JWTPayload } from 'jose';
 
 const getSecretKey = () => {
   const secret = process.env.JWT_ACCESS_TOKEN_SECRET;

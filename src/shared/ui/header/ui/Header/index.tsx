@@ -1,10 +1,12 @@
 import Link from 'next/link';
-import { HEADER_NAV } from '../../config/navigation';
+
 import Bell from '@/shared/asset/svg/Bell';
+
+import { HEADER_NAV } from '../../config/navigation';
 
 export default function Header() {
   return (
-    <header className="flex h-[70px] w-full items-center justify-center border-b border-gray-100 bg-white">
+    <header className="flex h-[70px] w-full items-center justify-center border-b border-gray-100 bg-white sticky top-0 z-50">
       <div className="flex w-150 flex-shrink-0 flex-grow-0 items-center justify-between px-3 text-center">
         <Link href="/main" className="text-main-800 text-xl font-bold">
           GSMC

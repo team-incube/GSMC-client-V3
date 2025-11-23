@@ -1,9 +1,13 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { QueryProvider } from '@/shared/lib/query';
-import { Toaster } from 'sonner';
-import localFont from 'next/font/local'
 import { GoogleOAuthProvider } from '@react-oauth/google';
+
+import type { Metadata } from 'next';
+import localFont from 'next/font/local'
+
+import { Toaster } from 'sonner';
+
+import { QueryProvider } from '@/shared/lib/query';
+
+import './globals.css';
 
 const pretendard = localFont({
   src: '../shared/asset/fonts/pretendard/PretendardVariable.woff2',

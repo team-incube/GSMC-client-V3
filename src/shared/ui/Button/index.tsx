@@ -17,6 +17,7 @@ const VARIANT_STYLE = {
 export default function Button({
   children,
   variant = 'active',
+  className,
   ...props
 }: ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
@@ -24,6 +25,7 @@ export default function Button({
       className={cn(
         'text-body1 flex w-full cursor-pointer items-center justify-center rounded-xl py-3',
         VARIANT_STYLE[variant],
+        className,
       )}
       {...props}
     >

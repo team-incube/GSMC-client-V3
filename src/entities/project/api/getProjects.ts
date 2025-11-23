@@ -1,4 +1,5 @@
 import { instance } from '@/shared/lib/instance';
+
 import { ProjectType } from '../model/project';
 
 export const getProjects = async (): Promise<ProjectType[]> => {

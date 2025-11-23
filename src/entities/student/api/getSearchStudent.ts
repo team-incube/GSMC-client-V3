@@ -1,4 +1,5 @@
 import { instance } from '@/shared/lib/instance';
+
 import type { RoleType, StudentType } from '../model/StudentSchema';
 
 export interface GetSearchStudentParams {

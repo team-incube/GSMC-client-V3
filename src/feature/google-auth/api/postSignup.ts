@@ -1,4 +1,5 @@
 import { instance } from '@/shared/lib/instance';
+
 import { SignupFormValueType } from '../model/SignupSchema';
 
 export const postSignup = async ({ name, studentNumber }: SignupFormValueType) => {
