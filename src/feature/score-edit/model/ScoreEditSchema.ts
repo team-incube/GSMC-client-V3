@@ -1,7 +1,7 @@
 import z from 'zod';
 
 export const ScoreEditSchema = z.object({
-  categoryType: z.string(),
+  categoryType: z.string().lowercase(),
   evidenceType: z.enum(['EVIDENCE', 'FILE', 'UNREQUIRED']),
   evidenceId: z.number(),
   title: z.string().min(1, '제목을 입력해주세요.'),
@@ -22,7 +22,19 @@ export const ScoreFormSchema = ScoreEditSchema.pick({
   categoryType: true,
   value: true,
   fileId: true,
-});
+  evidenceType: true,
+}).refine(
+  (data) => {
+    if (data.evidenceType === 'FILE' && !data.fileId) {
+      return false;
+    }
+    return true;
+  },
+  {
+    message: '파일을 첨부해주세요.',
+    path: ['fileId'],
+  },
+);
 
 export type ScoreEditFormValueType = z.infer<typeof ScoreEditSchema>;
 
