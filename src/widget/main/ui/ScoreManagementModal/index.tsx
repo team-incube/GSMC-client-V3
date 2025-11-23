@@ -5,6 +5,7 @@ import { cn } from "@/shared/lib/cn";
 import Button from "@/shared/ui/Button";
 import ModalWrapper from "@/shared/ui/ModalWrapper";
 
+import ScoreAddModal from "../ScoreAddModal";
 import ScoreEditModal from "../ScoreEditModal";
 
 interface ScoreManagementModalProps {
@@ -14,6 +15,7 @@ interface ScoreManagementModalProps {
 export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagementModalProps) {
   const { data: scoresByCategory } = useGetcoresByCategory({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [scoreId, setScoreId] = useState<number>(0);
   const [englishName, setEnglishName] = useState<string>('');
 
@@ -21,6 +23,8 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
     <div>
       {isEditModalOpen ? (
         <ScoreEditModal setIsEditModalOpen={setIsEditModalOpen} scoreId={scoreId} englishName={englishName} />
+      ) : isAddModalOpen ? (
+        <ScoreAddModal setIsAddModalOpen={setIsAddModalOpen} categoryType={englishName} />
       ) : (
         <ModalWrapper>
           <div className="flex flex-col justify-center gap-10 w-150 overflow-hidden">
@@ -42,8 +46,8 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                       <div className="flex items-center gap-[0.75rem]">
                         <div className={cn("w-2 h-2 aspect-square rounded-full", {
                           "bg-main-500": score.scoreStatus === "APPROVED",
-                          "bg-gray-600": score.scoreStatus === "REJECTED",
-                          "bg-error": score.scoreStatus === "PENDING",
+                          "bg-gray-600": score.scoreStatus === "PENDING",
+                          "bg-error": score.scoreStatus === "REJECTED",
                         })} />
                         <p className="text-body2">
                           {score.activityName || score.categoryNames.koreanName}
@@ -56,7 +60,10 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                       </div>
                     </article>
                   ))}
-                  <button className="w-full flex items-center justify-center cursor-pointer py-4 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors border-t border-gray-100">
+                  <button
+                    className="w-full flex items-center justify-center cursor-pointer py-4 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors border-t border-gray-100"
+                    onClick={() => { setIsAddModalOpen(true); setEnglishName(category.categoryType); }}
+                  >
                     <span className="text-body2 font-medium">추가</span>
                   </button>
                 </div>
