@@ -1,8 +1,9 @@
-import { EvidenceType } from '@/shared/api/getCategories';
 import { instance } from '@/shared/lib/instance';
 
+import { EvidenceType } from '../model/evidence';
+
 export interface getScoreByIdRequest {
-  evidenceId: string;
+  evidenceId: number;
 }
 
 export const getEvidenceById = async ({
