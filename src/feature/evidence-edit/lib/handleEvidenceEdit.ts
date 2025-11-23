@@ -7,6 +7,7 @@ import {
   EvidenceFormSchema,
   EvidenceFormValueType,
 } from '@/feature/score-edit/model/ScoreEditSchema';
+import getNumericArrayFromFormData from '@/shared/lib/getNumericArrayFromFormData';
 import { ActionState } from '@/shared/model/actionState';
 
 export async function handleEvidenceEdit(
@@ -14,11 +15,7 @@ export async function handleEvidenceEdit(
   formData: FormData,
 ): Promise<ActionState<EvidenceFormValueType>> {
   try {
-    const fileIds = formData
-      .getAll('fileIds')
-      .map(String)
-      .map(Number)
-      .filter((n) => !isNaN(n));
+    const fileIds = getNumericArrayFromFormData({ formData, key: 'fileIds' });
 
     const currentData: EvidenceFormValueType = {
       evidenceId: Number(formData.get('evidenceId')),

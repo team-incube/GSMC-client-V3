@@ -3,6 +3,7 @@ import z from 'zod';
 
 import { addEvidence } from '@/entities/evidence/api/addEvidence';
 import { addProjectScore } from '@/entities/score/api/addProjectScore';
+import getNumericArrayFromFormData from '@/shared/lib/getNumericArrayFromFormData';
 import { ActionState } from '@/shared/model/actionState';
 
 import {
@@ -14,11 +15,7 @@ export const handleProjectParticipation = async (
   _prevState: ActionState<ParticipationProjectFormValueType>,
   formData: FormData,
 ): Promise<ActionState<ParticipationProjectFormValueType>> => {
-  const fileIds = formData
-    .getAll('fileIds')
-    .map(String)
-    .map(Number)
-    .filter((n) => !isNaN(n));
+  const fileIds = getNumericArrayFromFormData({ formData, key: 'fileIds' });
 
   const currentData: ParticipationProjectFormValueType = {
     projectId: Number(formData.get('projectId')),

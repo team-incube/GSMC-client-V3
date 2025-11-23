@@ -4,6 +4,7 @@ import { isAxiosError } from 'axios';
 import z from 'zod';
 
 import { createProject } from '@/entities/project/api/createProject';
+import getNumericArrayFromFormData from '@/shared/lib/getNumericArrayFromFormData';
 import { ActionState } from '@/shared/model/actionState';
 
 import { CreateProjectFormValueType, CreateProjectSchema } from '../model/CreateProjectSchema';
@@ -18,11 +19,7 @@ export async function handleProjectCreate(
     .map(Number)
     .filter((n) => !isNaN(n));
 
-  const fileIds = formData
-    .getAll('fileIds')
-    .map(String)
-    .map(Number)
-    .filter((n) => !isNaN(n));
+  const fileIds = getNumericArrayFromFormData({ formData, key: 'fileIds' });
 
   const currentData: CreateProjectFormValueType = {
     title: String(formData.get('title') ?? '').trim(),
