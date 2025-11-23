@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 import { CategoryType } from '@/entities/category/model/category';
 import { ScoreType } from '@/entities/score/model/score';
-import { handleScoreValueEdit } from '@/feature/score-edit/lib/handleScoreEdit';
+import { handleScoreEdit } from '@/feature/score-edit/lib/handleScoreEdit';
 import { ScoreFormValueType } from '@/feature/score-edit/model/ScoreEditSchema';
 import { createInitialState } from '@/shared/lib/createInitialState';
 import Button from '@/shared/ui/Button';
@@ -21,7 +21,7 @@ interface ScoreValueEditFormProps {
 }
 
 export default function ScoreEditForm({ scoreData, category, setIsEditModalOpen }: ScoreValueEditFormProps) {
-  const [state, formAction, isPending] = useActionState(handleScoreValueEdit, createInitialState<ScoreFormValueType>());
+  const [state, formAction, isPending] = useActionState(handleScoreEdit, createInitialState<ScoreFormValueType>());
   const queryClient = useQueryClient();
 
   useEffect(() => {

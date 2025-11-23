@@ -8,7 +8,7 @@ import { ActionState } from '@/shared/model/actionState';
 
 import { ScoreFormSchema, ScoreFormValueType } from '../model/ScoreEditSchema';
 
-export async function handleScoreValueEdit(
+export async function handleScoreEdit(
   _prevState: ActionState<ScoreFormValueType>,
   formData: FormData,
 ): Promise<ActionState<ScoreFormValueType>> {
