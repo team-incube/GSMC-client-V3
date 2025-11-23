@@ -6,12 +6,12 @@ import { addScoreByCategoryType } from '@/shared/api/addScoreByCategoryType';
 import { ActionState } from '@/shared/type/actionState';
 import { CategoryEndpoint, CategoryKey } from '@/shared/type/category';
 
-import { ScoreFormSchema, ScoreFormValueType } from '../model/ScoreEditSchema';
+import { ScoreAddFormValueType, ScoreAddSchema } from '../model/ScoreAddSchema';
 
-export async function handleScoreValueEdit(
-  _prevState: ActionState<ScoreFormValueType>,
+export const handleScoreAdd = async (
+  _prevState: ActionState<ScoreAddFormValueType>,
   formData: FormData,
-): Promise<ActionState<ScoreFormValueType>> {
+): Promise<ActionState<ScoreAddFormValueType>> => {
   try {
     const fileIdRaw = formData.get('fileId');
     const fileId = fileIdRaw ? Number(fileIdRaw) : null;
@@ -20,14 +20,14 @@ export async function handleScoreValueEdit(
     const categoryEndpoint =
       CategoryEndpoint[categoryTypeInput as CategoryKey] || categoryTypeInput.toLocaleLowerCase();
 
-    const currentData: ScoreFormValueType = {
+    const currentData: ScoreAddFormValueType = {
       categoryType: categoryEndpoint,
       value: String(formData.get('value') ?? '').trim(),
       fileId: fileId,
       evidenceType: formData.get('evidenceType') as 'EVIDENCE' | 'FILE' | 'UNREQUIRED',
     };
 
-    const result = ScoreFormSchema.safeParse(currentData);
+    const result = ScoreAddSchema.safeParse(currentData);
 
     if (!result.success) {
       return {
@@ -44,8 +44,18 @@ export async function handleScoreValueEdit(
       fileId: result.data.fileId || undefined,
     });
 
-    return { status: 'success', message: '수정되었습니다.', fieldErrors: null, data: null };
-  } catch {
-    return { status: 'error', message: '수정에 실패했습니다.', fieldErrors: null, data: null };
+    return {
+      status: 'success',
+      message: '점수가 성공적으로 추가되었습니다.',
+      fieldErrors: null,
+      data: null,
+    };
+  } catch (error) {
+    return {
+      status: 'error',
+      message: '점수 추가에 실패했습니다.',
+      fieldErrors: null,
+      data: null,
+    };
   }
-}
+};
