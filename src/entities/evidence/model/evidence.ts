@@ -6,5 +6,5 @@ export interface EvidenceType {
   content: string;
   createdAt: string;
   updatedAt: string;
-  fileIds: FileType[] | null;
+  files: FileType[] | null;
 }
