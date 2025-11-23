@@ -1,6 +1,12 @@
 import { instance } from '@/shared/lib/instance';
 
-export const getScoreById = async (scoreId: number) => {
+import { ScoreType } from '../model/score';
+
+export interface getScoreByIdRequest {
+  scoreId: number;
+}
+
+export const getScoreById = async ({ scoreId }: getScoreByIdRequest): Promise<ScoreType> => {
   const response = await instance.get(`/scores/${scoreId}`);
-  return response.data;
+  return response.data.data;
 };
