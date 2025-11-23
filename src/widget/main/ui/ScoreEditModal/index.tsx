@@ -47,7 +47,6 @@ export default function ScoreEditModal({ setIsEditModalOpen, scoreId, englishNam
         <ScoreEditForm
           scoreData={scoreData}
           category={category}
-          englishName={englishName}
           setIsEditModalOpen={setIsEditModalOpen}
         />
       )}
