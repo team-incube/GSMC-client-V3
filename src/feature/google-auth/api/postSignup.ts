@@ -1,8 +1,8 @@
 import { instance } from '@/shared/lib/instance';
 
-import { SignupFormValueType } from '../model/SignupSchema';
+import { SignupFormType } from '../model/SignupSchema';
 
-export const postSignup = async ({ name, studentNumber }: SignupFormValueType) => {
+export const postSignup = async ({ name, studentNumber }: SignupFormType) => {
   const response = await instance.post('/auth/signup', {
     name,
     studentNumber,
