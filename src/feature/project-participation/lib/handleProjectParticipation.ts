@@ -1,31 +1,33 @@
 import { HttpStatusCode, isAxiosError } from 'axios';
 import z from 'zod';
 
-import { EvidenceSchema } from '@/entities/evidence/model/EvidenceSchema';
 import { addEvidence } from '@/shared/api/addEvidence';
 import { ActionState } from '@/shared/type/actionState';
 
 import { addProjectScore } from '../api/addProjectScore';
-import { ParticipationProjectFormState } from '../model/ParticipationProjectForm';
+import {
+  ParticipationProjectFormValueType,
+  ParticipationProjectSchema,
+} from '../model/ParticipationProjectSchema';
 
 export const handleProjectParticipation = async (
-  _prevState: ActionState<ParticipationProjectFormState>,
+  _prevState: ActionState<ParticipationProjectFormValueType>,
   formData: FormData,
-): Promise<ActionState<ParticipationProjectFormState>> => {
+): Promise<ActionState<ParticipationProjectFormValueType>> => {
   const fileIds = formData
     .getAll('fileIds')
     .map(String)
     .map(Number)
     .filter((n) => !isNaN(n));
 
-  const currentData: ParticipationProjectFormState = {
+  const currentData: ParticipationProjectFormValueType = {
     projectId: Number(formData.get('projectId')),
     title: String(formData.get('title') ?? '').trim(),
     content: String(formData.get('content') ?? '').trim(),
     fileIds: fileIds.length ? fileIds : null,
   };
 
-  const result = EvidenceSchema.safeParse(currentData);
+  const result = ParticipationProjectSchema.safeParse(currentData);
 
   if (!result.success) {
     return {
