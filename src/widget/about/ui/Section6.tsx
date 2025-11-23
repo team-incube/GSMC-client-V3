@@ -1,4 +1,4 @@
-import { scoreData, cumulativeData, yearData } from '@/view/about/mock/aboutData';
+import { cumulativeData, scoreData, yearData } from '@/view/about/mock/aboutData';
 
 export default function Section6() {
   return (

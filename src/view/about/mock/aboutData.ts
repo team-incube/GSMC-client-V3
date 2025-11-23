@@ -1,9 +1,9 @@
-import Trophy from '@/shared/asset/svg/Trophy';
 import Book from '@/shared/asset/svg/Book';
 import File from '@/shared/asset/svg/File';
 import Language from '@/shared/asset/svg/Language';
 import People from '@/shared/asset/svg/People';
 import Stars from '@/shared/asset/svg/Stars';
+import Trophy from '@/shared/asset/svg/Trophy';
 
 export const evaluationData = [
   {

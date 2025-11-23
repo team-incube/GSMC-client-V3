@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 import airplane from '@/shared/asset/img/airplane.png';
 
 export default function Section2() {
