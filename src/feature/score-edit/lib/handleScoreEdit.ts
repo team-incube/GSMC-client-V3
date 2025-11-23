@@ -2,7 +2,7 @@
 
 import z from 'zod';
 
-import { addScoreByategoryType } from '@/shared/api/addScoreByCategoryType';
+import { addScoreByCategoryType } from '@/shared/api/addScoreByCategoryType';
 import { ActionState } from '@/shared/type/actionState';
 
 import { ScoreFormSchema, ScoreFormValueType } from '../model/ScoreEditSchema';
@@ -16,9 +16,10 @@ export async function handleScoreValueEdit(
     const fileId = fileIdRaw ? Number(fileIdRaw) : null;
 
     const currentData: ScoreFormValueType = {
-      categoryType: String(formData.get('categoryType') ?? ''),
+      categoryType: String(formData.get('categoryType') ?? '').toLocaleLowerCase(),
       value: String(formData.get('value') ?? '').trim(),
       fileId: fileId,
+      evidenceType: formData.get('evidenceType') as 'EVIDENCE' | 'FILE' | 'UNREQUIRED',
     };
 
     const result = ScoreFormSchema.safeParse(currentData);
@@ -32,7 +33,7 @@ export async function handleScoreValueEdit(
       };
     }
 
-    await addScoreByategoryType({
+    await addScoreByCategoryType({
       categoryType: result.data.categoryType,
       value: result.data.value,
       fileId: result.data.fileId || undefined,
