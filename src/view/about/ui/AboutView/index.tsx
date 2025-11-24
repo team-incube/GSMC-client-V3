@@ -9,7 +9,7 @@ import Section6 from '@/widget/about/ui/Section6';
 
 export default function AboutView() {
   return (
-    <div className="flex flex-col">
+    <div className="flex w-full flex-col">
       <Section1 />
       <Section2 />
       <Section3 />
