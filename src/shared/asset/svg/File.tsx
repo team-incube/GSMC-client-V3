@@ -1,0 +1,24 @@
+interface FileProps {
+  width?: number;
+  height?: number;
+  color?: string;
+  className?: string;
+}
+
+export default function File({ width = 60, height = 80, color = 'black', className }: FileProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 60 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M60 70V22.5L37.5 0H10C7.34784 0 4.8043 1.05357 2.92893 2.92893C1.05357 4.8043 0 7.34784 0 10V70C0 72.6522 1.05357 75.1957 2.92893 77.0711C4.8043 78.9464 7.34784 80 10 80H50C52.6522 80 55.1957 78.9464 57.0711 77.0711C58.9464 75.1957 60 72.6522 60 70ZM37.5 15C37.5 16.9891 38.2902 18.8968 39.6967 20.3033C41.1032 21.7098 43.0109 22.5 45 22.5H55V70C55 71.3261 54.4732 72.5979 53.5355 73.5355C52.5979 74.4732 51.3261 75 50 75H10C8.67392 75 7.40215 74.4732 6.46447 73.5355C5.52678 72.5979 5 71.3261 5 70V10C5 8.67392 5.52678 7.40215 6.46447 6.46447C7.40215 5.52678 8.67392 5 10 5H37.5V15Z"
+        fill={color}
+      />
+    </svg>
+  );
+}

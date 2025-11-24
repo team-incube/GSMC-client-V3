@@ -27,14 +27,14 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Build
-        run: npm run build --if-present
-
       - name: Test
         run: npm test --if-present
 
       - name: Lint
         run: npm run lint --if-present
+
+      - name: Build
+        run: npm run build --if-present
 
       - name: GSMC-front CI Discord Notification (success)
         if: ${{ success() }}
