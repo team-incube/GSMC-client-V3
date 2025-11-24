@@ -11,7 +11,7 @@ interface FileUploaderProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 export default function FileUploader({ label, name, ...props }: FileUploaderProps) {
-  const { attachFile, loading, uploadedFileIds, removeFileId } = useAttachFile();
+  const { mutate, isPending } = useAttachFile();
   const [files, setFiles] = useState<Array<{ id: number; name: string }>>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -24,7 +24,7 @@ export default function FileUploader({ label, name, ...props }: FileUploaderProp
     if (!selectedFiles) return;
 
     for (const file of Array.from(selectedFiles)) {
-      attachFile(file, {
+      mutate(file, {
         onSuccess: (data) => {
           if (data?.id) {
             setFiles((prev) => [...prev, { id: data.id, name: file.name }]);
@@ -37,7 +37,6 @@ export default function FileUploader({ label, name, ...props }: FileUploaderProp
 
   const handleRemoveFile = (id: number) => {
     setFiles((prev) => prev.filter((file) => file.id !== id));
-    removeFileId(id);
   };
 
   return (
@@ -47,7 +46,7 @@ export default function FileUploader({ label, name, ...props }: FileUploaderProp
         <div
           role="button"
           tabIndex={0}
-          className={`focus:ring-main-500 flex ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} items-center gap-2 rounded-xl border border-gray-300 p-3 hover:border-gray-300 focus:outline-none`}
+          className={`focus:ring-main-500 flex ${isPending ? 'cursor-not-allowed' : 'cursor-pointer'} items-center gap-2 rounded-xl border border-gray-300 p-3 hover:border-gray-300 focus:outline-none`}
           onClick={openFileDialog}
         >
           <span className="text-gray-400">
@@ -56,12 +55,12 @@ export default function FileUploader({ label, name, ...props }: FileUploaderProp
           <span
             className="max-w-[220px] truncate text-sm text-gray-400"
             aria-live="polite"
-            title={loading ? '파일 업로드 중...' : `${files.length}개의 파일 첨부됨`}
+            title={isPending ? '파일 업로드 중...' : `${files.length}개의 파일 첨부됨`}
           >
-            {loading ? '파일 업로드 중...' : (files.length > 0 ? `${files.length}개의 파일 첨부됨` : '파일 첨부')}
+            {isPending ? '파일 업로드 중...' : (files.length > 0 ? `${files.length}개의 파일 첨부됨` : '파일 첨부')}
           </span>
           <input
-            disabled={loading}
+            disabled={isPending}
             ref={inputRef}
             type="file"
             className="hidden"
@@ -90,12 +89,12 @@ export default function FileUploader({ label, name, ...props }: FileUploaderProp
       </div>
 
       <div className="hidden">
-        {uploadedFileIds.map((id) => (
+        {files.map((file) => (
           <input
-            key={id}
-            type="hidden"
+            key={file.id}
+            value={file.id}
             name={name}
-            value={id}
+            type="hidden"
             readOnly
           />
         ))}
