@@ -41,7 +41,6 @@ export default function MainView() {
                 {score?.totalScore}점
               </p>
             </div>
-            <p className="text-2xl text-black">입니다.</p>
           </div>
         </div>
       </section>
@@ -65,38 +64,6 @@ export default function MainView() {
                 <article
                   key={category.categoryType}
                   className="flex w-full items-center justify-between px-8 py-6"
-                >
-                  <p className="text-center text-lg font-semibold text-[#68696c]">
-                    {category.categoryNames.koreanName}
-                  </p>
-                  <p className="text-center text-lg font-semibold text-[#68696c]">
-                    {category.recognizedScore}점
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-[3.63rem]">
-        <div className="relative h-[445px] w-full overflow-hidden rounded-[20px] bg-[#dfeafe]">
-          <div className="flex items-center justify-between bg-[#dfeafe] px-[2.25rem] py-[1.5rem]">
-            <p className="text-2xl font-semibold text-[#385b97]">내 점수</p>
-            <Button
-              variant="active"
-              className="w-auto px-[22px] py-[13px] text-center text-lg font-semibold"
-            >
-              점수 수정
-            </Button>
-          </div>
-
-          <div className="flex h-full flex-col items-start justify-start overflow-y-scroll rounded-xl px-[2.25rem]">
-            <div className="flex w-full flex-shrink-0 flex-grow-0 flex-col items-start justify-start rounded-xl bg-white">
-              {scoresByCategory?.map((category) => (
-                <article
-                  key={category.categoryType}
-                  className="flex flex-shrink-0 flex-grow-0 items-center justify-between self-stretch px-8 py-6"
                 >
                   <p className="text-center text-lg font-semibold text-[#68696c]">
                     {category.categoryNames.koreanName}

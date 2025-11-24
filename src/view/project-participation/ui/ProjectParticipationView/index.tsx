@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import ProjectParticipationForm from '@/widget/project-participation/ui/ProjectParticipationForm';
-=======
-import ProjectParticipationForm from "@/feature/project-participation/ui";
->>>>>>> 6f7704b64a88aa587f81589a4a602d8e2ca3672c
+import ProjectParticipationForm from '@/feature/project-participation/ui';
 
 export default function ProjectParticipationView() {
   return (
