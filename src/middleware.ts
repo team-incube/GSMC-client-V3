@@ -1,10 +1,9 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { RoleType } from './entities/student/model/StudentSchema';
+import { RoleType } from './entities/student/model/student';
 import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
 import { decodeTokenRole } from './shared/lib/jwt';
-
 
 export async function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);

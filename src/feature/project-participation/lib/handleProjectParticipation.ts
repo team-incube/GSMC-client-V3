@@ -1,31 +1,30 @@
 import { HttpStatusCode, isAxiosError } from 'axios';
 import z from 'zod';
 
-import { EvidenceSchema } from '@/entities/evidence/model/EvidenceSchema';
-import { addEvidence } from '@/shared/api/addEvidence';
-import { ActionState } from '@/shared/type/actionState';
+import { addEvidence } from '@/entities/evidence/api/addEvidence';
+import { addProjectScore } from '@/entities/score/api/addProjectScore';
+import getNumericArrayFromFormData from '@/shared/lib/getNumericArrayFromFormData';
+import { ActionState } from '@/shared/model/actionState';
 
-import { addProjectScore } from '../api/addProjectScore';
-import { ParticipationProjectFormState } from '../model/ParticipationProjectForm';
+import {
+  ParticipationProjectFormValueType,
+  ParticipationProjectSchema,
+} from '../model/ParticipationProjectSchema';
 
 export const handleProjectParticipation = async (
-  _prevState: ActionState<ParticipationProjectFormState>,
+  _prevState: ActionState<ParticipationProjectFormValueType>,
   formData: FormData,
-): Promise<ActionState<ParticipationProjectFormState>> => {
-  const fileIds = formData
-    .getAll('fileIds')
-    .map(String)
-    .map(Number)
-    .filter((n) => !isNaN(n));
+): Promise<ActionState<ParticipationProjectFormValueType>> => {
+  const fileIds = getNumericArrayFromFormData({ formData, key: 'fileIds' });
 
-  const currentData: ParticipationProjectFormState = {
+  const currentData: ParticipationProjectFormValueType = {
     projectId: Number(formData.get('projectId')),
     title: String(formData.get('title') ?? '').trim(),
     content: String(formData.get('content') ?? '').trim(),
     fileIds: fileIds.length ? fileIds : null,
   };
 
-  const result = EvidenceSchema.safeParse(currentData);
+  const result = ParticipationProjectSchema.safeParse(currentData);
 
   if (!result.success) {
     return {
@@ -38,7 +37,7 @@ export const handleProjectParticipation = async (
 
   try {
     const projectId = Number(formData.get('projectId'));
-    const scoreResponse = await addProjectScore(projectId);
+    const scoreResponse = await addProjectScore({ projectId });
 
     if (scoreResponse.code !== 200) {
       let errorMessage = '프로젝트 점수 추가에 실패했습니다.';

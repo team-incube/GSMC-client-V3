@@ -1,4 +1,4 @@
-import ProjectCreateForm from '@/widget/project-create/ui/ProjectCreateForm';
+import ProjectCreateForm from "@/feature/project-create/ui";
 
 export default function ProjectCreateView() {
   return (

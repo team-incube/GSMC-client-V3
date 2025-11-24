@@ -1,5 +1,5 @@
 import { FileType } from '@/entities/file/model/file';
-import { StudentType } from '@/entities/student/model/StudentSchema';
+import { StudentType } from '@/entities/student/model/student';
 
 export interface ProjectType {
   id: number;

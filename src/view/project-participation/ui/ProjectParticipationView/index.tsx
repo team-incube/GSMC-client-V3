@@ -1,4 +1,4 @@
-import ProjectParticipationForm from '@/widget/project-participation/ui/ProjectParticipationForm';
+import ProjectParticipationForm from "@/feature/project-participation/ui";
 
 export default function ProjectParticipationView() {
   return (

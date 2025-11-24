@@ -1,4 +1,4 @@
-import { ActionState } from '../type/actionState';
+import { ActionState } from '../model/actionState';
 
 export function createInitialState<T>(): ActionState<T> {
   return {

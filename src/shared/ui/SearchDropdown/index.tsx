@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { StudentType } from '@/entities/student/model/StudentSchema';
+import { StudentType } from '@/entities/student/model/student';
 import { useGetSearchStudent } from '@/entities/student/model/useGetSearchStudent';
 import SearchBar from '@/shared/ui/SearchBar';
 

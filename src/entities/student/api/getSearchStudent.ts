@@ -1,8 +1,8 @@
 import { instance } from '@/shared/lib/instance';
 
-import type { RoleType, StudentType } from '../model/StudentSchema';
+import { RoleType, StudentType } from '../model/student';
 
-export interface GetSearchStudentParams {
+export interface getSearchStudentRequest {
   name?: string;
   email?: string;
   grade?: string;
@@ -14,7 +14,7 @@ export interface GetSearchStudentParams {
   sortBy?: 'ASC' | 'DESC';
 }
 
-export const getSearchStudent = async (params: GetSearchStudentParams): Promise<StudentType[]> => {
+export const getSearchStudent = async (params: getSearchStudentRequest): Promise<StudentType[]> => {
   const response = await instance.get('/members/search', {
     params,
   });
