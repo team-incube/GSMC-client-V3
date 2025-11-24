@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import ProjectCreateForm from '@/widget/project-create/ui/ProjectCreateForm';
+=======
+import ProjectCreateForm from "@/feature/project-create/ui";
+>>>>>>> 6f7704b64a88aa587f81589a4a602d8e2ca3672c
 
 export default function ProjectCreateView() {
   return (

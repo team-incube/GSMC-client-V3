@@ -9,4 +9,4 @@ export const SignupSchema = z.object({
     .max(9999, '학번은 4자리 숫자여야 합니다.'),
 });
 
-export type SignupFormValueType = z.infer<typeof SignupSchema>;
+export type SignupFormType = z.infer<typeof SignupSchema>;

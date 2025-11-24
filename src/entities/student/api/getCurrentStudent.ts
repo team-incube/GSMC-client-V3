@@ -1,6 +1,6 @@
 import { instance } from '@/shared/lib/instance';
 
-import type { StudentType } from '../model/StudentSchema';
+import { StudentType } from '../model/student';
 
 export const getCurrentStudent = async (): Promise<StudentType> => {
   const response = await instance.get('/members/current');

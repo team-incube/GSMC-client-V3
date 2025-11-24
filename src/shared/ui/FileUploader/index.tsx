@@ -1,10 +1,10 @@
 'use client';
 
-import { useRef,useState } from 'react';
+import { useRef, useState } from 'react';
 import React from 'react';
 
+import { useAttachFile } from '@/entities/file/model/useAttachFile';
 import Chain from '@/shared/asset/svg/Chain';
-import { useAttachFile } from '@/shared/model/useAttachFile';
 
 interface FileUploaderProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
