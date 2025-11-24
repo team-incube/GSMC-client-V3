@@ -3,11 +3,13 @@
 import { useActionState } from 'react';
 import { useEffect } from 'react';
 
-import { notFound, useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
 import { useGetProjectById } from '@/entities/project/model/useGetProjectById';
+import { useGetScoreById } from '@/entities/score/model/useGetScoreById';
+import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
 import { handleProjectParticipation } from '@/feature/project-participation/lib/handleProjectParticipation';
 import { ParticipationProjectFormValueType } from '@/feature/project-participation/model/ParticipationProjectSchema';
 import { createInitialState } from '@/shared/lib/createInitialState';
@@ -25,13 +27,14 @@ export default function ProjectParticipationForm() {
 
   const rawId = Array.isArray(params.id) ? params.id[0] : params.id;
   const projectId = Number(rawId);
-  const isValidId = !isNaN(projectId) && projectId > 0;
-
-  if (!isValidId) {
-    notFound();
-  }
 
   const { data: project } = useGetProjectById({ projectId });
+
+  const { data: student } = useGetCurrentStudent();
+
+  const scoreId = project?.participants.find((p) => p.id === student?.id)?.scoreId;
+
+  const { data: score } = useGetScoreById({ scoreId })
 
   useEffect(() => {
     if (state.message) {
@@ -64,11 +67,11 @@ export default function ProjectParticipationForm() {
 
       <form className="flex flex-col w-full gap-16" action={formAction}>
         <div className="flex flex-col gap-6">
-          <Input name="title" placeholder="제목을 입력해주세요" label="제목" defaultValue={project?.title} readOnly />
+          <Input name="title" placeholder="제목을 입력해주세요" label="제목" defaultValue={score?.evidence?.title} />
           <small className="text-error pl-1">{state.fieldErrors?.title}</small>
-          <Textarea name="content" placeholder="프로젝트에서 했던 활동을 입력해주세요" label="내용" />
+          <Textarea name="content" placeholder="프로젝트에서 했던 활동을 입력해주세요" label="내용" defaultValue={score?.evidence?.content} />
           <small className="text-error pl-1">{state.fieldErrors?.content}</small>
-          <FileUploader name="fileIds" label="파일" placeholder="파일을 업로드해주세요" />
+          <FileUploader name="fileIds" label="파일" placeholder="파일을 업로드해주세요" uploadedFiles={score?.evidence?.files ?? undefined} isMultiple />
           <small className="text-error pl-1">{state.fieldErrors?.fileIds}</small>
           <Input name="projectId" type="hidden" value={projectId} readOnly />
         </div>
