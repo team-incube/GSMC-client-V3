@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 
 import { StudentType } from '@/entities/student/model/student';
 import { useGetSearchStudent } from '@/entities/student/model/useGetSearchStudent';
+import getStudentCode from '@/shared/lib/getStudentCode';
 import SearchBar from '@/shared/ui/SearchBar';
 
 interface SearchDropdownProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -79,8 +80,8 @@ export default function SearchDropdown({ label, name, ...props }: SearchDropdown
                     <span>
                       {student.name}
                     </span>
-                    <span>
-                      {student.grade}{student.classNumber}{String(student.number).padStart(2, "0")}
+                    <span className='tabular-nums'>
+                      {getStudentCode({ grade: student.grade, classNumber: student.classNumber, number: student.number })}
                     </span>
                   </li>
                 ))}
