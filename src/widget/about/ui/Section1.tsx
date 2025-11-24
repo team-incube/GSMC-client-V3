@@ -1,11 +1,9 @@
-import Header from '@/shared/ui/header/ui/Header';
 import ScrollDown from '@/shared/asset/svg/ScrollDown';
 
 export default function Section1() {
   const HEADER_HEIGHT = '4.375rem';
   return (
     <div className="w-full">
-      <Header />
       <div
         className="relative bg-[url(@/shared/asset/img/aboutImg.png)] bg-cover bg-center"
         style={{ height: `calc(100vh - ${HEADER_HEIGHT})` }}
