@@ -2,7 +2,6 @@
 
 import z from 'zod';
 
-import { CategoryKey } from '@/entities/category/model/category';
 import { addScoreByCategoryType } from '@/entities/score/api/addScoreByCategoryType';
 import { ActionState } from '@/shared/model/actionState';
 
