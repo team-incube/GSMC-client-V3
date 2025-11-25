@@ -1,5 +1,5 @@
 import { ProjectFileType } from '@/entities/file/model/file';
-import { ProjectStudentType } from '@/entities/student/model/student';
+import { StudentType } from '@/entities/student/model/student';
 
 export interface ProjectType {
   id: number;
@@ -7,5 +7,6 @@ export interface ProjectType {
   title: string;
   description: string;
   files: ProjectFileType[];
-  participants: ProjectStudentType[];
+  participants: StudentType[];
+  scoreIds: number[];
 }

@@ -9,7 +9,3 @@ export interface StudentType {
   number: number;
   role: RoleType;
 }
-
-export interface ProjectStudentType extends StudentType {
-  scoreId: number;
-}
