@@ -87,7 +87,7 @@ export default function FileUploader({
   const getButtonText = () => {
     if (isPending) return '업로드 중...';
     if (files.length === 0) return '파일 첨부';
-    if (!isMultiple) return files[0]?.fileOriginalName || '파일 선택됨';
+    if (!isMultiple) return files[0]?.originalName || '파일 선택됨';
     return `${files.length}개의 파일 첨부됨`;
   };
 

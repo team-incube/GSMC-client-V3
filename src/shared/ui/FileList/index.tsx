@@ -15,7 +15,7 @@ const FileList: React.FC<FileListProps> = ({ files, onRemove }) => {
       <h3 className="text-sm font-semibold mb-2">첨부 파일 목록</h3>
       {files.map((file) => (
         <div className="flex justify-between items-center py-1 border-b border-gray-100" key={file.id}>
-          <Link href={file.fileUri} className="text-sm text-gray-700 truncate max-w-[80%]">{file.fileOriginalName}</Link>
+          <Link href={file.uri} className="text-sm text-gray-700 truncate max-w-[80%]">{file.originalName}</Link>
           {onRemove ? <button
             type="button"
             onClick={(e) => {
