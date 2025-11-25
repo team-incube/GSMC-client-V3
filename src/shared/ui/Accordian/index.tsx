@@ -2,7 +2,13 @@ import { useState } from 'react';
 
 import ChevronDown from '@/shared/asset/svg/ChevronDown';
 
-export function Accordian({ title = "", children }: { title?: string; children: React.ReactNode }) {
+interface AccordianProps {
+  title?: string;
+  subTitle?: string;
+  children: React.ReactNode
+}
+
+export function Accordian({ title = "", subTitle = "", children }: AccordianProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -12,7 +18,7 @@ export function Accordian({ title = "", children }: { title?: string; children: 
         className="w-full flex items-center justify-between p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors text-left"
       >
         <div className="flex flex-col">
-          <span className="text-xs text-gray-500 font-medium mb-1">프로젝트 정보</span>
+          <span className="text-xs text-gray-500 font-medium mb-1">{subTitle}</span>
           <h2 className="text-lg font-bold text-gray-800">
             {title}
           </h2>
