@@ -1,6 +1,6 @@
 import { instance } from '@/shared/lib/instance';
 
-export interface editEvidenceRequest {
+export interface editEvidenceByIdRequest {
   evidenceId: number;
   title: string;
   content: string;
@@ -12,7 +12,7 @@ export const editEvidenceById = async ({
   title,
   content,
   fileIds,
-}: editEvidenceRequest) => {
+}: editEvidenceByIdRequest) => {
   const response = await instance.patch(`/evidences/${evidenceId}`, { title, content, fileIds });
   return response.data;
 };
