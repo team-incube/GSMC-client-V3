@@ -2,6 +2,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { removeEvidence } from '../api/removeEvidence';
 
+/**
+ * @unused
+ */
 export const useRemoveEvidence = () => {
   const queryClient = useQueryClient();
 

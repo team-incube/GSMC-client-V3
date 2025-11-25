@@ -1,8 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getEvidenceById, getScoreByIdRequest } from '../api/getEvidenceById';
+import { getEvidenceById, getEvidenceByIdRequest } from '../api/getEvidenceById';
 
-export const useGetEvidenceById = ({ evidenceId }: getScoreByIdRequest) => {
+/**
+ * @unused
+ */
+export const useGetEvidenceById = ({ evidenceId }: getEvidenceByIdRequest) => {
   return useQuery({
     queryKey: ['evidence', evidenceId],
     queryFn: () => getEvidenceById({ evidenceId }),
