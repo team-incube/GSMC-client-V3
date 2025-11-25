@@ -2,7 +2,7 @@
 
 import z from 'zod';
 
-import { CategoryEndpoint, CategoryKey } from '@/entities/category/model/category';
+import { CategoryKey } from '@/entities/category/model/category';
 import { addScoreByCategoryType } from '@/entities/score/api/addScoreByCategoryType';
 import { ActionState } from '@/shared/model/actionState';
 
@@ -18,7 +18,7 @@ export async function handleScoreEdit(
 
     const categoryTypeInput = String(formData.get('categoryType') ?? '');
     const categoryEndpoint =
-      CategoryEndpoint[categoryTypeInput as CategoryKey] || categoryTypeInput.toLocaleLowerCase();
+      (categoryTypeInput as CategoryKey) || categoryTypeInput.toLocaleLowerCase();
 
     const currentData: ScoreFormValueType = {
       categoryType: categoryEndpoint,

@@ -18,26 +18,11 @@ export const Category = {
 
 export type CategoryKey = keyof typeof Category;
 
+export type CalculationType = 'COUNT_BASED' | 'SCORE_BASED';
 export interface CategoryNames {
   englishName: string;
   koreanName: string;
 }
-
-export const CategoryEndpoint: Record<CategoryKey, string> = {
-  VOLUNTEER: 'volunteer',
-  TOPCIT: 'topcit',
-  TOEIC: 'toeic',
-  READ_A_THON: 'readathon',
-  PROJECT_PARTICIPATION: 'project-participation',
-  NEWRROW_SCHOOL: 'newrrow-school',
-  NCS: 'ncs',
-  JLPT: 'jlpt',
-  TOEIC_ACADEMY: 'toeic-academy',
-  EXTERNAL_ACTIVITY: 'external-activities',
-  CERTIFICATE: 'certificates',
-  AWARD: 'awards',
-  ACADEMIC_GRADE: 'academic-grade',
-};
 
 export interface CategoryType {
   englishName: string;
@@ -49,5 +34,3 @@ export interface CategoryType {
   calculationType: CalculationType;
   isForeignLanguage: boolean;
 }
-
-export type CalculationType = 'COUNT_BASED' | 'SCORE_BASED';
