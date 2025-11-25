@@ -2,10 +2,10 @@ import { FileType } from '@/entities/file/model/file';
 import { instance } from '@/shared/lib/instance';
 
 export interface removeFileByIdRequest {
-  fileId: number;
+  id: number;
 }
 
-export const removeFileById = async ({ fileId }: removeFileByIdRequest): Promise<FileType> => {
-  const response = await instance.delete(`/files/${fileId}`);
+export const removeFileById = async ({ id }: removeFileByIdRequest): Promise<FileType> => {
+  const response = await instance.delete(`/files/${id}`);
   return response.data.data;
 };
