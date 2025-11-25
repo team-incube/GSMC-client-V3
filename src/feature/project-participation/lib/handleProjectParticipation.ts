@@ -39,45 +39,18 @@ export const handleProjectParticipation = async (
     const projectId = Number(formData.get('projectId'));
     const scoreResponse = await addProjectScore({ projectId });
 
-    if (scoreResponse.code !== 200) {
-      let errorMessage = '프로젝트 점수 추가에 실패했습니다.';
-      if (scoreResponse.code === HttpStatusCode.Forbidden) {
-        errorMessage = '해당 프로젝트에 참여할 수 있는 권한이 없습니다.';
-      } else if (scoreResponse.code === HttpStatusCode.NotFound) {
-        errorMessage = '존재하지 않는 프로젝트입니다.';
-      } else if (scoreResponse.code === HttpStatusCode.Conflict) {
-        errorMessage = '이미 참여한 프로젝트입니다.';
-      }
-
-      return {
-        status: 'error',
-        message: errorMessage,
-        fieldErrors: null,
-        data: currentData,
-      };
-    }
-
     const evidenceData = {
       ...result.data,
       scoreId: scoreResponse.data.scoreId,
     };
 
-    const response = await addEvidence(evidenceData);
-
-    if (response.code === 200) {
-      return {
-        status: 'success',
-        message: '프로젝트 참여글을 생성했습니다.',
-        fieldErrors: null,
-        data: null,
-      };
-    }
+    await addEvidence(evidenceData);
 
     return {
-      status: 'error',
-      message: '프로젝트 참여글 생성을 실패했습니다.',
+      status: 'success',
+      message: '프로젝트 참여글을 생성했습니다.',
       fieldErrors: null,
-      data: currentData,
+      data: null,
     };
   } catch (error) {
     let errorMessage = '프로젝트 점수 추가에 실패했습니다.';
@@ -87,9 +60,10 @@ export const handleProjectParticipation = async (
 
       if (status === HttpStatusCode.Forbidden) {
         errorMessage = '해당 프로젝트에 참여할 수 있는 권한이 없습니다.';
-      } else if (status === HttpStatusCode.NotFound) {
+      } else if (status === HttpStatusCode.NotFound) {   
         errorMessage = '존재하지 않는 프로젝트입니다.';
       } else if (status === HttpStatusCode.Conflict) {
+        console.log("error:",error);
         errorMessage = '이미 참여한 프로젝트입니다.';
       }
     }

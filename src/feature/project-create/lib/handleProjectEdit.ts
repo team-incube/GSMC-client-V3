@@ -51,25 +51,16 @@ export async function handleProjectEdit(
   }
 
   try {
-    const response = await editProjectById({
+    await editProjectById({
       projectId,
       ...result.data,
     });
 
-    if (response.code === 200) {
-      return {
-        status: 'success',
-        message: '프로젝트를 수정했습니다.',
-        fieldErrors: null,
-        data: null,
-      };
-    }
-
     return {
-      status: 'error',
-      message: response.message || '프로젝트 수정을 실패했습니다.',
+      status: 'success',
+      message: '프로젝트를 수정했습니다.',
       fieldErrors: null,
-      data: currentData,
+      data: null,
     };
   } catch (error) {
     let errorMessage = '프로젝트 수정을 실패했습니다.';
@@ -81,8 +72,6 @@ export async function handleProjectEdit(
         errorMessage = '프로젝트를 수정할 권한이 없습니다.';
       } else if (status === HttpStatusCode.NotFound) {
         errorMessage = '존재하지 않는 프로젝트입니다.';
-      } else {
-        errorMessage = error.response?.data?.message || errorMessage;
       }
     }
 

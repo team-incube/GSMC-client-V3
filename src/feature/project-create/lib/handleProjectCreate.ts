@@ -40,29 +40,16 @@ export async function handleProjectCreate(
   }
 
   try {
-    const response = await createProject(result.data);
-
-    if (response.code === 200) {
-      return {
-        status: 'success',
-        message: '프로젝트를 생성했습니다.',
-        fieldErrors: null,
-        data: null,
-      };
-    }
+    await createProject(result.data);
 
     return {
-      status: 'error',
-      message: response.message || '프로젝트 생성을 실패했습니다.',
+      status: 'success',
+      message: '프로젝트를 생성했습니다.',
       fieldErrors: null,
-      data: currentData,
+      data: null,
     };
   } catch (error) {
     let errorMessage = '프로젝트 생성을 실패했습니다.';
-
-    if (isAxiosError(error)) {
-      errorMessage = error.response?.data?.message || errorMessage;
-    }
 
     return {
       status: 'error',

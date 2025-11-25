@@ -1,6 +1,6 @@
 'use server';
 
-import { isAxiosError } from 'axios';
+import { HttpStatusCode, isAxiosError } from 'axios';
 import z from 'zod';
 
 import { ActionState } from '@/shared/model/actionState';
@@ -9,7 +9,7 @@ import { postSignup } from '../api/postSignup';
 import { SignupFormType, SignupSchema } from '../model/SignupSchema';
 
 export async function handleSignup(
-  prevState: ActionState<SignupFormType>,
+  _prevState: ActionState<SignupFormType>,
   formData: FormData,
 ): Promise<ActionState<SignupFormType>> {
   const currentData: SignupFormType = {
@@ -29,35 +29,30 @@ export async function handleSignup(
   }
 
   try {
-    const response = await postSignup(result.data);
-
-    if (response.code === 202) {
-      return {
-        status: 'success',
-        message: '회원가입에 성공했습니다. 다시 로그인해주세요.',
-        fieldErrors: null,
-        data: null,
-      };
-    }
+    await postSignup(result.data);
 
     return {
-      status: 'error',
-      message: response.message || '회원가입에 실패했습니다.',
+      status: 'success',
+      message: '회원가입에 성공했습니다. 다시 로그인해주세요.',
       fieldErrors: null,
-      data: currentData,
+      data: null,
     };
   } catch (error) {
-    let errorMessage = '회원가입에 실패했습니다.';
-
-    if (isAxiosError(error)) {
-      errorMessage = error.response?.data?.message || errorMessage;
-    }
-
-    return {
-      status: 'error',
-      message: errorMessage,
-      fieldErrors: null,
-      data: currentData,
-    };
+      let errorMessage = '회원가입에 실패했습니다.';
+  
+      if (isAxiosError(error)) {
+        const status = error.response?.status;
+  
+        if (status === HttpStatusCode.NotFound) {   
+          errorMessage = '존재하지 않는 사용자입니다.';
+        }
+      }
+  
+      return {
+        status: 'error',
+        message: errorMessage,
+        fieldErrors: null,
+        data: currentData,
+      };
   }
 }
