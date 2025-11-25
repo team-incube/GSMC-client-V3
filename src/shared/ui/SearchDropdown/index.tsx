@@ -113,8 +113,8 @@ export default function SearchDropdown({ label, name, ...props }: SearchDropdown
                 <span className="text-sm font-medium text-gray-700">
                   {student.name}
                 </span>
-                <span className="text-xs text-gray-500">
-                  {student.grade}{student.classNumber}{String(student.number).padStart(2, "0")}
+                <span className="text-xs text-gray-500 tabular-nums">
+                  {getStudentCode({ grade: student.grade, classNumber: student.classNumber, number: student.number })}
                 </span>
               </div>
               <button
