@@ -1,7 +1,6 @@
 
 "use client";
 
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
 import { useQueryClient } from "@tanstack/react-query";
@@ -43,7 +42,7 @@ export default function ProjectView() {
         <div className="flex items-baseline justify-between">
           <h1 className="text-main-700 text-titleMedium">{project?.title}</h1>
           {project?.ownerId === student?.id && isSuccess ? <div className="space-x-2">
-            <Link className="cursor-pointer" href={`/project-create?projectId=${projectId}`}>수정</Link>
+            <button className="cursor-pointer" onClick={() => router.push(`/project-create?projectId=${projectId}`)}>수정</button>
             <button className="cursor-pointer" onClick={handleRemoveProject}>삭제</button>
           </div> : null}
         </div>
@@ -73,10 +72,8 @@ export default function ProjectView() {
           ))}
         </div>
         <hr className="my-4" />
-        <Button>
-          <Link href={`/project-participation/${projectId}`}>
-            프로젝트 참여글 작성하기
-          </Link>
+        <Button onClick={() => router.push(`/project-participation/${projectId}`)}>
+          프로젝트 참여글 작성하기
         </Button>
       </div>
     </div>
