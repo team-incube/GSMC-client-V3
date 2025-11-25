@@ -44,7 +44,7 @@ export default function ProjectCreateForm() {
         <div className="flex flex-col gap-6">
           <Input name="title" placeholder="주제를 입력해주세요" label="주제" defaultValue={project?.title} />
           <small className="text-error pl-1">{state.fieldErrors?.title}</small>
-          <SearchDropdown name="participantIds" placeholder="이름을 입력해주세요" label="팀원" />
+          <SearchDropdown name="participantIds" placeholder="이름을 입력해주세요" label="팀원" selectedStudents={project?.participants} />
           <small className="text-error pl-1">{state.fieldErrors?.participantIds}</small>
           <Textarea name="description" placeholder="프로젝트 설명을 입력해주세요" label="프로젝트 설명" defaultValue={project?.description} />
           <small className="text-error pl-1">{state.fieldErrors?.description}</small>
