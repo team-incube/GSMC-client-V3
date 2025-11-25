@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { FileType } from '@/entities/file/model/file';
 import { useAttachFile } from '@/entities/file/model/useAttachFile';
 import { useRemoveFileById } from '@/entities/file/model/useRemoveFileById';
 import Chain from '@/shared/asset/svg/Chain';
-
+import FileList from '@/shared/ui/FileList';
 interface FileUploaderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value'> {
   label: string;
   uploadedFiles?: FileType | FileType[];
@@ -76,10 +76,10 @@ export default function FileUploader({
     e.target.value = '';
   };
 
-  const handleRemoveFile = (fileId: number) => {
-    removeFile({ fileId }, {
+  const handleRemoveFile = (id: number) => {
+    removeFile({ id }, {
       onSuccess: () => {
-        setFiles((prev) => prev.filter((file) => file.id !== fileId));
+        setFiles((prev) => prev.filter((file) => file.id !== id));
       },
     });
   };
@@ -126,24 +126,7 @@ export default function FileUploader({
 
       <hr className="mt-6 mb-8" />
 
-      <div className="mt-3">
-        {files.length > 0 && <h3 className="text-sm font-semibold mb-2">첨부 파일 목록</h3>}
-        {files.map((file) => (
-          <div className="flex justify-between items-center py-1 border-b border-gray-100" key={file.id}>
-            <span className="text-sm text-gray-700 truncate max-w-[80%]">{file.fileOriginalName}</span>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleRemoveFile(file.id);
-              }}
-              className="text-xs text-red-500 hover:text-red-700 ml-2 cursor-pointer"
-            >
-              삭제
-            </button>
-          </div>
-        ))}
-      </div>
+      <FileList files={files} onRemove={handleRemoveFile} />
 
       <div className="hidden">
         {files.map((file) => (
