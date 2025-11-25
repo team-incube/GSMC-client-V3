@@ -16,9 +16,7 @@ export const handleScoreAdd = async (
   const fileId = fileIdRaw ? Number(fileIdRaw) : null;
 
   const categoryTypeInput = String(formData.get('categoryType') ?? '');
-  const categoryEndpoint =
-    (categoryTypeInput as CategoryKey) || categoryTypeInput.toLocaleLowerCase();
-
+  const categoryEndpoint = categoryTypeInput.toLocaleLowerCase();
   const currentData: ScoreAddFormValueType = {
     categoryType: categoryEndpoint,
     value: String(formData.get('value') ?? '').trim(),
