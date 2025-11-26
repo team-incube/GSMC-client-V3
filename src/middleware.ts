@@ -1,35 +1,41 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
+import axios from 'axios';
+
 import { RoleType } from './entities/student/model/student';
 import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
-import { decodeTokenRole } from './shared/lib/jwt';
+import { setAuthCookies } from './shared/lib/cookie/setAuthCookie';
+import { decodeToken } from './shared/lib/jwt';
+
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   const currentPath = request.nextUrl.pathname;
+
   const isProtectedRoute = PROTECT_PAGE.includes(currentPath);
   const isPublicRoute = PUBLIC_PAGE.includes(currentPath);
 
-  // API 요청인 경우 - Route Handler는 쿠키에 직접 접근 가능하므로 그냥 통과
-  if (currentPath.startsWith('/api')) {
-    return NextResponse.next();
-  }
-
-  // 정적 파일 및 Next.js 내부 경로는 무시
-  if (
-    currentPath.startsWith('/_next') ||
-    currentPath.startsWith('/favicon') ||
-    currentPath.includes('.')
-  ) {
-    return NextResponse.next();
-  }
-
   const accessToken = request.cookies.get('accessToken')?.value;
+  const refreshToken = request.cookies.get('refreshToken')?.value;
+
   let userRole: RoleType | null = null;
 
   if (accessToken) {
-    userRole = await decodeTokenRole(accessToken);
+    const response = await decodeToken(accessToken);
+    userRole = response?.role ?? null;
+  } else if (refreshToken) {
+    try {
+      const response = await axios.put(
+        `${BACKEND_URL}/auth/refresh`,
+        {},
+        { headers: { Cookie: `refreshToken=${refreshToken}` } },
+      );
+      await setAuthCookies(response.data.data.accessToken, response.data.data.refreshToken);
+    } catch {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
   }
 
   if (isProtectedRoute) {
@@ -56,3 +62,7 @@ export async function middleware(request: NextRequest) {
     },
   });
 }
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/auth).*)'],
+};
