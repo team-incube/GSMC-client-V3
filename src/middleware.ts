@@ -6,7 +6,7 @@ import axios from 'axios';
 import { RoleType } from './entities/student/model/student';
 import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
 import { setAuthCookies } from './shared/lib/cookie/setAuthCookie';
-import { decodeTokenRole } from './shared/lib/jwt';
+import { decodeToken } from './shared/lib/jwt';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -23,7 +23,8 @@ export async function middleware(request: NextRequest) {
   let userRole: RoleType | null = null;
 
   if (accessToken) {
-    userRole = await decodeTokenRole(accessToken);
+    const response = await decodeToken(accessToken);
+    userRole = response?.role ?? null;
   } else if (refreshToken) {
     try {
       const response = await axios.put(
