@@ -15,17 +15,20 @@ async function proxyRequest(request: NextRequest, method: string) {
       .map((cookie) => `${cookie.name}=${cookie.value}`)
       .join('; ');
 
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-    };
+    const headers: HeadersInit = {};
+
+    const contentType = request.headers.get('content-type');
+    if (contentType) {
+      headers['Content-Type'] = contentType;
+    }
 
     if (cookieHeader) {
       headers.Cookie = cookieHeader;
     }
 
-    let body: string | undefined;
+    let body: BodyInit | undefined;
     if (method !== 'GET' && method !== 'HEAD') {
-      body = await request.text();
+      body = await request.arrayBuffer();
     }
 
     const response = await fetch(backendUrl, {
