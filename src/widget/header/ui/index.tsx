@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { signout } from '@/feature/google-auth/lib/signout';
 import Bell from '@/shared/asset/svg/Bell';
 
 import { HEADER_NAV } from '../config/navigation';
@@ -18,7 +19,7 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-          <button className="font-semibold text-gray-900">로그아웃</button>
+          <button className="font-semibold cursor-pointer text-gray-900" onClick={signout}>로그아웃</button>
         </nav>
 
         <Bell />
