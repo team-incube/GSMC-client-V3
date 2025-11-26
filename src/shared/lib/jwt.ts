@@ -8,7 +8,13 @@ interface RolePayload extends JWTPayload {
 }
 
 export async function decodeToken(token: string): Promise<RolePayload | null> {
-  const SECRET_KEY = new TextEncoder().encode(process.env.JWT_ACCESS_TOKEN_SECRET);
+  const secret = process.env.JWT_ACCESS_TOKEN_SECRET;
+
+  if (!secret) {
+    return null;
+  }
+
+  const SECRET_KEY = new TextEncoder().encode(secret);
 
   try {
     const { payload } = (await jwtVerify(token, SECRET_KEY)) as { payload: RolePayload };
