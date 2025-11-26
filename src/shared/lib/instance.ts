@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 export const baseURL = '/api/proxy';
 
@@ -12,7 +12,7 @@ export const instance = axios.create({
 });
 
 instance.interceptors.request.use(
-  async (config) => {
+  async (config: InternalAxiosRequestConfig) => {
     if (typeof window === 'undefined') {
       const { cookies } = await import('next/headers');
       const cookieStore = await cookies();
@@ -29,7 +29,7 @@ instance.interceptors.request.use(
 
     return config;
   },
-  (error) => {
+  (error: AxiosError) => {
     return Promise.reject(error);
   },
 );
