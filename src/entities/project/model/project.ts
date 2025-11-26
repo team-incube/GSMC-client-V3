@@ -12,6 +12,6 @@ export interface ProjectType {
   scoreIds: number[];
 }
 
-export interface ProjectScoreEvidenceType {
+export interface ProjectScoreType {
   score: ScoreType;
 }
