@@ -33,8 +33,8 @@ export async function middleware(request: NextRequest) {
         { headers: { Cookie: `refreshToken=${refreshToken}` } },
       );
       await setAuthCookies(response.data.data.accessToken, response.data.data.refreshToken);
-    } catch (error) {
-      console.error('Token refresh failed:', error);
+    } catch {
+      return NextResponse.redirect(new URL('/', request.url));
     }
   }
 
