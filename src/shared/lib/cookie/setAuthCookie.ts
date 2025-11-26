@@ -4,7 +4,7 @@ export async function setAuthCookies(accessToken: string, refreshToken?: string 
   const cookieStore = await cookies();
 
   cookieStore.set('accessToken', accessToken, {
-    httpOnly: false,
+    httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60,
     path: '/',
