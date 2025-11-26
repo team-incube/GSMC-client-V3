@@ -19,7 +19,7 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-          <button className="font-semibold cursor-pointer text-gray-900" onClick={signout}>로그아웃</button>
+          <button type="button" className="font-semibold cursor-pointer text-gray-900" onClick={signout}>로그아웃</button>
         </nav>
 
         <Bell />
