@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import { useRouter,useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -18,7 +18,7 @@ export default function CallbackView() {
       try {
         const response = await axios.post('/api/auth/google/callback', { code });
 
-        if (response.data.needsSignup) {
+        if (response.data.role === "UNAUTHORIZED") {
           toast.success('환영합니다! 회원가입을 완료해주세요.');
           router.push('/signup');
         } else {

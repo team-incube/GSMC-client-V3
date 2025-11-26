@@ -22,21 +22,10 @@ export async function POST(request: NextRequest) {
     // 토큰과 역할 추출
     const { accessToken, refreshToken, role } = response.data.data;
 
-    // 토큰이 없으면 오류 반환
-    if (!accessToken || !refreshToken) {
-      return NextResponse.json({ error: '토큰을 받지 못했습니다' }, { status: 500 });
-    }
-
     // 쿠키 설정
     await setAuthCookies(accessToken, refreshToken);
 
-    return NextResponse.json(
-      {
-        success: true,
-        needsSignup: role === 'UNAUTHORIZED',
-      },
-      { status: 200 },
-    );
+    return NextResponse.json({ success: true, role }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
