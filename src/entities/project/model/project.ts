@@ -1,4 +1,3 @@
-import { EvidenceType } from '@/entities/evidence/model/evidence';
 import { ProjectFileType } from '@/entities/file/model/file';
 import { ScoreType } from '@/entities/score/model/score';
 import { StudentType } from '@/entities/student/model/student';
@@ -15,5 +14,4 @@ export interface ProjectType {
 
 export interface ProjectScoreEvidenceType {
   score: ScoreType;
-  evidence: EvidenceType;
 }
