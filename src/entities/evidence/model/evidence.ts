@@ -9,4 +9,11 @@ export interface EvidenceType {
   files: FileType[] | null;
 }
 
+export interface DraftEvidenceType {
+  scoreId: number;
+  title: string;
+  content: string;
+  fileIds: number[];
+}
+
 export type RequiredEvidenceType = 'EVIDENCE' | 'FILE' | 'UNREQUIRED';
