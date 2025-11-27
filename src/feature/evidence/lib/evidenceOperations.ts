@@ -8,10 +8,14 @@ import { removeScoreById } from '@/entities/score/api/removeScoreById';
 import { EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema';
 
 export const createEvidenceOperation = async (formData: EvidenceFormValues): Promise<string> => {
-  const scoreResponse = await addProjectScore({ projectId: formData.projectId! });
+  if (!formData.projectId) {
+    throw new Error('Project ID is required for update');
+  }
+
+  const scoreResponse = await addProjectScore({ projectId: formData.projectId });
 
   const request = {
-    projectId: formData.projectId!,
+    projectId: formData.projectId,
     scoreId: scoreResponse.data.scoreId,
     title: formData.title,
     content: formData.content,
@@ -28,9 +32,13 @@ export const createEvidenceOperation = async (formData: EvidenceFormValues): Pro
 };
 
 export const updateEvidenceOperation = async (formData: EvidenceFormValues): Promise<string> => {
+  if (!formData.evidenceId) {
+    throw new Error('Evidence ID is required for update');
+  }
+
   const request = {
-    evidenceId: formData.evidenceId!,
-    scoreId: formData.scoreId!,
+    evidenceId: formData.evidenceId,
+    scoreId: formData.scoreId,
     title: formData.title,
     content: formData.content,
     fileIds: formData.fileIds,
