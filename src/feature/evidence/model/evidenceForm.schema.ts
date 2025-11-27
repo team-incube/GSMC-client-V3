@@ -17,4 +17,4 @@ export const EvideceRequestSchema = EvidenceFormSchema.pick({
 });
 
 export type EvidenceFormValues = z.infer<typeof EvidenceFormSchema>;
-export type EvideceRequestType = z.infer<typeof EvideceRequestSchema>;
+export type EvidenceRequestSchema = z.infer<typeof EvideceRequestSchema>;
