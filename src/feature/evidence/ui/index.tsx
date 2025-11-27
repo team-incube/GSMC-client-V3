@@ -24,6 +24,7 @@ export interface EvidenceFormProps {
     title?: string;
     content?: string;
     files?: FileType[];
+    fileIds?: number[];
   };
 
   actions?: {
