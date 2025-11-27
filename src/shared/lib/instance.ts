@@ -14,8 +14,16 @@ export const instance = axios.create({
 instance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     if (typeof window === 'undefined') {
-      const { cookies } = await import('next/headers');
+      const { cookies, headers } = await import('next/headers');
       const cookieStore = await cookies();
+      const headersStore = await headers();
+
+      const host = headersStore.get('host');
+      const protocol = headersStore.get('x-forwarded-proto') || 'http';
+
+      if (host) {
+        config.baseURL = `${protocol}://${host}/api/proxy`;
+      }
 
       const cookieHeader = cookieStore
         .getAll()
