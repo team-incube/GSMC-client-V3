@@ -38,8 +38,8 @@ export default function ProjectView() {
         <div className="flex items-baseline justify-between">
           <h1 className="text-main-700 text-titleMedium">{project?.title}</h1>
           {project?.ownerId === student?.id && isSuccess ? <div className="space-x-2">
-            <button className="cursor-pointer" onClick={() => router.push(`/project-create?projectId=${projectId}`)}>수정</button>
-            <button className="cursor-pointer" onClick={handleRemoveProject}>삭제</button>
+            <button type="button" className="cursor-pointer" onClick={() => router.push(`/project-create?projectId=${projectId}`)}>수정</button>
+            <button type="button" className="cursor-pointer" onClick={handleRemoveProject}>삭제</button>
           </div> : null}
         </div>
         <hr className="my-4" />
