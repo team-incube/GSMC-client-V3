@@ -17,42 +17,64 @@ async function proxyRequest(request: NextRequest, method: string) {
       .join('; ');
 
     const headers: HeadersInit = {};
-
     const contentType = request.headers.get('content-type');
-
     if (contentType) {
       headers['Content-Type'] = contentType;
     }
-
     if (cookieHeader) {
       headers.Cookie = cookieHeader;
     }
 
     let body: BodyInit | undefined;
     if (method !== 'GET' && method !== 'HEAD') {
-      body = await request.arrayBuffer();
+      const contentType = request.headers.get('content-type');
+
+      if (contentType?.includes('application/json')) {
+        body = await request.text();
+      } else if (contentType?.includes('multipart/form-data')) {
+        body = await request.arrayBuffer();
+      } else {
+        body = await request.text();
+      }
     }
+
+    // console.log('Proxying to:', backendUrl);
 
     const response = await fetch(backendUrl, {
       method,
       headers,
       body,
+      signal: AbortSignal.timeout(30000),
     });
 
     if (response.status === 204) {
-      return NextResponse.json(null, { status: 204 });
+      return NextResponse.json(null, { status: 200 });
     }
 
-    const data = await response.json();
-
-    return NextResponse.json(data, {
-      status: response.status,
-      headers: {
-        'Content-Type': 'application/json',
+    const responseContentType = response.headers.get('content-type');
+    if (responseContentType?.includes('application/json')) {
+      const data = await response.json();
+      return NextResponse.json(data, {
+        status: response.status,
+      });
+    } else {
+      const text = await response.text();
+      return new NextResponse(text, {
+        status: response.status,
+        headers: {
+          'Content-Type': responseContentType || 'text/plain',
+        },
+      });
+    }
+  } catch (error) {
+    // console.error('Proxy error:', error);
+    return NextResponse.json(
+      {
+        error: 'Proxy request failed',
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
-    });
-  } catch {
-    return NextResponse.json({ error: 'Proxy request failed' }, { status: 500 });
+      { status: 500 },
+    );
   }
 }
 
