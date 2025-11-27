@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { useGetProjectBySearch } from '@/entities/project/model/useGetProjectBySearch';
 import { useGetProjects } from '@/entities/project/model/useGetProjects';
-import { useGetcoresByCategory } from '@/entities/score/model/useGetScoresByCategory';
+import { useGetScoresByCategory } from '@/entities/score/model/useGetScoresByCategory';
 import { useGetTotalScore } from '@/entities/score/model/useGetTotalScore';
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
 import Button from '@/shared/ui/Button';
@@ -17,7 +17,7 @@ export default function MainView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: student } = useGetCurrentStudent();
   const { data: score } = useGetTotalScore({ includeApprovedOnly: true });
-  const { data: scoresByCategory } = useGetcoresByCategory({ status: 'APPROVED' });
+  const { data: scoresByCategory } = useGetScoresByCategory({ status: 'APPROVED' });
   const { data: allProjects } = useGetProjects();
   const { data: searchedProjects } = useGetProjectBySearch({
     title: searchKeyword,

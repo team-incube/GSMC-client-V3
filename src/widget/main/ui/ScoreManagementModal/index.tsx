@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useGetcoresByCategory } from "@/entities/score/model/useGetScoresByCategory";
+import { useGetScoresByCategory } from "@/entities/score/model/useGetScoresByCategory";
 import { cn } from "@/shared/lib/cn";
 import Button from "@/shared/ui/Button";
 import ModalWrapper from "@/shared/ui/ModalWrapper";
@@ -13,7 +13,7 @@ interface ScoreManagementModalProps {
 }
 
 export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagementModalProps) {
-  const { data: scoresByCategory } = useGetcoresByCategory({});
+  const { data: scoresByCategory } = useGetScoresByCategory({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [scoreId, setScoreId] = useState<number>(0);
@@ -24,6 +24,11 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
     setScoreId(scoreId);
     setEnglishName(englishName);
   };
+
+  const handleAddClick = (englishName: string) => {
+    setIsAddModalOpen(true);
+    setEnglishName(englishName);
+  }
 
   return (
     <div>
@@ -68,7 +73,7 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                   ))}
                   <button
                     className="w-full flex items-center justify-center cursor-pointer py-4 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors border-t border-gray-100"
-                    onClick={() => { setIsAddModalOpen(true); setEnglishName(category.categoryType); }}
+                    onClick={() => { handleAddClick(category.categoryType.replaceAll("_", "-")); }}
                   >
                     <span className="text-body2 font-medium">추가</span>
                   </button>
