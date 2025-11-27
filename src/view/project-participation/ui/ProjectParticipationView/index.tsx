@@ -16,13 +16,13 @@ export default function ProjectParticipationView() {
     title: draftEvidence.title,
     content: draftEvidence.content,
     fileIds: draftEvidence.fileIds,
-  } : projectScoreEvidence?.score?.evidence ? {
+  } : projectScoreEvidence?.evidence ? {
     projectId,
-    evidenceId: projectScoreEvidence.score.evidence.evidenceId,
+    evidenceId: projectScoreEvidence.evidence.evidenceId,
     scoreId: projectScoreEvidence.score.scoreId,
-    title: projectScoreEvidence.score.evidence.title,
-    content: projectScoreEvidence.score.evidence.content,
-    files: projectScoreEvidence.score.evidence?.files,
+    title: projectScoreEvidence.evidence.title,
+    content: projectScoreEvidence.evidence.content,
+    files: projectScoreEvidence.evidence?.files,
   } : { projectId };
 
   const mode = initialData.evidenceId ? 'edit' : 'create';

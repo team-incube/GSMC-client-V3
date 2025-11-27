@@ -1,6 +1,6 @@
 import { instance } from '@/shared/lib/instance';
 
-import { ProjectScoreType } from '../model/project';
+import { ProjectScoreEvidenceGroupType } from '../model/project';
 
 export interface getProjectMyScoreByIdRequest {
   projectId: number;
@@ -8,7 +8,7 @@ export interface getProjectMyScoreByIdRequest {
 
 export const getProjectMyScoreById = async ({
   projectId,
-}: getProjectMyScoreByIdRequest): Promise<ProjectScoreType> => {
+}: getProjectMyScoreByIdRequest): Promise<ProjectScoreEvidenceGroupType> => {
   const response = await instance.get(`/projects/${projectId}/my-score-and-evidence`);
   return response.data.data;
 };

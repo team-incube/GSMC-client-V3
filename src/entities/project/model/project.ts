@@ -1,5 +1,6 @@
+import { CategoryNames } from '@/entities/category/model/category';
+import { EvidenceType } from '@/entities/evidence/model/evidence';
 import { ProjectFileType } from '@/entities/file/model/file';
-import { ScoreType } from '@/entities/score/model/score';
 import { StudentType } from '@/entities/student/model/student';
 
 export interface ProjectType {
@@ -13,5 +14,15 @@ export interface ProjectType {
 }
 
 export interface ProjectScoreType {
-  score: ScoreType;
+  scoreId: number;
+  categoryNames: CategoryNames;
+  scoreStatus: string;
+  activityName: string;
+  scoreValue: number | null;
+  rejectionReason: string | null;
+}
+
+export interface ProjectScoreEvidenceGroupType {
+  score: ProjectScoreType;
+  evidence: EvidenceType;
 }

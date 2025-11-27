@@ -4,7 +4,7 @@ import { getProjectMyScoreById, getProjectMyScoreByIdRequest } from '../api/getP
 
 export const useGetProjectMyScoreById = ({ projectId }: getProjectMyScoreByIdRequest) => {
   return useQuery({
-    queryKey: ['project', 'score', projectId],
+    queryKey: ['evidence', 'score', projectId],
     queryFn: () => getProjectMyScoreById({ projectId }),
     enabled: !!projectId,
   });
