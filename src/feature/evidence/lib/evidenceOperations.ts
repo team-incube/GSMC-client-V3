@@ -9,14 +9,14 @@ import { EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema
 
 export const createEvidenceOperation = async (formData: EvidenceFormValues): Promise<string> => {
   if (!formData.projectId) {
-    throw new Error('Project ID is required for update');
+    throw new Error('Project ID is required for creation');
   }
 
   const scoreResponse = await addProjectScore({ projectId: formData.projectId });
 
   const request = {
     projectId: formData.projectId,
-    scoreId: scoreResponse.data.scoreId,
+    scoreId: scoreResponse.scoreId,
     title: formData.title,
     content: formData.content,
     fileIds: formData.fileIds,
@@ -26,7 +26,7 @@ export const createEvidenceOperation = async (formData: EvidenceFormValues): Pro
     await addEvidence(request);
     return '프로젝트 참여글을 작성했습니다.';
   } catch (error) {
-    await removeScoreById({ scoreId: scoreResponse.data.scoreId });
+    await removeScoreById({ scoreId: scoreResponse.scoreId });
     throw error;
   }
 };
@@ -34,6 +34,10 @@ export const createEvidenceOperation = async (formData: EvidenceFormValues): Pro
 export const updateEvidenceOperation = async (formData: EvidenceFormValues): Promise<string> => {
   if (!formData.evidenceId) {
     throw new Error('Evidence ID is required for update');
+  }
+
+  if (!formData.scoreId) {
+    throw new Error('Score ID is required for update');
   }
 
   const request = {
