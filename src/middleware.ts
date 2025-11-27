@@ -4,7 +4,9 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 
 import { RoleType } from './entities/student/model/student';
+import { AuthTokenType } from './feature/google-auth/model/auth';
 import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
+import { deleteAuthCookies } from './shared/lib/cookie/deleteCookie';
 import { setAuthCookies } from './shared/lib/cookie/setAuthCookie';
 import { decodeToken } from './shared/lib/jwt';
 
@@ -27,13 +29,15 @@ export async function middleware(request: NextRequest) {
     userRole = response?.role ?? null;
   } else if (refreshToken) {
     try {
-      const response = await axios.put(
+      const response = await axios.put<AuthTokenType>(
         `${BACKEND_URL}/auth/refresh`,
         {},
         { headers: { Cookie: `refreshToken=${refreshToken}` } },
       );
       await setAuthCookies(response.data.data.accessToken, response.data.data.refreshToken);
+      userRole = response?.data.data.role ?? null;
     } catch {
+      await deleteAuthCookies();
       return NextResponse.redirect(new URL('/', request.url));
     }
   }
