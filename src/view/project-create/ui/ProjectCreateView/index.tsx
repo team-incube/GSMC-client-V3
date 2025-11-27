@@ -1,5 +1,6 @@
-import ProjectCreateForm from '@/feature/project-create/ui';
 import { Suspense } from 'react';
+
+import ProjectCreateForm from '@/feature/project-create/ui';
 
 export default function ProjectCreateView() {
   return (
