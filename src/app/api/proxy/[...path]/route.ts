@@ -12,12 +12,14 @@ async function proxyRequest(request: NextRequest, method: string) {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore
       .getAll()
+      .filter((cookie) => cookie.name === 'accessToken' || cookie.name === 'refreshToken')
       .map((cookie) => `${cookie.name}=${cookie.value}`)
       .join('; ');
 
     const headers: HeadersInit = {};
 
     const contentType = request.headers.get('content-type');
+
     if (contentType) {
       headers['Content-Type'] = contentType;
     }
@@ -36,6 +38,10 @@ async function proxyRequest(request: NextRequest, method: string) {
       headers,
       body,
     });
+
+    if (response.status === 204) {
+      return NextResponse.json(null, { status: 204 });
+    }
 
     const data = await response.json();
 
