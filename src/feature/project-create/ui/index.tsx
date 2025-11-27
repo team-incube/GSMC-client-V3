@@ -30,7 +30,6 @@ export default function ProjectCreateForm() {
   const { data: project, isLoading } = useGetProjectById({ projectId });
   const { data: student } = useGetCurrentStudent();
 
-
   const hasPermission = (() => {
     if (!isEditMode) return true;
     if (!project || !student) return false;
@@ -78,7 +77,7 @@ export default function ProjectCreateForm() {
       </h1>
       <form className="flex flex-col w-full gap-16" action={formAction}>
 
-        {isEditMode && <input type="hidden" name="projectId" value={projectId} />}
+        {isEditMode ? <input type="hidden" name="projectId" value={projectId} /> : null}
 
         <div className="flex flex-col gap-6">
           <Input name="title" placeholder="주제를 입력해주세요" label="주제" defaultValue={project?.title} />

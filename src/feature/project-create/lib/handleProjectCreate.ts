@@ -1,6 +1,5 @@
 'use server';
 
-import { isAxiosError } from 'axios';
 import z from 'zod';
 
 import { createProject } from '@/entities/project/api/createProject';
@@ -48,12 +47,10 @@ export async function handleProjectCreate(
       fieldErrors: null,
       data: null,
     };
-  } catch (error) {
-    let errorMessage = '프로젝트 생성을 실패했습니다.';
-
+  } catch {
     return {
       status: 'error',
-      message: errorMessage,
+      message: '프로젝트 생성을 실패했습니다.',
       fieldErrors: null,
       data: currentData,
     };
