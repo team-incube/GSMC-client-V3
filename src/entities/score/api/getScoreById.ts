@@ -3,7 +3,7 @@ import { instance } from '@/shared/lib/instance';
 import { ScoreType } from '../model/score';
 
 export interface getScoreByIdRequest {
-  scoreId?: number;
+  scoreId: number;
 }
 
 export const getScoreById = async ({ scoreId }: getScoreByIdRequest): Promise<ScoreType> => {
