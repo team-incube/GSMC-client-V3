@@ -4,6 +4,7 @@ import { editEvidenceById } from '@/entities/evidence/api/editEvidenceById';
 import { removeDraftEvidence } from '@/entities/evidence/api/removeDraftEvidence';
 import { removeEvidence } from '@/entities/evidence/api/removeEvidence';
 import { addProjectScore } from '@/entities/score/api/addProjectScore';
+import { removeScoreById } from '@/entities/score/api/removeScoreById';
 import { EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema';
 
 export const createEvidenceOperation = async (formData: EvidenceFormValues): Promise<string> => {
@@ -17,8 +18,13 @@ export const createEvidenceOperation = async (formData: EvidenceFormValues): Pro
     fileIds: formData.fileIds,
   };
 
-  await addEvidence(request);
-  return '프로젝트 참여글을 작성했습니다.';
+  try {
+    await addEvidence(request);
+    return '프로젝트 참여글을 작성했습니다.';
+  } catch (error) {
+    await removeScoreById({ scoreId: scoreResponse.data.scoreId });
+    throw error;
+  }
 };
 
 export const updateEvidenceOperation = async (formData: EvidenceFormValues): Promise<string> => {
