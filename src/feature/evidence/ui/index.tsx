@@ -4,6 +4,7 @@ import { useActionState, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { FileType } from '@/entities/file/model/file';
@@ -42,6 +43,7 @@ export default function EvidenceForm({
   redirectOnSuccess = '/main',
 }: EvidenceFormProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [state, formAction, isPending] = useActionState(
     handleEvidenceAction,
     createInitialState<EvidenceFormValues>()
@@ -50,6 +52,7 @@ export default function EvidenceForm({
   useEffect(() => {
     if (state.message) {
       if (state.status === 'success') {
+        queryClient.invalidateQueries({ queryKey: ['evidence'] });
         toast.success(state.message);
         if (redirectOnSuccess) {
           router.push(redirectOnSuccess);
@@ -58,7 +61,7 @@ export default function EvidenceForm({
         toast.error(state.message);
       }
     }
-  }, [state, router, redirectOnSuccess]);
+  }, [state, router, redirectOnSuccess, queryClient]);
 
   return (
     <form className="flex w-full flex-col gap-16" action={formAction}>
