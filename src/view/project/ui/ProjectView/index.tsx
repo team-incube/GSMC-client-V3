@@ -72,7 +72,7 @@ export default function ProjectView() {
           ))}
         </div>
         <hr className="my-4" />
-        <Button onClick={() => router.push(`/project-participation/${projectId}`)}>
+        <Button onClick={() => router.push(`/project-participation?projectId=${projectId}`)}>
           프로젝트 참여글 작성하기
         </Button>
       </div>
