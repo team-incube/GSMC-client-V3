@@ -2,13 +2,13 @@ import { useState } from 'react';
 
 import ChevronDown from '@/shared/asset/svg/ChevronDown';
 
-interface AccordianProps {
+interface AccordionProps {
   title?: string;
   subTitle?: string;
   children: React.ReactNode
 }
 
-export function Accordian({ title = "", subTitle = "", children }: AccordianProps) {
+export function Accordion({ title = "", subTitle = "", children }: AccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
