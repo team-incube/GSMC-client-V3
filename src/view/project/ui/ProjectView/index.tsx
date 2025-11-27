@@ -3,8 +3,6 @@
 
 import { useParams, useRouter } from "next/navigation";
 
-import { useQueryClient } from "@tanstack/react-query";
-
 import { useGetProjectById } from "@/entities/project/model/useGetProjectById";
 import { useRemoveProjectById } from "@/entities/project/model/useRemoveProjectById";
 import { useGetCurrentStudent } from "@/entities/student/model/useGetCurrentStudent";
@@ -17,7 +15,6 @@ export default function ProjectView() {
   const router = useRouter();
   const rawId = Array.isArray(params.id) ? params.id[0] : params.id;
   const projectId = Number(rawId);
-  const queryClient = useQueryClient();
 
   const { data: project, isLoading, isSuccess } = useGetProjectById({ projectId });
   const { data: student } = useGetCurrentStudent();
@@ -30,7 +27,6 @@ export default function ProjectView() {
   const handleRemoveProject = () => {
     mutate({ projectId }, {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['project'] });
         router.replace('/main');
       }
     })
