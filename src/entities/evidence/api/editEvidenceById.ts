@@ -1,10 +1,10 @@
+import { EvideceRequestType } from '@/feature/evidence/model/evidenceForm.schema';
 import { instance } from '@/shared/lib/instance';
 
-export interface editEvidenceByIdRequest {
+import { EvidenceType } from '../model/evidence';
+
+export interface editEvidenceByIdRequest extends EvideceRequestType {
   evidenceId: number;
-  title: string;
-  content: string;
-  fileIds: number[];
 }
 
 export const editEvidenceById = async ({
@@ -12,7 +12,7 @@ export const editEvidenceById = async ({
   title,
   content,
   fileIds,
-}: editEvidenceByIdRequest) => {
+}: editEvidenceByIdRequest): Promise<EvidenceType> => {
   const response = await instance.patch(`/evidences/${evidenceId}`, { title, content, fileIds });
   return response.data;
 };
