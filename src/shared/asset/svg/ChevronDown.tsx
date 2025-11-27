@@ -2,17 +2,20 @@ interface ChevronDownProps {
   width?: number;
   height?: number;
   color?: string;
+  className?: string;
 }
 
 export default function ChevronDown({
   width = 32,
   height = 32,
   color = '#385B97',
+  className = ''
 }: ChevronDownProps) {
   return (
     <svg
       width={width}
       height={height}
+      className={className}
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

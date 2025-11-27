@@ -1,5 +1,6 @@
 import { CategoryKey, CategoryNames } from '@/entities/category/model/category';
 import { EvidenceType } from '@/entities/evidence/model/evidence';
+import { FileType } from '@/entities/file/model/file';
 
 export type ScoreStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
@@ -9,6 +10,7 @@ export interface ScoreType {
   scoreStatus: ScoreStatus;
   activityName: string;
   evidence: EvidenceType | null;
+  file: FileType | null;
   scoreValue: number;
   rejectionReason: string | null;
 }

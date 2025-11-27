@@ -1,25 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { toast } from 'sonner';
 
 import { StudentType } from '@/entities/student/model/student';
 import { useGetSearchStudent } from '@/entities/student/model/useGetSearchStudent';
+import getStudentCode from '@/shared/lib/getStudentCode';
 import SearchBar from '@/shared/ui/SearchBar';
+import SearchList from '@/shared/ui/SearchList';
 
-interface SearchDropdownProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface SearchDropdownProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value'> {
   label: string;
   name?: string;
+  selectedStudents?: StudentType | StudentType[];
 }
 
-export default function SearchDropdown({ label, name, ...props }: SearchDropdownProps) {
+export default function SearchDropdown({ label, name, selectedStudents, ...props }: SearchDropdownProps) {
   const [keyword, setKeyword] = useState('');
   const [inputValue, setInputValue] = useState('');
   const { data: searchResults = [], isLoading } = useGetSearchStudent({ name: keyword, page: 0, limit: 10 })
 
   const [students, setStudents] = useState<StudentType[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  useEffect(() => {
+    if (!selectedStudents) {
+      setStudents([]);
+      return;
+    }
+    const normalizedStudents = Array.isArray(selectedStudents) ? selectedStudents : [selectedStudents];
+    setStudents(normalizedStudents);
+  }, [selectedStudents]);
 
   const handleSearchChange = (value: string) => {
     setKeyword(value);
@@ -79,8 +91,8 @@ export default function SearchDropdown({ label, name, ...props }: SearchDropdown
                     <span>
                       {student.name}
                     </span>
-                    <span>
-                      {student.grade}{student.classNumber}{String(student.number).padStart(2, "0")}
+                    <span className='tabular-nums'>
+                      {getStudentCode({ grade: student.grade, classNumber: student.classNumber, number: student.number })}
                     </span>
                   </li>
                 ))}
@@ -96,37 +108,7 @@ export default function SearchDropdown({ label, name, ...props }: SearchDropdown
 
       <hr className="mt-6 mb-8 border-gray-100" />
 
-      <div className="mt-3">
-        {students.length > 0 && (
-          <h3 className="text-sm font-semibold mb-2 text-gray-700">
-            선택된 학생 ({students.length}명)
-          </h3>
-        )}
-        <div className="flex flex-col gap-2">
-          {students.map((student) => (
-            <div
-              key={student.id}
-              className="flex justify-between items-center p-3 rounded-lg bg-gray-50 border border-gray-100"
-            >
-              <div className="flex flex-col">
-                <span className="text-sm font-medium text-gray-700">
-                  {student.name}
-                </span>
-                <span className="text-xs text-gray-500">
-                  {student.grade}{student.classNumber}{String(student.number).padStart(2, "0")}
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() => handleRemoveStudent(student.id)}
-                className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1"
-              >
-                삭제
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+      <SearchList students={students} onRemove={handleRemoveStudent} />
 
       <div className="hidden">
         {students.map((student) => (

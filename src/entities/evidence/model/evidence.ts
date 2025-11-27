@@ -6,7 +6,13 @@ export interface EvidenceType {
   content: string;
   createdAt: string;
   updatedAt: string;
-  files: FileType[] | null;
+  files: FileType[];
+}
+
+export interface DraftEvidenceType {
+  title: string;
+  content: string;
+  fileIds: number[];
 }
 
 export type RequiredEvidenceType = 'EVIDENCE' | 'FILE' | 'UNREQUIRED';

@@ -36,18 +36,20 @@ export default function ScoreAddModal({ setIsAddModalOpen, categoryType }: Score
 
   if (category.evidenceType === 'EVIDENCE') {
     return (
-      <div className="flex min-w-[400px] flex-col gap-4">
-        <h2 className="mb-4 text-xl font-bold">{category.koreanName} 추가</h2>
-        <p className="text-gray-600">
-          프로젝트 참여 점수는 메인 페이지의 프로젝트 목록에서<br />
-          참여하기를 통해 추가할 수 있습니다.
-        </p>
-        <div className="mt-6 flex gap-2">
-          <Button type="button" onClick={() => setIsAddModalOpen(false)}>
-            확인
-          </Button>
+      <ModalWrapper>
+        <div className="flex min-w-[400px] flex-col gap-4">
+          <h2 className="mb-4 text-xl font-bold">{category.koreanName} 추가</h2>
+          <p className="text-gray-600">
+            프로젝트 참여 점수는 메인 페이지의 프로젝트 목록에서<br />
+            참여하기를 통해 추가할 수 있습니다.
+          </p>
+          <div className="mt-6 flex gap-2">
+            <Button type="button" onClick={() => setIsAddModalOpen(false)}>
+              확인
+            </Button>
+          </div>
         </div>
-      </div>
+      </ModalWrapper>
     );
   }
 

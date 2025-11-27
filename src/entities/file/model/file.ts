@@ -1,6 +1,10 @@
 export interface FileType {
   id: number;
-  fileOriginalName: string;
-  fileStoreName: string;
-  fileUri: string;
+  originalName: string;
+  storeName: string;
+  uri: string;
+}
+
+export interface ProjectFileType extends FileType {
+  memberId: number;
 }

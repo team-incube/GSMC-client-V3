@@ -2,13 +2,16 @@ import { instance } from '@/shared/lib/instance';
 
 import { EvidenceType } from '../model/evidence';
 
-export interface getScoreByIdRequest {
+export interface getEvidenceByIdRequest {
   evidenceId: number;
 }
 
+/**
+ * @unused
+ */
 export const getEvidenceById = async ({
   evidenceId,
-}: getScoreByIdRequest): Promise<EvidenceType> => {
+}: getEvidenceByIdRequest): Promise<EvidenceType> => {
   const response = await instance.get(`/evidences/${evidenceId}`);
   return response.data.data;
 };
