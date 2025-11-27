@@ -24,12 +24,7 @@ export async function handleProjectEdit(
     };
   }
 
-  const participantIds = formData
-    .getAll('participantIds')
-    .map(String)
-    .map(Number)
-    .filter((n) => !isNaN(n));
-
+  const participantIds = getNumericArrayFromFormData({ formData, key: 'participantIds' });
   const fileIds = getNumericArrayFromFormData({ formData, key: 'fileIds' });
 
   const currentData: CreateProjectFormValueType = {
