@@ -5,7 +5,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { CategoryType } from '@/entities/category/model/category';
+import { CategoryKey, CategoryType } from '@/entities/category/model/category';
 import { handleScoreAdd } from '@/feature/score-add/lib/handleScoreAdd';
 import { ScoreAddFormValueType } from '@/feature/score-add/model/ScoreAddSchema';
 import { createInitialState } from '@/shared/lib/createInitialState';
@@ -52,7 +52,7 @@ export default function ScoreAddForm({ category, setIsAddModalOpen }: ScoreAddFo
             label="어학 종류"
             options={['TOEIC', 'JLPT']}
             value={selectedCategoryType}
-            onChange={setSelectedCategoryType}
+            onChange={(value) => setSelectedCategoryType(value as CategoryKey)}
           />
 
           <Input
