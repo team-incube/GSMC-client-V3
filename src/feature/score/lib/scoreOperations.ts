@@ -25,7 +25,7 @@ export const updateScoreOperation = async (formData: ScoreFormValues): Promise<s
       categoryType: formData.categoryType as 'external-activity' | 'certificate' | 'award',
       scoreId: formData.scoreId,
       value: String(formData.value),
-      fileId: formData.fileId || 0,
+      fileId: formData.fileId || undefined,
     });
   } else {
     await addScoreByCategoryType({

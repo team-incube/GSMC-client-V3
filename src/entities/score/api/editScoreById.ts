@@ -6,7 +6,7 @@ export interface editScoreByIdRequest {
   categoryType: 'external-activity' | 'certificate' | 'award';
   scoreId: number;
   value: string;
-  fileId: number;
+  fileId?: number;
 }
 
 export const editScoreById = async ({
