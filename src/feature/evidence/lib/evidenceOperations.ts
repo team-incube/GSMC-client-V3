@@ -64,7 +64,8 @@ export const draftEvidenceOperation = async (formData: EvidenceFormValues): Prom
 };
 
 export const deleteEvidenceOperation = async (formData: EvidenceFormValues): Promise<string> => {
-  if (formData.evidenceId) {
+  if (formData.scoreId && formData.evidenceId) {
+    await removeScoreById({ scoreId: formData.scoreId });
     await removeEvidence({ evidenceId: formData.evidenceId });
   } else {
     await removeDraftEvidence();
