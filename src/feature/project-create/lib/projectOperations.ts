@@ -45,13 +45,12 @@ export const draftProjectOperation = async (formData: ProjectFormValues): Promis
 };
 
 export const deleteProjectOperation = async (formData: ProjectFormValues): Promise<string> => {
-  if (!formData.projectId) {
-    throw new Error('Project ID is required for deletion');
-  }
-
   if (formData.isDraft) {
     await removeDraftProject();
   } else {
+    if (!formData.projectId) {
+      throw new Error('Project ID is required for deletion');
+    }
     await removeProjectById({ projectId: formData.projectId });
   }
 
