@@ -15,7 +15,7 @@ export default function ProjectParticipationView() {
     projectId,
     title: draftEvidence.title,
     content: draftEvidence.content,
-    fileIds: draftEvidence.fileIds,
+    files: draftEvidence.files,
   } : projectScoreEvidence?.evidence ? {
     projectId,
     evidenceId: projectScoreEvidence.evidence.evidenceId,
