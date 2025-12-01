@@ -58,13 +58,7 @@ export default function ProjectCreateForm({
         queryClient.invalidateQueries({ queryKey: ['draftProject'] });
 
         if (state.message === '삭제되었습니다.') {
-          if (mode === 'edit') {
-            router.push('/main');
-          } else {
-            window.location.reload();
-          }
-        } else if (state.message === '임시저장되었습니다.') {
-          // Stay on page
+          router.push('/main');
         } else if (mode === 'edit' && initialData?.projectId) {
           router.push(`/project/${initialData.projectId}`);
         } else {
