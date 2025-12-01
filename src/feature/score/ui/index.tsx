@@ -81,7 +81,7 @@ export default function ScoreForm({
               id="toeicAcademy"
               name="toeicAcademy"
               defaultChecked={initialData?.scoreId !== undefined}
-              className="h-4 w-4 accent-main-500"
+              className="h-4 w-4 accent-main-500 cursor-pointer"
             />
             <label htmlFor="toeicAcademy" className="text-sm font-medium">
               토사관
@@ -128,7 +128,7 @@ export default function ScoreForm({
                   type="checkbox"
                   id="toeicAcademy"
                   name="toeicAcademy"
-                  className="h-4 w-4 accent-main-500"
+                  className="h-4 w-4 accent-main-500 cursor-pointer"
                 />
                 <label htmlFor="toeicAcademy" className="text-sm font-medium">
                   토사관
