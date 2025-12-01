@@ -24,6 +24,7 @@ export const handleScoreAction = async (
     value: String(formData.get('value') ?? '').trim(),
     fileId: fileId,
     evidenceType: formData.get('evidenceType') as 'EVIDENCE' | 'FILE' | 'UNREQUIRED',
+    toeicAcademy: formData.get('toeicAcademy') === 'on',
   };
 
   switch (intent) {

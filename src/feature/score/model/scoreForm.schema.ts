@@ -7,6 +7,7 @@ export const ScoreFormSchema = z
     value: z.union([z.string(), z.number()]),
     fileId: z.number().nullable(),
     evidenceType: z.enum(['EVIDENCE', 'FILE', 'UNREQUIRED']),
+    toeicAcademy: z.boolean().optional(),
   })
   .refine(
     (data) => {
