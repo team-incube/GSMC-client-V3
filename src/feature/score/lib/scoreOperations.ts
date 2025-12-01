@@ -4,6 +4,14 @@ import { removeScoreById } from '@/entities/score/api/removeScoreById';
 import { ScoreFormValues } from '@/feature/score/model/scoreForm.schema';
 
 export const createScoreOperation = async (formData: ScoreFormValues): Promise<string> => {
+  if (formData.toeicAcademy === true) {
+    await addScoreByCategoryType({
+      categoryType: 'toeic-academy',
+      value: formData.value,
+      fileId: formData.fileId || undefined,
+    });
+  }
+
   await addScoreByCategoryType({
     categoryType: formData.categoryType,
     value: formData.value,
@@ -20,19 +28,31 @@ export const updateScoreOperation = async (formData: ScoreFormValues): Promise<s
 
   const editableCategories = ['external-activity', 'certificate', 'award'];
 
-  if (editableCategories.includes(formData.categoryType)) {
-    await editScoreById({
-      categoryType: formData.categoryType as 'external-activity' | 'certificate' | 'award',
-      scoreId: formData.scoreId,
-      value: String(formData.value),
-      fileId: formData.fileId || undefined,
-    });
+  if (formData.toeicAcademy !== undefined) {
+    if (formData.toeicAcademy === true) {
+      await addScoreByCategoryType({
+        categoryType: 'toeic-academy',
+        value: formData.value,
+        fileId: formData.fileId || undefined,
+      });
+    } else {
+      await removeScoreById({ scoreId: formData.scoreId });
+    }
   } else {
-    await addScoreByCategoryType({
-      categoryType: formData.categoryType,
-      value: formData.value,
-      fileId: formData.fileId || undefined,
-    });
+    if (editableCategories.includes(formData.categoryType)) {
+      await editScoreById({
+        categoryType: formData.categoryType as 'external-activity' | 'certificate' | 'award',
+        scoreId: formData.scoreId,
+        value: String(formData.value),
+        fileId: formData.fileId || undefined,
+      });
+    } else {
+      await addScoreByCategoryType({
+        categoryType: formData.categoryType,
+        value: formData.value,
+        fileId: formData.fileId || undefined,
+      });
+    }
   }
 
   return '수정되었습니다.';
