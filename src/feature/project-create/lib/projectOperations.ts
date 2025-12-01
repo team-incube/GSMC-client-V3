@@ -7,6 +7,8 @@ import { removeProjectById } from '@/entities/project/api/removeProjectById';
 import { ProjectFormValues } from '../model/projectForm.schema';
 
 export const createProjectOperation = async (formData: ProjectFormValues): Promise<string> => {
+  await removeDraftProject();
+
   await createProject({
     title: formData.title,
     description: formData.description,
