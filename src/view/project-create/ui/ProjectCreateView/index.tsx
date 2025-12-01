@@ -57,7 +57,7 @@ export default function ProjectCreateView() {
   const mode = isEditMode ? 'edit' : 'create';
 
   const actions = {
-    showDraft: true,
+    showDraft: mode === 'edit' ? false : true,
     showDelete: isDraft,
   };
 
