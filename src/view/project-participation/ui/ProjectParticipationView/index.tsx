@@ -29,7 +29,7 @@ export default function ProjectParticipationView() {
   const showDelete = !!initialData.evidenceId;
 
   const actions = {
-    showDraft: true,
+    showDraft: mode === 'edit' ? false : true,
     showDelete,
   };
 
