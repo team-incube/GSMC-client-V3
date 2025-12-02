@@ -35,9 +35,9 @@ export const handleProjectAction = async (
     case 'update':
       return executeProjectAction(data, updateProjectOperation);
     case 'draft':
-      return executeProjectAction(data, draftProjectOperation);
+      return executeProjectAction(data, draftProjectOperation, { isDraft: true });
     case 'delete':
-      return executeProjectAction(data, deleteProjectOperation, true);
+      return executeProjectAction(data, deleteProjectOperation, { skipValidation: true });
     default:
       return {
         status: 'error',

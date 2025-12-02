@@ -8,11 +8,11 @@ import { ProjectFormValues } from '../model/projectForm.schema';
 export const executeProjectAction = async (
   data: ProjectFormValues,
   operation: (data: ProjectFormValues) => Promise<string>,
-  skipValidation = false,
+  options: { skipValidation?: boolean; isDraft?: boolean } = {},
 ): Promise<ActionState<ProjectFormValues>> => {
   try {
-    if (!skipValidation) {
-      const validationError = validateProject(data);
+    if (!options.skipValidation) {
+      const validationError = validateProject(data, options.isDraft);
       if (validationError) return validationError;
     }
 
@@ -29,11 +29,16 @@ export const executeProjectAction = async (
   }
 };
 
-const validateProject = (data: ProjectFormValues): ActionState<ProjectFormValues> | null => {
+const validateProject = (
+  data: ProjectFormValues,
+  isDraft = false,
+): ActionState<ProjectFormValues> | null => {
   const schema = z.object({
-    title: z.string().min(1, '제목을 입력해주세요.'),
-    description: z.string().min(1, '설명을 입력해주세요.'),
-    participantIds: z.array(z.number()).nonempty('프로젝트 참여 팀원을 선택해주세요.'),
+    title: isDraft ? z.string() : z.string().min(1, '제목을 입력해주세요.'),
+    description: isDraft ? z.string() : z.string().min(1, '설명을 입력해주세요.'),
+    participantIds: isDraft
+      ? z.array(z.number())
+      : z.array(z.number()).nonempty('프로젝트 참여 팀원을 선택해주세요.'),
     fileIds: z.array(z.number()).optional(),
   });
 
