@@ -1,7 +1,6 @@
 'use client';
 
-import React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { FileType } from '@/entities/file/model/file';
 import Chain from '@/shared/asset/svg/Chain';
@@ -19,13 +18,38 @@ interface LocalFile {
   file: File;
 }
 
+interface NewFileInputProps {
+  file: File;
+}
+
+const NewFileInput = ({ file }: NewFileInputProps) => {
+  const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (ref.current && file) {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      ref.current.files = dt.files;
+    }
+  }, [file]);
+
+  return (
+    <input
+      ref={ref}
+      type="file"
+      name="newFiles"
+      className="hidden"
+      readOnly
+    />
+  );
+};
+
 export default function FileUploader({
   label,
   uploadedFiles,
   isMultiple = false,
   ...props
 }: FileUploaderProps) {
-
   const [existingFiles, setExistingFiles] = useState<FileType[]>([]);
   const [newFiles, setNewFiles] = useState<LocalFile[]>([]);
 
@@ -51,11 +75,13 @@ export default function FileUploader({
     if (!isMultiple) {
       const file = selectedFiles[0];
       setExistingFiles([]);
-      setNewFiles([{
-        id: `local-${Date.now()}`,
-        name: file.name,
-        file: file,
-      }]);
+      setNewFiles([
+        {
+          id: `local-${Date.now()}`,
+          name: file.name,
+          file: file,
+        },
+      ]);
     } else {
       const fileArray = Array.from(selectedFiles);
       const localFiles: LocalFile[] = fileArray.map((file, index) => ({
@@ -92,7 +118,7 @@ export default function FileUploader({
 
   const displayFiles: FileType[] = [
     ...existingFiles,
-    ...newFiles.map(f => ({
+    ...newFiles.map((f) => ({
       id: f.id as unknown as number,
       originalName: f.name,
       storeName: '',
@@ -147,31 +173,12 @@ export default function FileUploader({
           />
         ))}
 
-        {newFiles.map((localFile) => {
-          const NewFileInput = () => {
-            const ref = useRef<HTMLInputElement>(null);
-
-            useEffect(() => {
-              if (ref.current) {
-                const dt = new DataTransfer();
-                dt.items.add(localFile.file);
-                ref.current.files = dt.files;
-              }
-            }, []);
-
-            return (
-              <input
-                ref={ref}
-                type="file"
-                name="newFiles"
-                className="hidden"
-                readOnly
-              />
-            );
-          };
-
-          return <NewFileInput key={localFile.id} />;
-        })}
+        {newFiles.map((localFile) => (
+          <NewFileInput
+            key={localFile.id}
+            file={localFile.file}
+          />
+        ))}
       </div>
     </div>
   );
