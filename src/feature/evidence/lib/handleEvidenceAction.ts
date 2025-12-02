@@ -34,9 +34,9 @@ export const handleEvidenceAction = async (
     case 'update':
       return executeEvidenceAction(data, updateEvidenceOperation);
     case 'draft':
-      return executeEvidenceAction(data, draftEvidenceOperation);
+      return executeEvidenceAction(data, draftEvidenceOperation, { isDraft: true });
     case 'delete':
-      return executeEvidenceAction(data, deleteEvidenceOperation, true);
+      return executeEvidenceAction(data, deleteEvidenceOperation, { skipValidation: true });
     default:
       return {
         status: 'error',
