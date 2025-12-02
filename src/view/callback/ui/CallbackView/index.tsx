@@ -11,6 +11,7 @@ export default function CallbackView() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const code = searchParams.get('code');
+  const error = searchParams.get('error');
 
   useEffect(() => {
 
@@ -31,10 +32,16 @@ export default function CallbackView() {
       }
     };
 
+    if (error) {
+      toast.error('로그인에 실패했습니다. 다시 시도해주세요.');
+      router.push('/');
+      return;
+    }
+
     if (code) {
       run();
     }
-  }, [router, code]);
+  }, [router, code, error]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
