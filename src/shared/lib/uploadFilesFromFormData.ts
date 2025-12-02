@@ -12,51 +12,29 @@ export async function uploadFilesFromFormData(
 ): Promise<number[]> {
   const { multiple } = options;
 
-  const existingFileIds: number[] = [];
-  const existingFileIdsRaw = formData.getAll('existingFileIds');
+  const existingFileIds = formData
+    .getAll('existingFileIds')
+    .map((id) => Number(id))
+    .filter((num) => !isNaN(num));
 
-  for (const id of existingFileIdsRaw) {
-    const numId = Number(id);
-    if (!isNaN(numId)) {
-      existingFileIds.push(numId);
-    }
-  }
+  const rawFiles = formData.getAll('newFiles');
+  const validFiles = rawFiles.filter((file): file is File => file instanceof File && file.size > 0);
 
-  const newFiles: File[] = [];
-  const newFilesRaw = formData.getAll('newFiles');
+  const filesToUpload = multiple ? validFiles : validFiles.slice(0, 1);
 
-  for (const file of newFilesRaw) {
-    if (file instanceof File && file.size > 0) {
-      newFiles.push(file);
-    }
-  }
-
-  const uploadedFileIds: number[] = [];
-
-  if (newFiles.length > 0) {
-    if (multiple) {
-      for (const file of newFiles) {
-        try {
-          const uploadedFile = await attachFile({ file });
-          if (uploadedFile?.id) {
-            uploadedFileIds.push(uploadedFile.id);
-          }
-        } catch {
-          throw new Error(`파일 업로드에 실패했습니다: ${file.name}`);
-        }
+  const uploadPromises = filesToUpload.map(async (file) => {
+    try {
+      const uploadedFile = await attachFile({ file });
+      if (!uploadedFile?.id) {
+        throw new Error('Upload successful but ID is missing');
       }
-    } else {
-      const file = newFiles[0];
-      try {
-        const uploadedFile = await attachFile({ file });
-        if (uploadedFile?.id) {
-          uploadedFileIds.push(uploadedFile.id);
-        }
-      } catch {
-        throw new Error(`파일 업로드에 실패했습니다: ${file.name}`);
-      }
+      return uploadedFile.id;
+    } catch {
+      throw new Error(`파일 업로드에 실패했습니다: ${file.name}`);
     }
-  }
+  });
+
+  const uploadedFileIds = await Promise.all(uploadPromises);
 
   return [...existingFileIds, ...uploadedFileIds];
 }
