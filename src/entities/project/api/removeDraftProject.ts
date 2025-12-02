@@ -1,10 +1,6 @@
 import { instance } from '@/shared/lib/instance';
 
-export interface removeDraftProjectRequest {
-  projectId: number;
-}
-
-export const removeDraftProject = async ({ projectId }: removeDraftProjectRequest) => {
-  const response = await instance.delete(`/projects/draft/${projectId}`);
+export const removeDraftProject = async () => {
+  const response = await instance.delete(`/projects/draft`);
   return response.data;
 };

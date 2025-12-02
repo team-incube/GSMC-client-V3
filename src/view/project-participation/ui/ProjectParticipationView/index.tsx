@@ -15,7 +15,7 @@ export default function ProjectParticipationView() {
     projectId,
     title: draftEvidence.title,
     content: draftEvidence.content,
-    fileIds: draftEvidence.fileIds,
+    files: draftEvidence.files,
   } : projectScoreEvidence?.evidence ? {
     projectId,
     evidenceId: projectScoreEvidence.evidence.evidenceId,
@@ -28,11 +28,20 @@ export default function ProjectParticipationView() {
   const mode = initialData.evidenceId ? 'edit' : 'create';
   const showDelete = !!initialData.evidenceId;
 
+  const actions = {
+    showDraft: mode === 'edit' ? false : true,
+    showDelete,
+  };
+
   return (
     <div className="flex w-full justify-center px-4 py-15.5">
       <div className="flex w-full max-w-[600px] flex-col items-start">
         <h1 className="text-main-700 text-titleMedium mb-9">프로젝트 참여</h1>
-        <EvidenceForm mode={mode} initialData={initialData} actions={{ showDraft: true, showDelete }} />
+        <EvidenceForm
+          mode={mode}
+          initialData={initialData}
+          actions={actions}
+        />
       </div>
     </div>
   );
