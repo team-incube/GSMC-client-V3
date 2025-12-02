@@ -26,33 +26,29 @@ export const updateScoreOperation = async (formData: ScoreFormValues): Promise<s
     throw new Error('Score ID is required for update');
   }
 
+  if (formData.categoryType === 'toeic-academy') {
+    if (!formData.toeicAcademy) {
+      await removeScoreById({ scoreId: formData.scoreId });
+      return '토익 사관학교 내역이 삭제되었습니다.';
+    }
+    return '수정되었습니다.';
+  }
+
   const editableCategories = ['external-activity', 'certificate', 'award'];
 
-  if (formData.toeicAcademy !== undefined) {
-    if (formData.toeicAcademy === true) {
-      await addScoreByCategoryType({
-        categoryType: 'toeic-academy',
-        value: formData.value,
-        fileId: formData.fileId || undefined,
-      });
-    } else {
-      await removeScoreById({ scoreId: formData.scoreId });
-    }
+  if (editableCategories.includes(formData.categoryType)) {
+    await editScoreById({
+      categoryType: formData.categoryType as 'external-activity' | 'certificate' | 'award',
+      scoreId: formData.scoreId,
+      value: String(formData.value),
+      fileId: formData.fileId || undefined,
+    });
   } else {
-    if (editableCategories.includes(formData.categoryType)) {
-      await editScoreById({
-        categoryType: formData.categoryType as 'external-activity' | 'certificate' | 'award',
-        scoreId: formData.scoreId,
-        value: String(formData.value),
-        fileId: formData.fileId || undefined,
-      });
-    } else {
-      await addScoreByCategoryType({
-        categoryType: formData.categoryType,
-        value: formData.value,
-        fileId: formData.fileId || undefined,
-      });
-    }
+    await addScoreByCategoryType({
+      categoryType: formData.categoryType,
+      value: formData.value,
+      fileId: formData.fileId || undefined,
+    });
   }
 
   return '수정되었습니다.';
