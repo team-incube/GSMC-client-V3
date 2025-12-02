@@ -1,6 +1,7 @@
 'use server';
 
 import getNumericArrayFromFormData from '@/shared/lib/getNumericArrayFromFormData';
+import { uploadFilesFromFormData } from '@/shared/lib/uploadFilesFromFormData';
 import { ActionState } from '@/shared/model/actionState';
 
 import { ProjectFormValues } from '../model/projectForm.schema';
@@ -18,7 +19,18 @@ export const handleProjectAction = async (
 ): Promise<ActionState<ProjectFormValues>> => {
   const intent = formData.get('intent') as string;
   const participantIds = getNumericArrayFromFormData({ formData, key: 'participantIds' });
-  const fileIds = getNumericArrayFromFormData({ formData, key: 'fileIds' });
+
+  let fileIds: number[] = [];
+  try {
+    fileIds = await uploadFilesFromFormData(formData, { multiple: true });
+  } catch (error) {
+    return {
+      status: 'error',
+      message: error instanceof Error ? error.message : '파일 업로드에 실패했습니다.',
+      fieldErrors: null,
+      data: {} as ProjectFormValues,
+    };
+  }
 
   const data: ProjectFormValues = {
     projectId: formData.get('projectId') ? Number(formData.get('projectId')) : undefined,

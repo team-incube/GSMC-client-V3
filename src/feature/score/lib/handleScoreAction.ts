@@ -1,6 +1,7 @@
 'use server';
 
 import { ScoreFormValues } from '@/feature/score/model/scoreForm.schema';
+import { uploadFilesFromFormData } from '@/shared/lib/uploadFilesFromFormData';
 import { ActionState } from '@/shared/model/actionState';
 
 import {
@@ -14,9 +15,20 @@ export const handleScoreAction = async (
   _prevState: ActionState<ScoreFormValues>,
   formData: FormData,
 ): Promise<ActionState<ScoreFormValues>> => {
-  const fileIdRaw = formData.get('fileId');
-  const fileId = fileIdRaw ? Number(fileIdRaw) : null;
   const intent = String(formData.get('intent'));
+
+  let fileId: number | null = null;
+  try {
+    const fileIds = await uploadFilesFromFormData(formData, { multiple: false });
+    fileId = fileIds.length > 0 ? fileIds[0] : null;
+  } catch (error) {
+    return {
+      status: 'error',
+      message: error instanceof Error ? error.message : '파일 업로드에 실패했습니다.',
+      fieldErrors: null,
+      data: {} as ScoreFormValues,
+    };
+  }
 
   const data: ScoreFormValues = {
     scoreId: formData.get('scoreId') ? Number(formData.get('scoreId')) : undefined,
