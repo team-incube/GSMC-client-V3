@@ -77,15 +77,15 @@ export default function FileUploader({
       setExistingFiles([]);
       setNewFiles([
         {
-          id: `local-${Date.now()}`,
+          id: crypto.randomUUID(),
           name: file.name,
           file: file,
         },
       ]);
     } else {
       const fileArray = Array.from(selectedFiles);
-      const localFiles: LocalFile[] = fileArray.map((file, index) => ({
-        id: `local-${Date.now()}-${index}`,
+      const localFiles: LocalFile[] = fileArray.map((file) => ({
+        id: crypto.randomUUID(),
         name: file.name,
         file: file,
       }));
