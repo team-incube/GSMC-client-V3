@@ -1,3 +1,5 @@
+"use client"
+
 import Button from '@/shared/ui/Button';
 import ModalWrapper from '@/shared/ui/ModalWrapper';
 
