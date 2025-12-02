@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { useGetCategories } from "@/entities/category/model/useGetCategories";
 import { useGetScoresByCategory } from "@/entities/score/model/useGetScoresByCategory";
 import { cn } from "@/shared/lib/cn";
 import Button from "@/shared/ui/Button";
@@ -14,6 +15,7 @@ interface ScoreManagementModalProps {
 
 export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagementModalProps) {
   const { data: scoresByCategory } = useGetScoresByCategory({});
+  const { data: categories } = useGetCategories();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [scoreId, setScoreId] = useState<number>(0);
@@ -30,6 +32,36 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
     setEnglishName(englishName);
   }
 
+  const canAddScore = (categoryGroup: NonNullable<typeof scoresByCategory>[number]) => {
+    const { categoryType, categoryNames, scores } = categoryGroup;
+
+    const isGroupedCategory = categoryNames.englishName !== categoryType;
+
+    if (isGroupedCategory) {
+      const individualCategories = new Set(
+        scores.map((score) => score.categoryNames.englishName)
+      );
+
+      const canAddToGroup = Array.from(individualCategories).some(categoryName => {
+        const category = categories?.find(category => category.englishName === categoryName);
+        if (!category) return false;
+
+        const count = scores.filter(
+          (score) => score.categoryNames.englishName === categoryName
+        ).length;
+
+        return count < category.maxRecordCount;
+      });
+
+      return canAddToGroup;
+    }
+
+    const category = categories?.find(category => category.englishName === categoryType);
+    if (!category) return false;
+
+    return scores.length < category.maxRecordCount;
+  };
+
   return (
     <div>
       {isEditModalOpen ? (
@@ -43,42 +75,54 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
               내 점수 수정하기
             </h2>
             <section className="flex flex-col justify-start items-start max-h-160 overflow-y-scroll">
-              {scoresByCategory?.map((category) => (
-                <div key={category.categoryType} className="w-full flex flex-col">
-                  <div className="flex justify-between px-5 py-2 bg-gray-50 text-sm font-bold text-gray-500">
-                    <p>{category.categoryNames.koreanName}</p>
-                    <p>{category.recognizedScore}점</p>
-                  </div>
-                  {category.scores.map((score) => (
-                    <article
-                      key={score.scoreId}
-                      className="flex justify-between items-center w-full px-5 py-4 border-b border-gray-100 last:border-none"
+              {scoresByCategory?.map((category) => {
+                const canAdd = canAddScore(category);
+
+                return (
+                  <div key={category.categoryType} className="w-full flex flex-col">
+                    <div className="flex justify-between px-5 py-2 bg-gray-50 text-sm font-bold text-gray-500">
+                      <p>{category.categoryNames.koreanName}</p>
+                      <p>{category.recognizedScore}점</p>
+                    </div>
+                    {category.scores.map((score) => (
+                      <article
+                        key={score.scoreId}
+                        className="flex justify-between items-center w-full px-5 py-4 border-b border-gray-100 last:border-none"
+                      >
+                        <div className="flex items-center gap-[0.75rem]">
+                          <div className={cn("w-2 h-2 aspect-square rounded-full", {
+                            "bg-main-500": score.scoreStatus === "APPROVED",
+                            "bg-gray-600": score.scoreStatus === "PENDING",
+                            "bg-error": score.scoreStatus === "REJECTED",
+                          })} />
+                          <p className="text-body2">
+                            {score.activityName || score.categoryNames.koreanName}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-[0.75rem]">
+                          <Button variant="border" className="w-auto px-[0.75rem] py-[0.125rem]" onClick={() => { handleEditClick(score.scoreId, score.categoryNames.englishName); }}>
+                            수정
+                          </Button>
+                        </div>
+                      </article>
+                    ))}
+                    <button
+                      className={cn(
+                        "w-full flex items-center justify-center py-4 text-gray-400 transition-colors border-t border-gray-100",
+                        canAdd
+                          ? "cursor-pointer hover:text-gray-600 hover:bg-gray-50"
+                          : "cursor-not-allowed opacity-50"
+                      )}
+                      onClick={() => { if (canAdd) handleAddClick(category.categoryType); }}
+                      disabled={!canAdd}
                     >
-                      <div className="flex items-center gap-[0.75rem]">
-                        <div className={cn("w-2 h-2 aspect-square rounded-full", {
-                          "bg-main-500": score.scoreStatus === "APPROVED",
-                          "bg-gray-600": score.scoreStatus === "PENDING",
-                          "bg-error": score.scoreStatus === "REJECTED",
-                        })} />
-                        <p className="text-body2">
-                          {score.activityName || score.categoryNames.koreanName}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-[0.75rem]">
-                        <Button variant="border" className="w-auto px-[0.75rem] py-[0.125rem]" onClick={() => { handleEditClick(score.scoreId, score.categoryNames.englishName); }}>
-                          수정
-                        </Button>
-                      </div>
-                    </article>
-                  ))}
-                  <button
-                    className="w-full flex items-center justify-center cursor-pointer py-4 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors border-t border-gray-100"
-                    onClick={() => { handleAddClick(category.categoryType); }}
-                  >
-                    <span className="text-body2 font-medium">추가</span>
-                  </button>
-                </div>
-              ))}
+                      <span className="text-body2 font-medium">
+                        {canAdd ? "추가" : "최대 등록 개수 도달"}
+                      </span>
+                    </button>
+                  </div>
+                );
+              })}
             </section>
           </div>
           <Button variant="border" onClick={() => setIsModalOpen(false)}>
