@@ -4,7 +4,7 @@ import { FileType } from '@/entities/file/model/file';
 
 interface FileListProps {
   files: FileType[] | [];
-  onRemove?: (fileId: number) => void;
+  onRemove?: (fileId: number | string) => void;
 }
 
 const FileList: React.FC<FileListProps> = ({ files, onRemove }) => {

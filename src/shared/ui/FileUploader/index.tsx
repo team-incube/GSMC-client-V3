@@ -119,7 +119,7 @@ export default function FileUploader({
   const displayFiles: FileType[] = [
     ...existingFiles,
     ...newFiles.map((f) => ({
-      id: f.id as unknown as number,
+      id: f.id,
       originalName: f.name,
       storeName: '',
       uri: '',
