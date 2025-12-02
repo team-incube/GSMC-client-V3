@@ -4,92 +4,101 @@ import React from 'react';
 import { useEffect, useRef, useState } from 'react';
 
 import { FileType } from '@/entities/file/model/file';
-import { useAttachFile } from '@/entities/file/model/useAttachFile';
-import { useRemoveFileById } from '@/entities/file/model/useRemoveFileById';
 import Chain from '@/shared/asset/svg/Chain';
 import FileList from '@/shared/ui/FileList';
+
 interface FileUploaderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value'> {
   label: string;
   uploadedFiles?: FileType | FileType[];
   isMultiple?: boolean;
 }
 
+interface LocalFile {
+  id: string;
+  name: string;
+  file: File;
+}
+
 export default function FileUploader({
   label,
   uploadedFiles,
-  name,
   isMultiple = false,
   ...props
 }: FileUploaderProps) {
 
-  const { mutate: attachFile, isPending } = useAttachFile();
-  const { mutate: removeFile } = useRemoveFileById();
+  const [existingFiles, setExistingFiles] = useState<FileType[]>([]);
+  const [newFiles, setNewFiles] = useState<LocalFile[]>([]);
 
-  const [files, setFiles] = useState<FileType[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!uploadedFiles) {
-      setFiles([]);
+      setExistingFiles([]);
       return;
     }
     const normalizedFiles = Array.isArray(uploadedFiles) ? uploadedFiles : [uploadedFiles];
-    setFiles(normalizedFiles);
+    setExistingFiles(normalizedFiles);
   }, [uploadedFiles]);
 
   const openFileDialog = () => {
     inputRef.current?.click();
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
     if (!selectedFiles || selectedFiles.length === 0) return;
 
     if (!isMultiple) {
       const file = selectedFiles[0];
-      attachFile({ file }, {
-        onSuccess: (data) => {
-          if (data?.id) {
-            setFiles([data]);
-          }
-        },
-      });
-    }
-    else {
+      setExistingFiles([]);
+      setNewFiles([{
+        id: `local-${Date.now()}`,
+        name: file.name,
+        file: file,
+      }]);
+    } else {
       const fileArray = Array.from(selectedFiles);
-      fileArray.forEach((file) => {
-        attachFile({ file }, {
-          onSuccess: (data) => {
-            if (data?.id) {
-              setFiles((prev) => {
-                if (prev.some((f) => f.id === data.id)) {
-                  return prev;
-                }
-                return [...prev, data];
-              });
-            }
-          },
-        });
-      });
+      const localFiles: LocalFile[] = fileArray.map((file, index) => ({
+        id: `local-${Date.now()}-${index}`,
+        name: file.name,
+        file: file,
+      }));
+      setNewFiles((prev) => [...prev, ...localFiles]);
     }
 
     e.target.value = '';
   };
 
-  const handleRemoveFile = (id: number) => {
-    removeFile({ id }, {
-      onSuccess: () => {
-        setFiles((prev) => prev.filter((file) => file.id !== id));
-      },
-    });
+  const handleRemoveFile = (id: number | string) => {
+    if (typeof id === 'number') {
+      setExistingFiles((prev) => prev.filter((file) => file.id !== id));
+    } else {
+      setNewFiles((prev) => prev.filter((file) => file.id !== id));
+    }
   };
 
   const getButtonText = () => {
-    if (isPending) return '업로드 중...';
-    if (files.length === 0) return '파일 첨부';
-    if (!isMultiple) return files[0]?.originalName || '파일 선택됨';
-    return `${files.length}개의 파일 첨부됨`;
+    const totalCount = existingFiles.length + newFiles.length;
+    if (totalCount === 0) return '파일 첨부';
+
+    if (!isMultiple) {
+      if (newFiles.length > 0) return newFiles[0].name;
+      if (existingFiles.length > 0) return existingFiles[0].originalName;
+      return '파일 선택됨';
+    }
+
+    return `${totalCount}개의 파일 첨부됨`;
   };
+
+  const displayFiles: FileType[] = [
+    ...existingFiles,
+    ...newFiles.map(f => ({
+      id: f.id as unknown as number,
+      originalName: f.name,
+      storeName: '',
+      uri: '',
+    })),
+  ];
 
   return (
     <div>
@@ -99,7 +108,7 @@ export default function FileUploader({
         <div
           role="button"
           tabIndex={0}
-          className={`focus:ring-main-500 flex ${isPending ? 'cursor-not-allowed' : 'cursor-pointer'} items-center gap-2 rounded-xl border border-gray-300 p-3 hover:border-gray-300 focus:outline-none`}
+          className="focus:ring-main-500 flex cursor-pointer items-center gap-2 rounded-xl border border-gray-300 p-3 hover:border-gray-300 focus:outline-none"
           onClick={openFileDialog}
         >
           <span className="text-gray-400">
@@ -113,7 +122,6 @@ export default function FileUploader({
           </span>
 
           <input
-            disabled={isPending}
             ref={inputRef}
             type="file"
             className="hidden"
@@ -126,20 +134,44 @@ export default function FileUploader({
 
       <hr className="mt-6 mb-8" />
 
-      <FileList files={files} onRemove={handleRemoveFile} />
+      <FileList files={displayFiles} onRemove={handleRemoveFile} />
 
       <div className="hidden">
-        {files.map((file) => (
-          file?.id ? (
-            <input
-              key={file.id}
-              value={file.id}
-              name={name}
-              type="hidden"
-              readOnly
-            />
-          ) : null
+        {existingFiles.map((file) => (
+          <input
+            key={`existing-${file.id}`}
+            value={file.id}
+            name="existingFileIds"
+            type="hidden"
+            readOnly
+          />
         ))}
+
+        {newFiles.map((localFile) => {
+          const NewFileInput = () => {
+            const ref = useRef<HTMLInputElement>(null);
+
+            useEffect(() => {
+              if (ref.current) {
+                const dt = new DataTransfer();
+                dt.items.add(localFile.file);
+                ref.current.files = dt.files;
+              }
+            }, []);
+
+            return (
+              <input
+                ref={ref}
+                type="file"
+                name="newFiles"
+                className="hidden"
+                readOnly
+              />
+            );
+          };
+
+          return <NewFileInput key={localFile.id} />;
+        })}
       </div>
     </div>
   );
