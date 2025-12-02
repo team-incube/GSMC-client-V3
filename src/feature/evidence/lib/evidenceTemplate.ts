@@ -7,11 +7,11 @@ import { ActionState } from '@/shared/model/actionState';
 export const executeEvidenceAction = async (
   data: EvidenceFormValues,
   operation: (data: EvidenceFormValues) => Promise<string>,
-  skipValidation = false,
+  options: { skipValidation?: boolean; isDraft?: boolean } = {},
 ): Promise<ActionState<EvidenceFormValues>> => {
   try {
-    if (!skipValidation) {
-      const validationError = validateEvidence(data);
+    if (!options.skipValidation) {
+      const validationError = validateEvidence(data, options.isDraft);
       if (validationError) return validationError;
     }
     const message = await operation(data);
@@ -26,10 +26,13 @@ export const executeEvidenceAction = async (
   }
 };
 
-const validateEvidence = (data: EvidenceFormValues): ActionState<EvidenceFormValues> | null => {
+const validateEvidence = (
+  data: EvidenceFormValues,
+  isDraft = false,
+): ActionState<EvidenceFormValues> | null => {
   const schema = z.object({
-    title: z.string().min(1, '제목을 입력해주세요.'),
-    content: z.string().min(1, '내용을 입력해주세요.'),
+    title: isDraft ? z.string() : z.string().min(1, '제목을 입력해주세요.'),
+    content: isDraft ? z.string() : z.string().min(1, '내용을 입력해주세요.'),
     fileIds: z.array(z.number()).optional(),
   });
 
