@@ -83,6 +83,7 @@ export default function ProjectCreateForm({
           defaultValue={initialData?.title}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.title}</small>
+
         <SearchDropdown
           name="participantIds"
           placeholder="이름을 입력해주세요"
@@ -90,6 +91,7 @@ export default function ProjectCreateForm({
           selectedStudents={initialData?.participants}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.participantIds}</small>
+
         <Textarea
           name="description"
           placeholder="프로젝트 설명을 입력해주세요"
@@ -97,6 +99,7 @@ export default function ProjectCreateForm({
           defaultValue={initialData?.description}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.description}</small>
+
         <FileUploader
           name="fileIds"
           placeholder="파일을 업로드해주세요"
