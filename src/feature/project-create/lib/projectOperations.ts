@@ -20,7 +20,7 @@ export const createProjectOperation = async (formData: ProjectFormValues): Promi
 };
 
 export const updateProjectOperation = async (formData: ProjectFormValues): Promise<string> => {
-  if (!formData.projectId) {
+  if (formData.projectId === undefined) {
     throw new Error('Project ID is required for update');
   }
 
@@ -50,7 +50,7 @@ export const deleteProjectOperation = async (formData: ProjectFormValues): Promi
   if (formData.isDraft) {
     await removeDraftProject();
   } else {
-    if (!formData.projectId) {
+    if (formData.projectId === undefined) {
       throw new Error('Project ID is required for deletion');
     }
     await removeProjectById({ projectId: formData.projectId });
