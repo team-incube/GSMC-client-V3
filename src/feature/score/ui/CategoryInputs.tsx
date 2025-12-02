@@ -218,7 +218,7 @@ export default function CategoryInputs({
             { label: '호랑이', value: '6' },
             { label: '월계관', value: '7' },
           ]}
-          value={initialData?.scoreValue?.toString() || '거북이'}
+          value={initialData?.scoreValue?.toString() || '1'}
           onChange={() => { }}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
