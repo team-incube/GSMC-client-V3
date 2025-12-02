@@ -236,7 +236,7 @@ export default function CategoryInputs({
           name="value"
           label="봉사 점수 (담임선생님 입력)"
           type="number"
-          placeholder="봉사 점수를 입력해주세요"
+          placeholder="봉사 점수"
           defaultValue={initialData?.scoreValue}
           readOnly
         />
