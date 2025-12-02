@@ -3,12 +3,11 @@ import { NextResponse } from 'next/server';
 
 import axios from 'axios';
 
-import { RoleType } from './entities/student/model/student';
+import { RoleType, StudentType } from './entities/student/model/student';
 import { AuthTokenType } from './feature/google-auth/model/auth';
 import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
 import { deleteAuthCookies } from './shared/lib/cookie/deleteCookie';
 import { setAuthCookies } from './shared/lib/cookie/setAuthCookie';
-import { decodeToken } from './shared/lib/jwt';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,11 +24,19 @@ export async function middleware(request: NextRequest) {
   let userRole: RoleType | null = null;
 
   if (accessToken) {
-    const response = await decodeToken(accessToken);
-    userRole = response?.role ?? null;
+    try {
+      const response = await axios.get<{ data: StudentType }>(`${BACKEND_URL}/members/current`, {
+        headers: {
+          Cookie: `accessToken=${accessToken}`,
+        },
+      });
+      userRole = response.data.data.role;
+    } catch {
+      userRole = null;
+    }
   } else if (refreshToken) {
     try {
-      const response = await axios.put<AuthTokenType>(
+      const response = await axios.put<{ data: AuthTokenType }>(
         `${BACKEND_URL}/auth/refresh`,
         {},
         { headers: { Cookie: `refreshToken=${refreshToken}` } },
