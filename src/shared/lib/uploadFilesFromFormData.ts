@@ -1,6 +1,8 @@
 'use server';
 
 import { attachFile } from '@/entities/file/api/attachFile';
+import { removeFileById } from '@/entities/file/api/removeFileById';
+import { FileType } from '@/entities/file/model/file';
 
 export interface UploadFilesOptions {
   multiple?: boolean;
@@ -22,19 +24,27 @@ export async function uploadFilesFromFormData(
 
   const filesToUpload = multiple ? validFiles : validFiles.slice(0, 1);
 
-  const uploadPromises = filesToUpload.map(async (file) => {
-    try {
-      const uploadedFile = await attachFile({ file });
-      if (!uploadedFile?.id) {
-        throw new Error('Upload successful but ID is missing');
-      }
-      return uploadedFile.id;
-    } catch {
-      throw new Error(`파일 업로드에 실패했습니다: ${file.name}`);
+  const results = await Promise.allSettled(filesToUpload.map((file) => attachFile({ file })));
+
+  const successfulUploads = results.filter(
+    (result): result is PromiseFulfilledResult<FileType> => result.status === 'fulfilled',
+  );
+  const failedUploads = results.filter((result) => result.status === 'rejected');
+
+  if (failedUploads.length > 0) {
+    const idsToRollback = successfulUploads
+      .map((result) => Number(result.value?.id))
+      .filter((id): id is number => !isNaN(id));
+
+    if (idsToRollback.length > 0) {
+      await Promise.allSettled(idsToRollback.map((id) => removeFileById({ id })));
     }
-  });
+    throw new Error(`파일 업로드 중 일부가 실패하여 전체 취소되었습니다.`);
+  }
 
-  const uploadedFileIds = await Promise.all(uploadPromises);
+  const newUploadedIds = successfulUploads
+    .map((result) => Number(result.value.id))
+    .filter((id): id is number => !isNaN(id));
 
-  return [...existingFileIds, ...uploadedFileIds];
+  return [...existingFileIds, ...newUploadedIds];
 }
