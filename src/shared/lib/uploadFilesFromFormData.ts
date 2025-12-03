@@ -33,7 +33,7 @@ export async function uploadFilesFromFormData(
 
   if (failedUploads.length > 0) {
     const idsToRollback = successfulUploads
-      .map((result) => Number(result.value?.id))
+      .map((result) => Number(result.value.id))
       .filter((id): id is number => !isNaN(id));
 
     if (idsToRollback.length > 0) {
