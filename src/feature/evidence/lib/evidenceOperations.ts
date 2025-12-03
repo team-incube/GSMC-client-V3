@@ -24,6 +24,7 @@ export const createEvidenceOperation = async (formData: EvidenceFormValues): Pro
 
   try {
     await addEvidence(request);
+    await removeDraftEvidence();
     return '프로젝트 참여글을 작성했습니다.';
   } catch (error) {
     await removeScoreById({ scoreId: scoreResponse.scoreId });
