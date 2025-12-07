@@ -24,7 +24,7 @@ export default function AlertsModal() {
           <article key={alert.id} className="flex flex-col px-5 py-3 border-b border-gray-200 last:border-b-0">
             <div className="flex justify-between items-start">
               <h3 className={cn("font-semibold", alert.alertType === 'REJECTED' ? 'text-error' : "text-main-500")}>{alert.title}</h3>
-              <p className="text-sm">{String(alert.createdAt).split("T")[0]}</p>
+              <p className="text-sm">{alert.createdAt.split("T")[0]}</p>
             </div>
             <p className="text-sm">{alert.content}</p>
           </article>

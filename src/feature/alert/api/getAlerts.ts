@@ -6,7 +6,7 @@ interface AlertType {
   id: number;
   title: string;
   content: string;
-  createdAt: Date;
+  createdAt: string;
   alertType: AlertStatusType;
   scoreId: number;
 }
