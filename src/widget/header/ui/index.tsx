@@ -30,7 +30,7 @@ export default function Header() {
             <button type="button" className="font-semibold cursor-pointer text-gray-900" onClick={signout}>로그아웃</button>
           </nav>
 
-          <Bell onClick={() => setIsModalOpen(!isModalOpen)} className="cursor-pointer" />
+          <Bell onClick={() => setIsModalOpen(((prev) => !prev))} className="cursor-pointer" />
         </div>
       </header>
       {isModalOpen ? <div className="fixed top-[70px] left-1/2 -translate-x-1/2 w-150 z-50 pointer-events-none">
