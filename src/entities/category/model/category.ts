@@ -28,10 +28,10 @@ export interface CategoryNames {
 export interface CategoryType {
   englishName: CategoryKey;
   koreanName: (typeof Category)[keyof typeof Category];
-  weight: number;
+  weight: number | null;
   maxRecordCount: number;
-  isAccumulated: boolean;
+  accumulated: boolean;
   evidenceType: RequiredEvidenceType;
   calculationType: CalculationType;
-  isForeignLanguage: boolean;
+  foreignLanguage: boolean;
 }

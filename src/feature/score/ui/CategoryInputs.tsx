@@ -62,7 +62,7 @@ export default function CategoryInputs({
   }
 
   // 3. 공인점수 (TOEIC, JLPT)
-  if (category.isForeignLanguage) {
+  if (category.foreignLanguage) {
     // TOEIC-ACADEMY (토익 사관학교) - 수정 모드 전용
     if (category.englishName === 'TOEIC-ACADEMY' && mode === 'edit') {
       return (
