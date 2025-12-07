@@ -38,16 +38,11 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
     const isGroupedCategory = categoryNames.englishName !== categoryType;
 
     if (isGroupedCategory) {
-      const individualCategories = new Set(
-        scores.map((score) => score.categoryNames.englishName)
-      );
+      const allCategoriesInGroup = categories?.filter(cat => cat.foreignLanguage) || [];
 
-      const canAddToGroup = Array.from(individualCategories).some(categoryName => {
-        const category = categories?.find(category => category.englishName === categoryName);
-        if (!category) return false;
-
+      const canAddToGroup = allCategoriesInGroup.some(category => {
         const count = scores.filter(
-          (score) => score.categoryNames.englishName === categoryName
+          (score) => score.categoryNames.englishName === category.englishName
         ).length;
 
         return count < category.maxRecordCount;
