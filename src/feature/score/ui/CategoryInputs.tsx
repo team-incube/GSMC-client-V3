@@ -360,7 +360,7 @@ export default function CategoryInputs({
           name="value"
           label="외부활동 제목"
           placeholder="외부활동 제목을 입력해주세요"
-          defaultValue={initialData?.activityName || initialData?.scoreValue}
+          defaultValue={initialData?.activityName}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
         <FileUploader label="외부활동 증빙 파일" name="fileId" uploadedFiles={initialData?.file} />
@@ -380,7 +380,7 @@ export default function CategoryInputs({
             ? '갯수/내용을 입력해주세요'
             : '점수를 입력해주세요'
         }
-        defaultValue={initialData?.activityName || initialData?.scoreValue}
+        defaultValue={category.calculationType === 'COUNT_BASED' ? initialData?.scoreValue : initialData?.activityName}
       />
       <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
 
