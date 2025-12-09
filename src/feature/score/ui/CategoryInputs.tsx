@@ -292,7 +292,8 @@ export default function CategoryInputs({
     return (
       <>
         <Input
-          name="number"
+          name="value"
+          type='number'
           label="회고온도"
           placeholder="회고온도를 입력해주세요"
           defaultValue={initialData?.scoreValue}
