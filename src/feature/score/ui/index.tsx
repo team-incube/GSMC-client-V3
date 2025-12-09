@@ -62,6 +62,9 @@ export default function ScoreForm({
         )}
       </div>
 
+      {!(mode === 'create' && category.foreignLanguage) && (
+        <input type="hidden" name="categoryType" value={category.englishName.toLowerCase()} />
+      )}
       <input type="hidden" name="evidenceType" value={category.evidenceType} />
       {initialData?.scoreId !== undefined && (
         <input type="hidden" name="scoreId" value={initialData.scoreId} />
