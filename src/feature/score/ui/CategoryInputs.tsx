@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 import Link from 'next/link';
 
@@ -13,6 +13,7 @@ interface CategoryInputsProps {
   mode: 'create' | 'edit';
   initialData?: {
     scoreValue?: string | number;
+    activityName?: string;
     file?: FileType;
   };
   state: {
@@ -34,7 +35,7 @@ export default function CategoryInputs({
           name="value"
           label="자격증 이름"
           placeholder="자격증 이름을 입력해주세요"
-          defaultValue={initialData?.scoreValue}
+          defaultValue={initialData?.activityName}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
         <FileUploader label="자격증 인증서 첨부" name="fileId" uploadedFiles={initialData?.file} />
@@ -126,7 +127,7 @@ export default function CategoryInputs({
                 { label: 'N4', value: '4' },
                 { label: 'N5', value: '5' }
               ]}
-              value={initialData?.scoreValue?.toString() || '1'}
+              value={initialData?.activityName || initialData?.scoreValue?.toString() || '1'}
               onChange={() => { }}
             />
             <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
@@ -140,12 +141,12 @@ export default function CategoryInputs({
 
     // 생성 모드: 어학 종류 선택 가능
     const ForeignLanguageCreate = () => {
-      const [selectedType, setSelectedType] = React.useState<'TOEIC' | 'JLPT'>('TOEIC');
-      const [jlptLevel, setJlptLevel] = React.useState('1');
+      const [selectedType, setSelectedType] = useState<'TOEIC' | 'JLPT'>('TOEIC');
+      const [jlptLevel, setJlptLevel] = useState('1');
 
       return (
         <div className="flex flex-col gap-4">
-          <input type="hidden" name="categoryType" value={selectedType} />
+          <input type="hidden" name="categoryType" value={selectedType.toLowerCase()} />
 
           <Dropdown
             label="어학 종류"
@@ -218,7 +219,7 @@ export default function CategoryInputs({
             { label: '호랑이', value: '6' },
             { label: '월계관', value: '7' },
           ]}
-          value={initialData?.scoreValue?.toString() || '1'}
+          value={initialData?.activityName || initialData?.scoreValue?.toString() || '1'}
           onChange={() => { }}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
@@ -259,7 +260,7 @@ export default function CategoryInputs({
             { label: '4등급', value: '4' },
             { label: '5등급', value: '5' },
           ]}
-          value={initialData?.scoreValue?.toString() || '1'}
+          value={initialData?.activityName || initialData?.scoreValue?.toString() || '1'}
           onChange={() => { }}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
@@ -277,7 +278,7 @@ export default function CategoryInputs({
           name="value"
           label="수상경력 제목"
           placeholder="수상경력 제목을 입력해주세요"
-          defaultValue={initialData?.scoreValue}
+          defaultValue={initialData?.activityName || initialData?.scoreValue}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
         <FileUploader label="수상경력 증빙 파일" name="fileId" uploadedFiles={initialData?.file} />
@@ -294,7 +295,7 @@ export default function CategoryInputs({
           name="value"
           label="회고온도"
           placeholder="회고온도를 입력해주세요"
-          defaultValue={initialData?.scoreValue}
+          defaultValue={initialData?.activityName || initialData?.scoreValue}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
         <FileUploader label="증빙가능한 이미지 첨부" name="fileId" uploadedFiles={initialData?.file} />
@@ -321,7 +322,7 @@ export default function CategoryInputs({
             { label: '8등급', value: '8' },
             { label: '9등급', value: '9' },
           ]}
-          value={initialData?.scoreValue?.toString() || '1'}
+          value={initialData?.activityName || initialData?.scoreValue?.toString() || '1'}
           onChange={() => { }}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
@@ -358,7 +359,7 @@ export default function CategoryInputs({
           name="value"
           label="외부활동 제목"
           placeholder="외부활동 제목을 입력해주세요"
-          defaultValue={initialData?.scoreValue}
+          defaultValue={initialData?.activityName || initialData?.scoreValue}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
         <FileUploader label="외부활동 증빙 파일" name="fileId" uploadedFiles={initialData?.file} />
@@ -378,7 +379,7 @@ export default function CategoryInputs({
             ? '갯수/내용을 입력해주세요'
             : '점수를 입력해주세요'
         }
-        defaultValue={initialData?.scoreValue}
+        defaultValue={initialData?.activityName || initialData?.scoreValue}
       />
       <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
 
