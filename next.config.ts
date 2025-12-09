@@ -5,8 +5,9 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
     serverActions: {
-      bodySizeLimit: '10mb',
+      bodySizeLimit: '20MB',
     },
+    middlewareClientMaxBodySize: '20MB',
   },
 };
 
