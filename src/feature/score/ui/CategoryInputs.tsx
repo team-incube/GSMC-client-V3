@@ -27,6 +27,9 @@ export default function CategoryInputs({
   initialData,
   state,
 }: CategoryInputsProps) {
+  const [selectedType, setSelectedType] = useState<'TOEIC' | 'JLPT'>('TOEIC');
+  const [jlptLevel, setJlptLevel] = useState('1');
+
   // 1. 자격증 (Certificate)
   if (category.englishName === 'CERTIFICATE') {
     return (
@@ -140,67 +143,60 @@ export default function CategoryInputs({
     }
 
     // 생성 모드: 어학 종류 선택 가능
-    const ForeignLanguageCreate = () => {
-      const [selectedType, setSelectedType] = useState<'TOEIC' | 'JLPT'>('TOEIC');
-      const [jlptLevel, setJlptLevel] = useState('1');
+    return (
+      <div className="flex flex-col gap-4">
+        <input type="hidden" name="categoryType" value={selectedType.toLowerCase()} />
 
-      return (
-        <div className="flex flex-col gap-4">
-          <input type="hidden" name="categoryType" value={selectedType.toLowerCase()} />
+        <Dropdown
+          label="어학 종류"
+          options={['TOEIC', 'JLPT']}
+          value={selectedType}
+          onChange={(value) => setSelectedType(value as 'TOEIC' | 'JLPT')}
+        />
 
+        {selectedType === 'JLPT' ? (
           <Dropdown
-            label="어학 종류"
-            options={['TOEIC', 'JLPT']}
-            value={selectedType}
-            onChange={(value) => setSelectedType(value as 'TOEIC' | 'JLPT')}
+            name="value"
+            label="JLPT 등급"
+            options={[
+              { label: 'N1', value: '1' },
+              { label: 'N2', value: '2' },
+              { label: 'N3', value: '3' },
+              { label: 'N4', value: '4' },
+              { label: 'N5', value: '5' }
+            ]}
+            value={jlptLevel}
+            onChange={(value) => setJlptLevel(value)}
           />
-
-          {selectedType === 'JLPT' ? (
-            <Dropdown
-              name="value"
-              label="JLPT 등급"
-              options={[
-                { label: 'N1', value: '1' },
-                { label: 'N2', value: '2' },
-                { label: 'N3', value: '3' },
-                { label: 'N4', value: '4' },
-                { label: 'N5', value: '5' }
-              ]}
-              value={jlptLevel}
-              onChange={(value) => setJlptLevel(value)}
-            />
-          ) : (
-            <Input
-              name="value"
-              label="TOEIC 점수"
-              type="number"
-              placeholder="점수를 입력해주세요"
-            />
-          )}
-          <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
-
-          <FileUploader
-            label={selectedType === 'JLPT' ? "성적증명서 첨부" : "성적표 첨부"}
-            name="fileId"
+        ) : (
+          <Input
+            name="value"
+            label="TOEIC 점수"
+            type="number"
+            placeholder="점수를 입력해주세요"
           />
-          <small className="pl-1 text-error">{state.fieldErrors?.fileId}</small>
+        )}
+        <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
 
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="toeicAcademy"
-              name="toeicAcademy"
-              className="h-4 w-4 accent-main-500 cursor-pointer"
-            />
-            <label htmlFor="toeicAcademy" className="text-sm font-medium">
-              토익 사관학교
-            </label>
-          </div>
+        <FileUploader
+          label={selectedType === 'JLPT' ? "성적증명서 첨부" : "성적표 첨부"}
+          name="fileId"
+        />
+        <small className="pl-1 text-error">{state.fieldErrors?.fileId}</small>
+
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="toeicAcademy"
+            name="toeicAcademy"
+            className="h-4 w-4 accent-main-500 cursor-pointer"
+          />
+          <label htmlFor="toeicAcademy" className="text-sm font-medium">
+            토익 사관학교
+          </label>
         </div>
-      );
-    };
-
-    return <ForeignLanguageCreate />;
+      </div>
+    );
   }
 
   // 4. 독서활동 (Reading)
