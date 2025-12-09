@@ -127,7 +127,7 @@ export default function CategoryInputs({
                 { label: 'N4', value: '4' },
                 { label: 'N5', value: '5' }
               ]}
-              value={initialData?.activityName || initialData?.scoreValue?.toString() || '1'}
+              value={initialData?.scoreValue?.toString() || '1'}
               onChange={() => { }}
             />
             <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
@@ -219,7 +219,7 @@ export default function CategoryInputs({
             { label: '호랑이', value: '6' },
             { label: '월계관', value: '7' },
           ]}
-          value={initialData?.activityName || initialData?.scoreValue?.toString() || '1'}
+          value={initialData?.scoreValue?.toString() || '1'}
           onChange={() => { }}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
@@ -260,7 +260,7 @@ export default function CategoryInputs({
             { label: '4등급', value: '4' },
             { label: '5등급', value: '5' },
           ]}
-          value={initialData?.activityName || initialData?.scoreValue?.toString() || '1'}
+          value={initialData?.scoreValue?.toString() || '1'}
           onChange={() => { }}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
@@ -278,7 +278,7 @@ export default function CategoryInputs({
           name="value"
           label="수상경력 제목"
           placeholder="수상경력 제목을 입력해주세요"
-          defaultValue={initialData?.activityName || initialData?.scoreValue}
+          defaultValue={initialData?.activityName}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
         <FileUploader label="수상경력 증빙 파일" name="fileId" uploadedFiles={initialData?.file} />
@@ -292,10 +292,10 @@ export default function CategoryInputs({
     return (
       <>
         <Input
-          name="value"
+          name="number"
           label="회고온도"
           placeholder="회고온도를 입력해주세요"
-          defaultValue={initialData?.activityName || initialData?.scoreValue}
+          defaultValue={initialData?.scoreValue}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
         <FileUploader label="증빙가능한 이미지 첨부" name="fileId" uploadedFiles={initialData?.file} />
@@ -322,7 +322,7 @@ export default function CategoryInputs({
             { label: '8등급', value: '8' },
             { label: '9등급', value: '9' },
           ]}
-          value={initialData?.activityName || initialData?.scoreValue?.toString() || '1'}
+          value={initialData?.scoreValue?.toString() || '1'}
           onChange={() => { }}
         />
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
