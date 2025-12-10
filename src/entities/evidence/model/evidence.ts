@@ -12,7 +12,7 @@ export interface EvidenceType {
 export interface DraftEvidenceType {
   title: string;
   content: string;
-  fileIds: number[];
+  files: FileType[];
 }
 
 export type RequiredEvidenceType = 'EVIDENCE' | 'FILE' | 'UNREQUIRED';

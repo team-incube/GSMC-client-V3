@@ -1,20 +1,23 @@
 import { HttpStatusCode, isAxiosError } from 'axios';
 import z from 'zod';
 
-import { EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema';
 import { ActionState } from '@/shared/model/actionState';
 
-export const executeEvidenceAction = async (
-  data: EvidenceFormValues,
-  operation: (data: EvidenceFormValues) => Promise<string>,
+import { ProjectFormValues } from '../model/projectForm.schema';
+
+export const executeProjectAction = async (
+  data: ProjectFormValues,
+  operation: (data: ProjectFormValues) => Promise<string>,
   options: { skipValidation?: boolean; isDraft?: boolean } = {},
-): Promise<ActionState<EvidenceFormValues>> => {
+): Promise<ActionState<ProjectFormValues>> => {
   try {
     if (!options.skipValidation) {
-      const validationError = validateEvidence(data, options.isDraft);
+      const validationError = validateProject(data, options.isDraft);
       if (validationError) return validationError;
     }
+
     const message = await operation(data);
+
     return {
       status: 'success',
       message,
@@ -22,21 +25,25 @@ export const executeEvidenceAction = async (
       data: null,
     };
   } catch (error) {
-    return handleEvidenceError(error, data);
+    return handleProjectError(error, data);
   }
 };
 
-const validateEvidence = (
-  data: EvidenceFormValues,
+const validateProject = (
+  data: ProjectFormValues,
   isDraft = false,
-): ActionState<EvidenceFormValues> | null => {
+): ActionState<ProjectFormValues> | null => {
   const schema = z.object({
     title: isDraft ? z.string() : z.string().min(1, '제목을 입력해주세요.'),
-    content: isDraft ? z.string() : z.string().min(1, '내용을 입력해주세요.'),
+    description: isDraft ? z.string() : z.string().min(1, '설명을 입력해주세요.'),
+    participantIds: isDraft
+      ? z.array(z.number())
+      : z.array(z.number()).nonempty('프로젝트 참여 팀원을 선택해주세요.'),
     fileIds: z.array(z.number()).optional(),
   });
 
   const result = schema.safeParse(data);
+
   if (!result.success) {
     return {
       status: 'error',
@@ -45,23 +52,25 @@ const validateEvidence = (
       data,
     };
   }
+
   return null;
 };
 
-const handleEvidenceError = (
+const handleProjectError = (
   error: unknown,
-  data: EvidenceFormValues,
-): ActionState<EvidenceFormValues> => {
+  data: ProjectFormValues,
+): ActionState<ProjectFormValues> => {
   let errorMessage = '작업에 실패했습니다.';
 
   if (isAxiosError(error)) {
     const status = error.response?.status;
+
     if (status === HttpStatusCode.Forbidden) {
-      errorMessage = '권한이 없습니다.';
+      errorMessage = '프로젝트를 수정할 권한이 없습니다.';
     } else if (status === HttpStatusCode.NotFound) {
-      errorMessage = '존재하지 않는 데이터입니다.';
-    } else if (status === HttpStatusCode.Conflict) {
-      errorMessage = '이미 참여한 프로젝트입니다.';
+      errorMessage = '존재하지 않는 프로젝트입니다.';
+    } else if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
     }
   }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useGetCategoryBySearch } from '@/entities/category/model/useGetCategoryBySearch';
-import ScoreAddForm from '@/feature/score-add/ui';
+import ScoreForm from '@/feature/score/ui';
 import Button from '@/shared/ui/Button';
 import ModalWrapper from '@/shared/ui/ModalWrapper';
 
@@ -55,9 +55,10 @@ export default function ScoreAddModal({ setIsAddModalOpen, categoryType }: Score
 
   return (
     <ModalWrapper>
-      <ScoreAddForm
+      <ScoreForm
+        mode="create"
         category={category}
-        setIsAddModalOpen={setIsAddModalOpen}
+        setIsModalOpen={setIsAddModalOpen}
       />
     </ModalWrapper>
   );

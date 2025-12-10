@@ -1,7 +1,7 @@
 'use server';
 
 import { EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema';
-import getNumericArrayFromFormData from '@/shared/lib/getNumericArrayFromFormData';
+import { uploadFilesFromFormData } from '@/shared/lib/uploadFilesFromFormData';
 import { ActionState } from '@/shared/model/actionState';
 
 import {
@@ -16,8 +16,19 @@ export const handleEvidenceAction = async (
   _prevState: ActionState<EvidenceFormValues>,
   formData: FormData,
 ): Promise<ActionState<EvidenceFormValues>> => {
-  const fileIds = getNumericArrayFromFormData({ formData, key: 'fileIds' });
   const intent = formData.get('intent') as string;
+
+  let fileIds: number[] = [];
+  try {
+    fileIds = await uploadFilesFromFormData(formData, { multiple: true });
+  } catch (error) {
+    return {
+      status: 'error',
+      message: error instanceof Error ? error.message : '파일 업로드에 실패했습니다.',
+      fieldErrors: null,
+      data: {} as EvidenceFormValues,
+    };
+  }
 
   const data: EvidenceFormValues = {
     projectId: formData.get('projectId') ? Number(formData.get('projectId')) : undefined,
@@ -34,9 +45,9 @@ export const handleEvidenceAction = async (
     case 'update':
       return executeEvidenceAction(data, updateEvidenceOperation);
     case 'draft':
-      return executeEvidenceAction(data, draftEvidenceOperation);
+      return executeEvidenceAction(data, draftEvidenceOperation, { isDraft: true });
     case 'delete':
-      return executeEvidenceAction(data, deleteEvidenceOperation, true);
+      return executeEvidenceAction(data, deleteEvidenceOperation, { skipValidation: true });
     default:
       return {
         status: 'error',
