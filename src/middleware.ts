@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
 
   if (accessToken) {
     try {
-      const response = await axios.get<{ data: StudentType }>(`${BACKEND_URL}/members/current`, {
+      const response = await axios.get<{ data: StudentType }>(`${BACKEND_URL}/members/my`, {
         headers: {
           Cookie: `accessToken=${accessToken}`,
         },
