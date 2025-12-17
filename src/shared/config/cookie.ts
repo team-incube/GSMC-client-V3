@@ -5,6 +5,7 @@ export const COOKIE_CONFIG = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60,
+      path: '/',
       sameSite: 'lax' as const,
     },
   },
