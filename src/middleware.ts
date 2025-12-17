@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
       );
 
       userRole = response?.data.data.role ?? null;
-      newTokens = response.data.data;
+      newTokens = response?.data?.data ?? null;
     } catch {
       userRole = null;
     }
