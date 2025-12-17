@@ -1,23 +1,43 @@
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
-export async function setAuthCookies(accessToken: string, refreshToken?: string | null) {
+import { COOKIE_CONFIG } from '@/shared/config/cookie';
+
+export async function setAuthCookies(
+  accessToken: string,
+  refreshToken?: string | null,
+  response?: NextResponse
+) {
+  if (response) {
+    response.cookies.set(
+      COOKIE_CONFIG.accessToken.name,
+      accessToken,
+      COOKIE_CONFIG.accessToken.options
+    );
+
+    if (refreshToken) {
+      response.cookies.set(
+        COOKIE_CONFIG.refreshToken.name,
+        refreshToken,
+        COOKIE_CONFIG.refreshToken.options
+      );
+    }
+    return;
+  }
+
   const cookieStore = await cookies();
 
-  cookieStore.set('accessToken', accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60,
-    path: '/',
-    sameSite: 'lax',
-  });
+  cookieStore.set(
+    COOKIE_CONFIG.accessToken.name,
+    accessToken,
+    COOKIE_CONFIG.accessToken.options
+  );
 
   if (refreshToken) {
-    cookieStore.set('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-      sameSite: 'lax',
-    });
+    cookieStore.set(
+      COOKIE_CONFIG.refreshToken.name,
+      refreshToken,
+      COOKIE_CONFIG.refreshToken.options
+    );
   }
 }
