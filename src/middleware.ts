@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import { RoleType, StudentType } from './entities/student/model/student';
 import { AuthTokenType } from './feature/google-auth/model/auth';
+import { COOKIE_CONFIG } from './shared/config/cookie';
 import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
 import { setAuthCookies } from './shared/lib/cookie/setAuthCookie';
 
@@ -32,6 +33,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  let newTokens: { accessToken: string; refreshToken: string } | null = null;
+
   if (!userRole && refreshToken) {
     try {
       const response = await axios.put<{ data: AuthTokenType }>(
@@ -41,66 +44,47 @@ export async function middleware(request: NextRequest) {
       );
 
       userRole = response?.data.data.role ?? null;
-
-      const nextResponse = NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      });
-
-      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data.data;
-
-      if (isProtectedRoute) {
-        if (!userRole) {
-          const redirect = NextResponse.redirect(new URL('/', request.url));
-          redirect.cookies.delete('accessToken');
-          redirect.cookies.delete('refreshToken');
-          return redirect;
-        }
-        if (userRole === 'UNAUTHORIZED') {
-          const redirect = NextResponse.redirect(new URL('/signup', request.url));
-          await setAuthCookies(newAccessToken, newRefreshToken, redirect);
-          return redirect;
-        }
-      }
-
-      if (isPublicRoute && userRole && userRole !== 'UNAUTHORIZED') {
-        const redirect = NextResponse.redirect(new URL('/main', request.url));
-        await setAuthCookies(newAccessToken, newRefreshToken, redirect);
-        return redirect;
-      }
-
-      await setAuthCookies(newAccessToken, newRefreshToken, nextResponse);
-      return nextResponse;
-
+      newTokens = response.data.data;
     } catch {
-      const response = NextResponse.redirect(new URL('/', request.url));
-      response.cookies.delete('accessToken');
-      response.cookies.delete('refreshToken');
-      return response;
+      userRole = null;
     }
   }
 
   if (isProtectedRoute) {
     if (!userRole) {
-      return NextResponse.redirect(new URL('/', request.url));
+      const redirect = NextResponse.redirect(new URL('/', request.url));
+      redirect.cookies.delete(COOKIE_CONFIG.accessToken.name);
+      redirect.cookies.delete(COOKIE_CONFIG.refreshToken.name);
+      return redirect;
     }
     if (userRole === 'UNAUTHORIZED') {
-      return NextResponse.redirect(new URL('/signup', request.url));
+      const redirect = NextResponse.redirect(new URL('/signup', request.url));
+      if (newTokens) {
+        await setAuthCookies(newTokens.accessToken, newTokens.refreshToken, redirect);
+      }
+      return redirect;
     }
   }
 
-  if (isPublicRoute) {
-    if (userRole && userRole !== 'UNAUTHORIZED') {
-      return NextResponse.redirect(new URL('/main', request.url));
+  if (isPublicRoute && userRole && userRole !== 'UNAUTHORIZED') {
+    const redirect = NextResponse.redirect(new URL('/main', request.url));
+    if (newTokens) {
+      await setAuthCookies(newTokens.accessToken, newTokens.refreshToken, redirect);
     }
+    return redirect;
   }
 
-  return NextResponse.next({
+  const nextResponse = NextResponse.next({
     request: {
       headers: requestHeaders,
     },
   });
+
+  if (newTokens) {
+    await setAuthCookies(newTokens.accessToken, newTokens.refreshToken, nextResponse);
+  }
+
+  return nextResponse;
 }
 
 export const config = {
