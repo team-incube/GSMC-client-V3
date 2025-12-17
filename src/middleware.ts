@@ -48,25 +48,29 @@ export async function middleware(request: NextRequest) {
         },
       });
 
-      await setAuthCookies(
-        response.data.data.accessToken,
-        response.data.data.refreshToken,
-        nextResponse
-      );
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data.data;
 
       if (isProtectedRoute) {
         if (!userRole) {
-          return NextResponse.redirect(new URL('/', request.url));
+          const redirect = NextResponse.redirect(new URL('/', request.url));
+          redirect.cookies.delete('accessToken');
+          redirect.cookies.delete('refreshToken');
+          return redirect;
         }
         if (userRole === 'UNAUTHORIZED') {
-          return NextResponse.redirect(new URL('/signup', request.url));
+          const redirect = NextResponse.redirect(new URL('/signup', request.url));
+          await setAuthCookies(newAccessToken, newRefreshToken, redirect);
+          return redirect;
         }
       }
 
       if (isPublicRoute && userRole && userRole !== 'UNAUTHORIZED') {
-        return NextResponse.redirect(new URL('/main', request.url));
+        const redirect = NextResponse.redirect(new URL('/main', request.url));
+        await setAuthCookies(newAccessToken, newRefreshToken, redirect);
+        return redirect;
       }
 
+      await setAuthCookies(newAccessToken, newRefreshToken, nextResponse);
       return nextResponse;
 
     } catch {
