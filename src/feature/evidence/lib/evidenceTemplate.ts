@@ -1,7 +1,7 @@
 import { HttpStatusCode, isAxiosError } from 'axios';
 import z from 'zod';
 
-import { EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema';
+import { EvidenceFormSchema, EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema';
 import { ActionState } from '@/shared/model/actionState';
 
 export const executeEvidenceAction = async (
@@ -29,38 +29,7 @@ export const executeEvidenceAction = async (
 const validateEvidence = (
   data: EvidenceFormValues,
 ): ActionState<EvidenceFormValues> | null => {
-  const schema = z.object({
-    title: z.string().min(1, '제목을 입력해주세요.'),
-    isDraft: z.boolean().optional(),
-    content: z.string(),
-    fileIds: z.array(z.number()),
-  }).superRefine((data, ctx) => {
-    if (!data.isDraft) {
-      if (data.content.length < 300) {
-        ctx.addIssue({
-          code: 'custom',
-          message: '최소 300자 이상 입력해주세요',
-          path: ['content'],
-        });
-      }
-      if (data.content.length > 2000) {
-        ctx.addIssue({
-          code: 'custom',
-          message: '최대 2000자 이하 입력해주세요',
-          path: ['content'],
-        });
-      }
-      if (data.fileIds.length < 1) {
-        ctx.addIssue({
-          code: 'custom',
-          message: '최소 1개의 파일을 첨부해주세요',
-          path: ['fileIds'],
-        });
-      }
-    }
-  });
-
-  const result = schema.safeParse(data);
+  const result = EvidenceFormSchema.safeParse(data);
   if (!result.success) {
     return {
       status: 'error',
