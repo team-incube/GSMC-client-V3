@@ -18,9 +18,9 @@ export default function ProjectCreateView() {
 
   const { data: project, isLoading: isProjectLoading } = useGetProjectById({ projectId });
   const { data: draftProject, isLoading: isDraftLoading } = useGetDraftProject();
-  const { data: student } = useGetCurrentStudent();
+  const { data: student, isLoading: isStudentLoading } = useGetCurrentStudent();
 
-  const isLoading = (isEditMode && isProjectLoading) || (!isEditMode && isDraftLoading);
+  const isLoading = (isEditMode && isProjectLoading) || (!isEditMode && isDraftLoading) || isStudentLoading;
 
   if (isLoading) {
     return <div>로딩 중...</div>;

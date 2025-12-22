@@ -3,7 +3,7 @@ import z from 'zod';
 
 import { ActionState } from '@/shared/model/actionState';
 
-import { ProjectFormValues } from '../model/projectForm.schema';
+import { ProjectFormSchema, ProjectFormValues } from '../model/projectForm.schema';
 
 export const executeProjectAction = async (
   data: ProjectFormValues,
@@ -12,7 +12,7 @@ export const executeProjectAction = async (
 ): Promise<ActionState<ProjectFormValues>> => {
   try {
     if (!options.skipValidation) {
-      const validationError = validateProject(data, options.isDraft);
+      const validationError = validateProject(data);
       if (validationError) return validationError;
     }
 
@@ -31,19 +31,8 @@ export const executeProjectAction = async (
 
 const validateProject = (
   data: ProjectFormValues,
-  isDraft = false,
 ): ActionState<ProjectFormValues> | null => {
-  const schema = z.object({
-    title: isDraft ? z.string() : z.string().min(1, '제목을 입력해주세요.'),
-    description: isDraft ? z.string() : z.string().min(1, '설명을 입력해주세요.'),
-    participantIds: isDraft
-      ? z.array(z.number())
-      : z.array(z.number()).nonempty('프로젝트 참여 팀원을 선택해주세요.'),
-    fileIds: z.array(z.number()).optional(),
-  });
-
-  const result = schema.safeParse(data);
-
+  const result = ProjectFormSchema.safeParse(data);
   if (!result.success) {
     return {
       status: 'error',

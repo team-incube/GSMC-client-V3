@@ -59,10 +59,12 @@ export default function EvidenceForm({
     control,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<EvidenceFormValues>({
     resolver: zodResolver(EvidenceFormSchema),
-    defaultValues: {
+    values: {
+      isDraft: false,
       projectId: initialData?.projectId,
       evidenceId: initialData?.evidenceId,
       scoreId: initialData?.scoreId,
@@ -73,6 +75,7 @@ export default function EvidenceForm({
   });
 
   const contentLength = watch('content')?.length ?? 0;
+  const isDraftForm = watch('isDraft');
 
   useEffect(() => {
     if (state.message) {
@@ -96,6 +99,7 @@ export default function EvidenceForm({
     formData.set('intent', intent);
     formData.set('title', data.title);
     formData.set('content', data.content);
+    formData.set('isDraft', String(data.isDraft));
 
     if (data.projectId !== undefined) {
       formData.set('projectId', data.projectId.toString());
@@ -181,18 +185,25 @@ export default function EvidenceForm({
           <Button
             type="button"
             variant="border"
-            onClick={handleSubmit((data: EvidenceFormValues) => onSubmit(data, 'draft'))}
+            disabled={isPending}
+            onClick={() => {
+              setValue('isDraft', true);
+              handleSubmit((data: EvidenceFormValues) => onSubmit(data, 'draft'))();
+            }}
           >
-            임시저장
+            {isPending && isDraftForm ? '저장 중...' : '임시저장'}
           </Button>
         )}
 
         <Button
           type="button"
           disabled={isPending}
-          onClick={handleSubmit((data: EvidenceFormValues) => onSubmit(data, mode === 'create' ? 'create' : 'update'))}
+          onClick={() => {
+            setValue('isDraft', false);
+            handleSubmit((data: EvidenceFormValues) => onSubmit(data, mode === 'create' ? 'create' : 'update'))();
+          }}
         >
-          {isPending ? '처리 중...' : mode === 'create' ? '작성 완료' : '수정하기'}
+          {isPending && !isDraftForm ? '처리 중...' : mode === 'create' ? '작성 완료' : '수정하기'}
         </Button>
 
         {actions.showDelete === true && (
