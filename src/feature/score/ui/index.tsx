@@ -98,7 +98,7 @@ export default function ScoreForm({
           <Button type="button" variant="border" onClick={() => setIsModalOpen(false)}>
             취소
           </Button>
-          {category.englishName !== 'ACADEMIC-GRADE' && (
+          {category.englishName !== 'ACADEMIC-GRADE' && category.englishName !== 'VOLUNTEER' && (
             <Button
               type="submit"
               disabled={isPending}
