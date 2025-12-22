@@ -23,6 +23,8 @@ export default function ProjectParticipationView() {
     title: projectScoreEvidence.evidence.title,
     content: projectScoreEvidence.evidence.content,
     files: projectScoreEvidence.evidence?.files,
+    scoreStatus: projectScoreEvidence.score.scoreStatus,
+    rejectionReason: projectScoreEvidence.score.rejectionReason || undefined,
   } : { projectId };
 
   const mode = initialData.evidenceId ? 'edit' : 'create';

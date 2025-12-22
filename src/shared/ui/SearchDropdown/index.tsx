@@ -10,13 +10,14 @@ import getStudentCode from '@/shared/lib/getStudentCode';
 import SearchBar from '@/shared/ui/SearchBar';
 import SearchList from '@/shared/ui/SearchList';
 
-interface SearchDropdownProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value'> {
+interface SearchDropdownProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
   label: string;
   name?: string;
   selectedStudents?: StudentType | StudentType[];
+  onChange?: (students: StudentType[]) => void;
 }
 
-export default function SearchDropdown({ label, name, selectedStudents, ...props }: SearchDropdownProps) {
+export default function SearchDropdown({ label, name, selectedStudents, onChange, ...props }: SearchDropdownProps) {
   const [keyword, setKeyword] = useState('');
   const [inputValue, setInputValue] = useState('');
   const { data: searchResults = [], isLoading } = useGetSearchStudent({ name: keyword, page: 0, limit: 10 })
@@ -52,14 +53,18 @@ export default function SearchDropdown({ label, name, selectedStudents, ...props
       return;
     }
 
-    setStudents((prev) => [...prev, student]);
+    const newStudents = [...students, student];
+    setStudents(newStudents);
+    onChange?.(newStudents);
     setInputValue('');
     setKeyword('');
     setShowDropdown(false);
   };
 
   const handleRemoveStudent = (id: number) => {
-    setStudents((prev) => prev.filter((student) => student.id !== id));
+    const newStudents = students.filter((student) => student.id !== id);
+    setStudents(newStudents);
+    onChange?.(newStudents);
   };
 
   return (

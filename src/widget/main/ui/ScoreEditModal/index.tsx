@@ -65,7 +65,9 @@ export default function ScoreEditModal({ setIsEditModalOpen, scoreId, categoryTy
           scoreId: scoreData.scoreId,
           scoreValue: scoreData.scoreValue,
           activityName: scoreData.activityName,
-          file: scoreData.file || undefined
+          file: scoreData.file || undefined,
+          scoreStatus: scoreData.scoreStatus,
+          rejectionReason: scoreData.rejectionReason || undefined
         }}
         setIsModalOpen={setIsEditModalOpen}
       />
