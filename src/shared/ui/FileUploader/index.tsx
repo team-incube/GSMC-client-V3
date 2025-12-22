@@ -7,10 +7,11 @@ import Chain from '@/shared/asset/svg/Chain';
 import useFileUploaderState from '@/shared/model/useHandlingFileUploader';
 import FileList from '@/shared/ui/FileList';
 
-interface FileUploaderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value'> {
+interface FileUploaderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
   label: string;
   uploadedFiles?: FileType | FileType[];
   isMultiple?: boolean;
+  onChange?: (files: { existing: FileType[], new: File[] }) => void;
 }
 
 interface NewFileInputProps {
@@ -43,6 +44,7 @@ export default function FileUploader({
   label,
   uploadedFiles,
   isMultiple = false,
+  onChange,
   ...props
 }: FileUploaderProps) {
   const {
@@ -52,7 +54,7 @@ export default function FileUploader({
     buttonText,
     handleFileChange,
     handleRemoveFile,
-  } = useFileUploaderState({ uploadedFiles, isMultiple });
+  } = useFileUploaderState({ uploadedFiles, isMultiple, onChange });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
