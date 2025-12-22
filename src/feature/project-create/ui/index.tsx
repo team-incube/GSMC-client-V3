@@ -1,9 +1,11 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { startTransition, useActionState, useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { useRouter } from 'next/navigation';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -17,7 +19,7 @@ import Input from '@/shared/ui/Input';
 import SearchDropdown from '@/shared/ui/SearchDropdown';
 import Textarea from '@/shared/ui/Textarea';
 
-import { ProjectFormValues } from '../model/projectForm.schema';
+import { ProjectFormSchema, ProjectFormValues } from '../model/projectForm.schema';
 
 export interface ProjectCreateFormProps {
   mode?: 'create' | 'edit';
@@ -50,6 +52,26 @@ export default function ProjectCreateForm({
     createInitialState<ProjectFormValues>(),
   );
 
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ProjectFormValues>({
+    resolver: zodResolver(ProjectFormSchema),
+    defaultValues: {
+      projectId: initialData?.projectId,
+      title: initialData?.title ?? '',
+      description: initialData?.description ?? '',
+      participantIds: initialData?.participants?.map(p => p.id) ?? [],
+      fileIds: initialData?.files?.map(file => Number(file.id)) ?? [],
+      isDraft: initialData?.isDraft,
+    },
+  });
+
+  const descriptionLength = watch('description')?.length ?? 0;
+
   useEffect(() => {
     if (state.message) {
       if (state.status === 'success') {
@@ -70,44 +92,84 @@ export default function ProjectCreateForm({
     }
   }, [state, router, queryClient, mode, initialData, redirectOnSuccess]);
 
+  const onSubmit = (data: ProjectFormValues, intent: string) => {
+    const form = document.querySelector('form');
+    if (!form) return;
+
+    const formData = new FormData(form);
+    formData.set('intent', intent);
+    formData.set('title', data.title);
+    formData.set('description', data.description);
+
+    formData.delete('participantIds');
+    data.participantIds.forEach(id => formData.append('participantIds', id.toString()));
+
+    if (data.projectId !== undefined) {
+      formData.set('projectId', data.projectId.toString());
+    }
+    if (data.isDraft !== undefined) {
+      formData.set('isDraft', data.isDraft.toString());
+    }
+
+    startTransition(() => {
+      formAction(formData);
+    });
+  };
+
   const isDraft = initialData?.isDraft ?? false;
   const activeProjectId = initialData?.projectId ?? 0;
 
   return (
-    <form className="flex flex-col w-full gap-16" action={formAction}>
+    <form className="flex flex-col w-full gap-16" onSubmit={(e) => e.preventDefault()}>
       <div className="flex flex-col gap-6">
         <Input
-          name="title"
-          placeholder="주제를 입력해주세요"
-          label="주제"
-          defaultValue={initialData?.title}
+          label="제목"
+          placeholder="제목을 입력해주세요"
+          {...register('title')}
         />
-        <small className="pl-1 text-error">{state.fieldErrors?.title}</small>
+        <small className="pl-1 text-error">{errors.title?.message || state.fieldErrors?.title}</small>
 
-        <SearchDropdown
+        <Controller
           name="participantIds"
-          placeholder="이름을 입력해주세요"
-          label="팀원"
-          selectedStudents={initialData?.participants}
+          control={control}
+          render={({ field }) => (
+            <SearchDropdown
+              label="팀원"
+              placeholder="이름을 입력해주세요"
+              selectedStudents={initialData?.participants}
+              onChange={(students) => field.onChange(students.map(s => s.id))}
+            />
+          )}
         />
-        <small className="pl-1 text-error">{state.fieldErrors?.participantIds}</small>
+        <small className="pl-1 text-error">{errors.participantIds?.message || state.fieldErrors?.participantIds}</small>
 
         <Textarea
-          name="description"
-          placeholder="프로젝트 설명을 입력해주세요"
-          label="프로젝트 설명"
-          defaultValue={initialData?.description}
+          label='프로젝트 설명'
+          placeholder="최소 300자, 최대 2000자 입력해주세요"
+          description={`${descriptionLength}/300`}
+          {...register('description')}
         />
-        <small className="pl-1 text-error">{state.fieldErrors?.description}</small>
+        <small className="pl-1 text-error">{errors.description?.message || state.fieldErrors?.description}</small>
 
-        <FileUploader
+        <Controller
           name="fileIds"
-          placeholder="파일을 업로드해주세요"
-          label="파일"
-          uploadedFiles={initialData?.files}
-          isMultiple
+          control={control}
+          render={({ field }) => (
+            <FileUploader
+              label="파일"
+              placeholder="파일을 업로드해주세요"
+              uploadedFiles={initialData?.files}
+              isMultiple
+              onChange={(files) => {
+                const existingFileIds = files.existing.map(f => Number(f.id));
+                const newFileIds = files.new.map((_, index) => -(index + 1));
+                const allFileIds = [...existingFileIds, ...newFileIds];
+                field.onChange(allFileIds);
+              }}
+            />
+          )}
         />
-        <small className="pl-1 text-error">{state.fieldErrors?.fileIds}</small>
+        <small className="pl-1 text-error">{errors.fileIds?.message || state.fieldErrors?.fileIds}</small>
 
         {initialData?.projectId !== undefined && <input type="hidden" name="projectId" value={activeProjectId} />}
         {initialData?.isDraft !== undefined && <input type="hidden" name="isDraft" value={String(isDraft)} />}
@@ -115,27 +177,29 @@ export default function ProjectCreateForm({
       </div>
       <div className="flex flex-col gap-[10px]">
         {actions.showDraft === true && (
-          <Button type="submit" variant="border" name="intent" value="draft">
+          <Button
+            type="button"
+            variant="border"
+            onClick={handleSubmit((data: ProjectFormValues) => onSubmit(data, 'draft'))}
+          >
             임시저장
           </Button>
         )}
 
         <Button
-          type="submit"
+          type="button"
           disabled={isPending}
-          name="intent"
-          value={mode === 'create' ? 'create' : 'update'}
+          onClick={handleSubmit((data: ProjectFormValues) => onSubmit(data, mode === 'create' ? 'create' : 'update'))}
         >
           {isPending ? '처리 중...' : mode === 'create' ? '작성 완료' : '수정하기'}
         </Button>
 
         {actions.showDelete === true && (
           <Button
-            type="submit"
+            type="button"
             variant="border"
             className="text-error underline"
-            name="intent"
-            value="delete"
+            onClick={handleSubmit((data: ProjectFormValues) => onSubmit(data, 'delete'))}
           >
             삭제
           </Button>
