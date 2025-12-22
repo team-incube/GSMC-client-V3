@@ -33,18 +33,33 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  let newTokens: { accessToken: string; refreshToken: string } | null = null;
-
-  if (!userRole && refreshToken) {
+  if ((!accessToken || !userRole) && refreshToken) {
     try {
       const response = await axios.put<{ data: AuthTokenType }>(
         `${BACKEND_URL}/auth/refresh`,
         {},
-        { headers: { Cookie: `refreshToken=${refreshToken}` } },
+        {
+          headers: { Cookie: `refreshToken=${refreshToken}` },
+          withCredentials: true
+        }
       );
 
       userRole = response?.data.data.role ?? null;
-      newTokens = response?.data?.data ?? null;
+
+      const setCookie = response.headers['set-cookie'];
+
+      if (setCookie && userRole) {
+        const redirectUrl = new URL(request.url);
+        const redirect = NextResponse.redirect(redirectUrl);
+
+        const cookies = Array.isArray(setCookie) ? setCookie : [setCookie];
+
+        cookies.forEach((cookie) => {
+          redirect.headers.append('Set-Cookie', cookie);
+        });
+
+        return redirect;
+      }
     } catch {
       userRole = null;
     }
@@ -59,18 +74,12 @@ export async function middleware(request: NextRequest) {
     }
     if (userRole === 'UNAUTHORIZED') {
       const redirect = NextResponse.redirect(new URL('/signup', request.url));
-      if (newTokens) {
-        await setAuthCookies(newTokens.accessToken, newTokens.refreshToken, redirect);
-      }
       return redirect;
     }
   }
 
   if (isPublicRoute && userRole && userRole !== 'UNAUTHORIZED') {
     const redirect = NextResponse.redirect(new URL('/main', request.url));
-    if (newTokens) {
-      await setAuthCookies(newTokens.accessToken, newTokens.refreshToken, redirect);
-    }
     return redirect;
   }
 
@@ -79,10 +88,6 @@ export async function middleware(request: NextRequest) {
       headers: requestHeaders,
     },
   });
-
-  if (newTokens) {
-    await setAuthCookies(newTokens.accessToken, newTokens.refreshToken, nextResponse);
-  }
 
   return nextResponse;
 }
