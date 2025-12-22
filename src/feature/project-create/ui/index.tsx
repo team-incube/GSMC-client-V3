@@ -58,6 +58,7 @@ export default function ProjectCreateForm({
     control,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ProjectFormValues>({
     resolver: zodResolver(ProjectFormSchema),
@@ -67,11 +68,12 @@ export default function ProjectCreateForm({
       description: initialData?.description ?? '',
       participantIds: initialData?.participants?.map(p => p.id) ?? [],
       fileIds: initialData?.files?.map(file => Number(file.id)) ?? [],
-      isDraft: initialData?.isDraft,
+      isDraft: initialData?.isDraft ?? false,
     },
   });
 
   const descriptionLength = watch('description')?.length ?? 0;
+  const isDraftForm = watch('isDraft');
 
   useEffect(() => {
     if (state.message) {
@@ -101,15 +103,13 @@ export default function ProjectCreateForm({
     formData.set('intent', intent);
     formData.set('title', data.title);
     formData.set('description', data.description);
+    formData.set('isDraft', String(data.isDraft));
 
     formData.delete('participantIds');
     data.participantIds.forEach(id => formData.append('participantIds', id.toString()));
 
     if (data.projectId !== undefined) {
       formData.set('projectId', data.projectId.toString());
-    }
-    if (data.isDraft !== undefined) {
-      formData.set('isDraft', data.isDraft.toString());
     }
 
     startTransition(() => {
@@ -185,18 +185,25 @@ export default function ProjectCreateForm({
           <Button
             type="button"
             variant="border"
-            onClick={handleSubmit((data: ProjectFormValues) => onSubmit(data, 'draft'))}
+            disabled={isPending}
+            onClick={() => {
+              setValue('isDraft', true);
+              handleSubmit((data: ProjectFormValues) => onSubmit(data, 'draft'))();
+            }}
           >
-            임시저장
+            {isPending && isDraftForm ? '저장 중...' : '임시저장'}
           </Button>
         )}
 
         <Button
           type="button"
           disabled={isPending}
-          onClick={handleSubmit((data: ProjectFormValues) => onSubmit(data, mode === 'create' ? 'create' : 'update'))}
+          onClick={() => {
+            setValue('isDraft', false);
+            handleSubmit((data: ProjectFormValues) => onSubmit(data, mode === 'create' ? 'create' : 'update'))();
+          }}
         >
-          {isPending ? '처리 중...' : mode === 'create' ? '작성 완료' : '수정하기'}
+          {isPending && !isDraftForm ? '처리 중...' : mode === 'create' ? '작성 완료' : '수정하기'}
         </Button>
 
         {actions.showDelete === true && (

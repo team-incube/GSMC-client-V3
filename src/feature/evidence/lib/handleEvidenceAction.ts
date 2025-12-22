@@ -37,6 +37,7 @@ export const handleEvidenceAction = async (
     title: String(formData.get('title') ?? '').trim(),
     content: String(formData.get('content') ?? '').trim(),
     fileIds: fileIds.length ? fileIds : [],
+    isDraft: formData.get('isDraft') === 'true',
   };
 
   switch (intent) {
