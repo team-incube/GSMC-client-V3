@@ -89,7 +89,6 @@ export default function ScoreForm({
           label="반려 사유"
           readOnly
           defaultValue={initialData.rejectionReason}
-          className="bg-gray-50"
         />
       )}
 
