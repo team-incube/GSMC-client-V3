@@ -62,7 +62,7 @@ export default function EvidenceForm({
     formState: { errors },
   } = useForm<EvidenceFormValues>({
     resolver: zodResolver(EvidenceFormSchema),
-    defaultValues: {
+    values: {
       projectId: initialData?.projectId,
       evidenceId: initialData?.evidenceId,
       scoreId: initialData?.scoreId,
