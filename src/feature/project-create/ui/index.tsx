@@ -1,6 +1,6 @@
 'use client';
 
-import { startTransition, useActionState, useEffect } from 'react';
+import { startTransition, useActionState, useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { useRouter } from 'next/navigation';
@@ -46,6 +46,7 @@ export default function ProjectCreateForm({
 }: ProjectCreateFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [state, formAction, isPending] = useActionState(
     handleProjectAction,
@@ -93,7 +94,7 @@ export default function ProjectCreateForm({
   }, [state, router, queryClient, mode, initialData, redirectOnSuccess]);
 
   const onSubmit = (data: ProjectFormValues, intent: string) => {
-    const form = document.querySelector('form');
+    const form = formRef.current;
     if (!form) return;
 
     const formData = new FormData(form);
@@ -120,7 +121,11 @@ export default function ProjectCreateForm({
   const activeProjectId = initialData?.projectId ?? 0;
 
   return (
-    <form className="flex flex-col w-full gap-16" onSubmit={(e) => e.preventDefault()}>
+    <form
+      ref={formRef}
+      className="flex flex-col w-full gap-16"
+      onSubmit={(e) => e.preventDefault()}
+    >
       <div className="flex flex-col gap-6">
         <Input
           label="제목"

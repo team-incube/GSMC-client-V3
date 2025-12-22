@@ -1,6 +1,6 @@
 'use client';
 
-import { startTransition, useActionState, useEffect } from 'react';
+import { startTransition, useActionState, useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { useRouter } from 'next/navigation';
@@ -47,6 +47,8 @@ export default function EvidenceForm({
 }: EvidenceFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const formRef = useRef<HTMLFormElement>(null);
+
   const [state, formAction, isPending] = useActionState(
     handleEvidenceAction,
     createInitialState<EvidenceFormValues>()
@@ -87,7 +89,7 @@ export default function EvidenceForm({
   }, [state, router, redirectOnSuccess, queryClient]);
 
   const onSubmit = (data: EvidenceFormValues, intent: string) => {
-    const form = document.querySelector('form');
+    const form = formRef.current;
     if (!form) return;
 
     const formData = new FormData(form);
@@ -111,7 +113,11 @@ export default function EvidenceForm({
   };
 
   return (
-    <form className="flex w-full flex-col gap-16" onSubmit={(e) => e.preventDefault()}>
+    <form
+      ref={formRef}
+      className="flex w-full flex-col gap-16"
+      onSubmit={(e) => e.preventDefault()}
+    >
       <div className="flex flex-col gap-6">
         {initialData?.scoreStatus === 'REJECTED' && (
           <p className="text-error text-body2 font-bold -mb-4">탈락됨</p>
