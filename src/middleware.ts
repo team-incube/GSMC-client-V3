@@ -7,7 +7,6 @@ import { RoleType, StudentType } from './entities/student/model/student';
 import { AuthTokenType } from './feature/google-auth/model/auth';
 import { COOKIE_CONFIG } from './shared/config/cookie';
 import { PROTECT_PAGE, PUBLIC_PAGE } from './shared/config/protect-page';
-import { setAuthCookies } from './shared/lib/cookie/setAuthCookie';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
 
