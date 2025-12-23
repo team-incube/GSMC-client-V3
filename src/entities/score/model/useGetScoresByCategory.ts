@@ -6,7 +6,5 @@ export const useGetScoresByCategory = (params: getScoresByCategoryRequest) => {
   return useQuery({
     queryKey: ['score', 'list', 'category', params],
     queryFn: () => getScoresByCategory(params),
-    select: (data) =>
-      data.map((score) => ({ ...score, categoryType: score.categoryType.replaceAll('_', '-') })),
   });
 };
