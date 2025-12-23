@@ -41,6 +41,7 @@ export default function FaqElement({
         'border-gray-200',
         'flex-col',
         'text-left',
+        'cursor-pointer'
       )}
       onClick={onToggle}
     >

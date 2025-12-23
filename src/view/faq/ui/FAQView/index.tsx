@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 
-import SearchBar from '@/shared/ui/SearchBar';
-import { faqData } from '@/view/faq/mock/faqData';
+import { faqData } from '@/view/faq/model/faqData';
 import FAQElement from '@/widget/faq/ui/FAQElement';
 
 export default function FAQ() {
@@ -17,7 +16,6 @@ export default function FAQ() {
     <div className="flex w-full justify-center px-4 py-15.5">
       <div className="flex w-full max-w-[600px] flex-col gap-6">
         <p className="font-400 text-center text-3xl">자주 묻는 질문</p>
-        <SearchBar placeholder="질문을 검색해주세요." />
         <div className="flex flex-col">
           {faqData.map((faq) => (
             <FAQElement
