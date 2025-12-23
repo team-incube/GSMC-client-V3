@@ -1,9 +1,8 @@
 interface MenuProps {
-  onClick?: () => void;
   className?: string;
 }
 
-export default function Menu({ onClick, className }: MenuProps) {
+export default function Menu({ className }: MenuProps) {
   return (
     <svg
       width="24"
@@ -11,7 +10,6 @@ export default function Menu({ onClick, className }: MenuProps) {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      onClick={onClick}
       className={className}
     >
       <path
