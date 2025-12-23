@@ -18,11 +18,12 @@ export const useGetCombinedScoresByCategory = () => {
       const approved = results[0].data;
       const all = results[1].data;
 
+      const approvedScoresMap = new Map(approved?.map((c) => [c.categoryType, c.recognizedScore]));
+
       return all?.map((category) => ({
         categoryType: category.categoryType,
         categoryNames: category.categoryNames,
-        approvedScore:
-          approved?.find((c) => c.categoryType === category.categoryType)?.recognizedScore ?? 0,
+        approvedScore: approvedScoresMap.get(category.categoryType) ?? 0,
         expectedScore: category.recognizedScore,
         scores: category.scores,
       }));
