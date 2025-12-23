@@ -5,6 +5,7 @@ import { FileType } from '@/entities/file/model/file';
 interface FileUploaderProps {
   uploadedFiles?: FileType | FileType[];
   isMultiple?: boolean;
+  onChange?: (files: { existing: FileType[], new: File[] }) => void;
 }
 
 interface LocalFile {
@@ -13,7 +14,7 @@ interface LocalFile {
   file: File;
 }
 
-export default function useFileUploaderState({ uploadedFiles, isMultiple }: FileUploaderProps) {
+export default function useFileUploaderState({ uploadedFiles, isMultiple, onChange }: FileUploaderProps) {
   const [existingFiles, setExistingFiles] = useState<FileType[]>([]);
   const [newFiles, setNewFiles] = useState<LocalFile[]>([]);
 
@@ -32,14 +33,17 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple }: File
 
     if (!isMultiple) {
       const file = selectedFiles[0];
-      setExistingFiles([]);
-      setNewFiles([
+      const newExisting: FileType[] = [];
+      const newLocal = [
         {
           id: crypto.randomUUID(),
           name: file.name,
           file: file,
         },
-      ]);
+      ];
+      setExistingFiles(newExisting);
+      setNewFiles(newLocal);
+      onChange?.({ existing: newExisting, new: [file] });
     } else {
       const fileArray = Array.from(selectedFiles);
       const localFiles: LocalFile[] = fileArray.map((file) => ({
@@ -47,18 +51,27 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple }: File
         name: file.name,
         file: file,
       }));
-      setNewFiles((prev) => [...prev, ...localFiles]);
+      const newLocalFiles = [...newFiles, ...localFiles];
+      setNewFiles(newLocalFiles);
+      onChange?.({ existing: existingFiles, new: newLocalFiles.map(f => f.file) });
     }
 
     e.target.value = '';
   };
 
   const handleRemoveFile = (id: number | string) => {
+    let newExisting = existingFiles;
+    let newLocal = newFiles;
+
     if (typeof id === 'number') {
-      setExistingFiles((prev) => prev.filter((file) => file.id !== id));
+      newExisting = existingFiles.filter((file) => file.id !== id);
+      setExistingFiles(newExisting);
     } else {
-      setNewFiles((prev) => prev.filter((file) => file.id !== id));
+      newLocal = newFiles.filter((file) => file.id !== id);
+      setNewFiles(newLocal);
     }
+
+    onChange?.({ existing: newExisting, new: newLocal.map(f => f.file) });
   };
 
   const getButtonText = () => {

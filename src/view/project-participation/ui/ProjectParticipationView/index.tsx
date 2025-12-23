@@ -8,8 +8,18 @@ import EvidenceForm from '@/feature/evidence/ui';
 
 export default function ProjectParticipationView() {
   const projectId = Number(useSearchParams().get('projectId'));
-  const { data: projectScoreEvidence } = useGetProjectMyScoreById({ projectId });
-  const { data: draftEvidence } = useGetDraftEvidence();
+  const { data: projectScoreEvidence, isLoading: isScoreLoading } = useGetProjectMyScoreById({ projectId });
+  const { data: draftEvidence, isLoading: isDraftLoading } = useGetDraftEvidence();
+
+  if (isScoreLoading || isDraftLoading) {
+    return (
+      <div className="flex w-full justify-center px-4 py-15.5">
+        <div className="flex w-full max-w-[600px] flex-col items-center justify-center h-[400px]">
+          <p className="text-gray-500">데이터를 불러오는 중입니다...</p>
+        </div>
+      </div>
+    );
+  }
 
   const initialData = draftEvidence ? {
     projectId,
@@ -23,6 +33,8 @@ export default function ProjectParticipationView() {
     title: projectScoreEvidence.evidence.title,
     content: projectScoreEvidence.evidence.content,
     files: projectScoreEvidence.evidence?.files,
+    scoreStatus: projectScoreEvidence.score.scoreStatus,
+    rejectionReason: projectScoreEvidence.score.rejectionReason || undefined,
   } : { projectId };
 
   const mode = initialData.evidenceId ? 'edit' : 'create';

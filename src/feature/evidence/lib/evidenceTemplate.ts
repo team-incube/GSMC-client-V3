@@ -1,7 +1,7 @@
 import { HttpStatusCode, isAxiosError } from 'axios';
 import z from 'zod';
 
-import { EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema';
+import { EvidenceFormSchema, EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema';
 import { ActionState } from '@/shared/model/actionState';
 
 export const executeEvidenceAction = async (
@@ -11,7 +11,7 @@ export const executeEvidenceAction = async (
 ): Promise<ActionState<EvidenceFormValues>> => {
   try {
     if (!options.skipValidation) {
-      const validationError = validateEvidence(data, options.isDraft);
+      const validationError = validateEvidence(data);
       if (validationError) return validationError;
     }
     const message = await operation(data);
@@ -28,15 +28,8 @@ export const executeEvidenceAction = async (
 
 const validateEvidence = (
   data: EvidenceFormValues,
-  isDraft = false,
 ): ActionState<EvidenceFormValues> | null => {
-  const schema = z.object({
-    title: isDraft ? z.string() : z.string().min(1, '제목을 입력해주세요.'),
-    content: isDraft ? z.string() : z.string().min(1, '내용을 입력해주세요.'),
-    fileIds: z.array(z.number()).optional(),
-  });
-
-  const result = schema.safeParse(data);
+  const result = EvidenceFormSchema.safeParse(data);
   if (!result.success) {
     return {
       status: 'error',
