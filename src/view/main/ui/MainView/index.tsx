@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import { useGetProjectBySearch } from '@/entities/project/model/useGetProjectBySearch';
 import { useGetProjects } from '@/entities/project/model/useGetProjects';
-import { useGetScoresByCategory } from '@/entities/score/model/useGetScoresByCategory';
-import { useGetTotalScore } from '@/entities/score/model/useGetTotalScore';
+import { useGetCombinedScoresByCategory } from '@/entities/score/model/useGetCombinedScoresByCategory';
+import { useGetCombinedTotalScore } from '@/entities/score/model/useGetCombinedTotalScore';
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
 import Button from '@/shared/ui/Button';
 import ProjectPost from '@/shared/ui/ProjectPost';
@@ -16,8 +16,9 @@ export default function MainView() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: student } = useGetCurrentStudent();
-  const { data: score } = useGetTotalScore({ includeApprovedOnly: true });
-  const { data: scoresByCategory } = useGetScoresByCategory({ status: 'APPROVED' });
+  const totalScore = useGetCombinedTotalScore();
+  const scoresByCategory = useGetCombinedScoresByCategory();
+
   const { data: allProjects } = useGetProjects();
   const { data: searchedProjects } = useGetProjectBySearch({
     title: searchKeyword,
@@ -36,12 +37,18 @@ export default function MainView() {
               <p className="text-main-700 text-center text-4xl">{student?.name}</p>
               <p className="text-left text-2xl text-black">님의 인증제 점수는</p>
             </div>
-            <div className="flex items-baseline gap-4.5">
+            <div className="flex items-baseline gap-2">
               <div className="flex items-center justify-center gap-2.5 rounded-full bg-[#f3f3f3] px-9 py-3">
                 <p className="text-main-500 flex-shrink-0 flex-grow-0 text-center text-5xl">
-                  {score?.totalScore}점
+                  {totalScore.approved}점
                 </p>
               </div>
+              <p className="text-black/40 flex-shrink-0 flex-grow-0 text-center text-5xl">
+                /
+              </p>
+              <p className="text-black/40 flex-shrink-0 flex-grow-0 text-center text-xl">
+                {totalScore.expected}점
+              </p>
             </div>
           </div>
         </section>
@@ -70,7 +77,7 @@ export default function MainView() {
                       {category.categoryNames.koreanName}
                     </p>
                     <p className="text-center text-lg font-semibold text-[#68696c]">
-                      {category.recognizedScore}점
+                      {category.approvedScore}점 / {category.expectedScore}점
                     </p>
                   </article>
                 ))}

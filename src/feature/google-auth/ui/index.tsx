@@ -26,7 +26,7 @@ export default function SignupForm() {
     resolver: zodResolver(SignupSchema),
     defaultValues: {
       name: '',
-      studentNumber: 0,
+      studentNumber: undefined,
     },
   });
 
@@ -77,7 +77,7 @@ export default function SignupForm() {
         disabled={isPending}
         onClick={handleSubmit(onSubmit)}
       >
-        등록하기
+        회원가입
       </Button>
     </form>
   );

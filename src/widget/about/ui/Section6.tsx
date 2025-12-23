@@ -6,18 +6,18 @@ import yearTable from '@/shared/asset/img/yearTable.png';
 
 export default function Section6() {
   return (
-    <section className="mb-[11.5625rem] flex flex-col items-center gap-[4rem]">
-      <p className="text-center text-[2.75rem] font-bold">
+    <section className="mb-16 flex flex-col items-center gap-8 px-4 md:mb-24 md:gap-12 lg:mb-[11.5625rem] lg:gap-[4rem]">
+      <p className="text-center text-2xl font-bold md:text-3xl lg:text-[2.75rem]">
         GSM 역량 인증제 영역별 취득 점수 기준표
       </p>
-      <div className="flex w-[86.375rem] flex-col gap-[0.5rem]">
-        <p className="text-2xl">영역별 점수 분포</p>
-        <Image src={scoreTable} alt="영역별 점수 분포 표" />
+      <div className="flex w-full max-w-[86.375rem] flex-col gap-2 md:gap-[0.5rem]">
+        <p className="text-lg md:text-xl lg:text-2xl">영역별 점수 분포</p>
+        <Image src={scoreTable} alt="영역별 점수 분포 표" className="h-auto w-full" />
       </div>
-      <div className="flex w-[86.375rem] flex-col gap-[0.5rem]">
-        <p className="text-2xl">영역별 점수 분포 - 누적</p>
-        <Image src={cumulativeTable} alt="누적 점수 분포 표" />
-        <div className="text-[1.25rem] text-[#828387]">
+      <div className="flex w-full max-w-[86.375rem] flex-col gap-2 md:gap-[0.5rem]">
+        <p className="text-lg md:text-xl lg:text-2xl">영역별 점수 분포 - 누적</p>
+        <Image src={cumulativeTable} alt="누적 점수 분포 표" className="h-auto w-full" />
+        <div className="text-sm text-[#828387] md:text-base lg:text-[1.25rem]">
           <p>※ 고등학교 재학 시 취득한 정규시험 점수만 인정함.</p>
           <p>※ 여러 번 제출 가능하며, 상위 점수 취득 시 상위점수를 인정함.</p>
           <p>※ 1학년의 경우는 학교에서 응시한 모의토익 점수를 공인인증시험점수로 인정한다.</p>
@@ -27,10 +27,10 @@ export default function Section6() {
           </p>
         </div>
       </div>
-      <div className="flex w-[86.375rem] flex-col gap-[0.5rem]">
-        <p className="text-2xl">항목별 점수 분포 - 당해년도</p>
-        <Image src={yearTable} alt="당해년도 점수 분포 표" />
-        <div className="text-[1.25rem] text-[#828387]">
+      <div className="flex w-full max-w-[86.375rem] flex-col gap-2 md:gap-[0.5rem]">
+        <p className="text-lg md:text-xl lg:text-2xl">항목별 점수 분포 - 당해년도</p>
+        <Image src={yearTable} alt="당해년도 점수 분포 표" className="h-auto w-full" />
+        <div className="text-sm text-[#828387] md:text-base lg:text-[1.25rem]">
           <p>※ 1학년은 5등급제이므로 산출이 다름</p>
           <p>※ 2025학년도 1학년의 경우 1등급 9점, 2등급 8점, 3등급 7점, 4등급 6점, 5등급 5점으로</p>
           <p>※ 2026학년도 부터는 1,2학년 모두 5등급제로 적용</p>

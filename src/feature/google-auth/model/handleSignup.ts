@@ -39,15 +39,17 @@ export async function handleSignup(
     };
   } catch (error) {
       let errorMessage = '회원가입에 실패했습니다.';
-  
+
       if (isAxiosError(error)) {
         const status = error.response?.status;
-  
-        if (status === HttpStatusCode.NotFound) {   
+
+        if (status === HttpStatusCode.NotFound) {
           errorMessage = '존재하지 않는 사용자입니다.';
+        } else if (status === HttpStatusCode.Conflict) {
+          errorMessage = '이미 사용 중인 학번입니다.';
         }
       }
-  
+
       return {
         status: 'error',
         message: errorMessage,
