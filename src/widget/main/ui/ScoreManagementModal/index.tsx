@@ -5,8 +5,7 @@ import { cn } from "@/shared/lib/cn";
 import Button from "@/shared/ui/Button";
 import ModalWrapper from "@/shared/ui/ModalWrapper";
 
-import ScoreAddModal from "../ScoreAddModal";
-import ScoreEditModal from "../ScoreEditModal";
+import ScoreModal from "../ScoreModal";
 
 interface ScoreManagementModalProps {
   setIsModalOpen: (isOpen: boolean) => void;
@@ -14,28 +13,33 @@ interface ScoreManagementModalProps {
 
 export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagementModalProps) {
   const scoresByCategory = useGetCombinedScoresByCategory();
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'list' | 'create' | 'edit'>('list');
   const [scoreId, setScoreId] = useState<number>(0);
   const [englishName, setEnglishName] = useState<string>('');
 
   const handleEditClick = (scoreId: number, englishName: string) => {
-    setIsEditModalOpen(true);
+    setModalMode('edit');
     setScoreId(scoreId);
     setEnglishName(englishName);
   };
 
   const handleAddClick = (englishName: string) => {
-    setIsAddModalOpen(true);
+    setModalMode('create');
     setEnglishName(englishName);
-  }
+  };
+
+  const handleCloseModal = (isOpen: boolean) => {
+    if (!isOpen) {
+      setModalMode('list');
+    }
+  };
 
   return (
     <div>
-      {isEditModalOpen ? (
-        <ScoreEditModal setIsEditModalOpen={setIsEditModalOpen} scoreId={scoreId} categoryType={englishName} />
-      ) : isAddModalOpen ? (
-        <ScoreAddModal setIsAddModalOpen={setIsAddModalOpen} categoryType={englishName} />
+      {modalMode === 'edit' ? (
+        <ScoreModal mode="edit" setIsModalOpen={handleCloseModal} categoryType={englishName} scoreId={scoreId} />
+      ) : modalMode === 'create' ? (
+        <ScoreModal mode="create" setIsModalOpen={handleCloseModal} categoryType={englishName} />
       ) : (
         <ModalWrapper>
           <div className="flex flex-col justify-center gap-10 w-150 overflow-hidden">
