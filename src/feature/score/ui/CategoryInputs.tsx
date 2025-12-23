@@ -17,14 +17,12 @@ interface CategoryInputsProps {
     file?: FileType;
   };
   errors: FieldErrors<ScoreFormValues>;
-  onFilesChange: (files: { existing: FileType[]; new: File[] }) => void;
 }
 
 export default function CategoryInputs({
   category,
   initialData,
   errors,
-  onFilesChange,
 }: CategoryInputsProps) {
   const { register, control } = useFormContext<ScoreFormValues>();
 
@@ -45,10 +43,7 @@ export default function CategoryInputs({
             <FileUploader
               label="자격증 인증서 첨부"
               uploadedFiles={initialData?.file}
-              onChange={(files) => {
-                field.onChange(files);
-                onFilesChange(files);
-              }}
+              onChange={field.onChange}
             />
           )}
         />
@@ -75,10 +70,7 @@ export default function CategoryInputs({
             <FileUploader
               label="TOPCIT 인증서 첨부"
               uploadedFiles={initialData?.file}
-              onChange={(files) => {
-                field.onChange(files);
-                onFilesChange(files);
-              }}
+              onChange={field.onChange}
             />
           )}
         />
@@ -105,10 +97,7 @@ export default function CategoryInputs({
             <FileUploader
               label="성적표 첨부"
               uploadedFiles={initialData?.file}
-              onChange={(files) => {
-                field.onChange(files);
-                onFilesChange(files);
-              }}
+              onChange={field.onChange}
             />
           )}
         />
@@ -147,10 +136,7 @@ export default function CategoryInputs({
             <FileUploader
               label="성적증명서 첨부"
               uploadedFiles={initialData?.file}
-              onChange={(files) => {
-                field.onChange(files);
-                onFilesChange(files);
-              }}
+              onChange={field.onChange}
             />
           )}
         />
@@ -218,10 +204,7 @@ export default function CategoryInputs({
             <FileUploader
               label="독서마라톤 완주증서 첨부"
               uploadedFiles={initialData?.file}
-              onChange={(files) => {
-                field.onChange(files);
-                onFilesChange(files);
-              }}
+              onChange={field.onChange}
             />
           )}
         />
@@ -276,10 +259,7 @@ export default function CategoryInputs({
             <FileUploader
               label="직기초 인증서 첨부"
               uploadedFiles={initialData?.file}
-              onChange={(files) => {
-                field.onChange(files);
-                onFilesChange(files);
-              }}
+              onChange={field.onChange}
             />
           )}
         />
@@ -305,10 +285,7 @@ export default function CategoryInputs({
             <FileUploader
               label="수상경력 증빙 파일"
               uploadedFiles={initialData?.file}
-              onChange={(files) => {
-                field.onChange(files);
-                onFilesChange(files);
-              }}
+              onChange={field.onChange}
             />
           )}
         />
@@ -335,10 +312,7 @@ export default function CategoryInputs({
             <FileUploader
               label="증빙가능한 이미지 첨부"
               uploadedFiles={initialData?.file}
-              onChange={(files) => {
-                field.onChange(files);
-                onFilesChange(files);
-              }}
+              onChange={field.onChange}
             />
           )}
         />
@@ -416,10 +390,7 @@ export default function CategoryInputs({
             <FileUploader
               label="외부활동 증빙 파일"
               uploadedFiles={initialData?.file}
-              onChange={(files) => {
-                field.onChange(files);
-                onFilesChange(files);
-              }}
+              onChange={field.onChange}
             />
           )}
         />
@@ -452,10 +423,7 @@ export default function CategoryInputs({
               <FileUploader
                 label="파일 첨부"
                 uploadedFiles={initialData?.file || undefined}
-                onChange={(files) => {
-                  field.onChange(files);
-                  onFilesChange(files);
-                }}
+                onChange={field.onChange}
               />
             )}
           />

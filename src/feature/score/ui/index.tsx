@@ -78,7 +78,6 @@ export default function ScoreForm({
 
   const {
     handleSubmit,
-    setValue,
     formState: { errors },
   } = methods;
 
@@ -120,10 +119,6 @@ export default function ScoreForm({
     })();
   };
 
-  const handleFilesChange = (files: { existing: FileType[]; new: File[] }) => {
-    setValue('files', files);
-  };
-
   return (
     <FormProvider {...methods}>
       <form className="flex min-w-[400px] flex-col gap-4">
@@ -149,7 +144,6 @@ export default function ScoreForm({
           category={category}
           initialData={initialData}
           errors={errors}
-          onFilesChange={handleFilesChange}
         />
 
         {initialData?.scoreStatus === 'REJECTED' && !!initialData.rejectionReason && (
