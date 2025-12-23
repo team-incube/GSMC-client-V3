@@ -9,6 +9,16 @@ const nextConfig: NextConfig = {
     },
     middlewareClientMaxBodySize: '20MB',
   },
+  images: {
+    remotePatterns: process.env.S3_IMAGE_HOSTNAME
+      ? [
+          {
+            protocol: 'https',
+            hostname: process.env.S3_IMAGE_HOSTNAME,
+          },
+        ]
+      : [],
+  },
 };
 
 export default nextConfig;
