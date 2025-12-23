@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'gsmc-s3-bucket.s3.ap-northeast-2.amazonaws.com',
+        hostname: process.env.S3_IMAGE_HOSTNAME || '',
       },
     ],
   },
