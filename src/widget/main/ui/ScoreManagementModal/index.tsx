@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import { useGetCategories } from "@/entities/category/model/useGetCategories";
 import { useGetCombinedScoresByCategory } from "@/entities/score/model/useGetCombinedScoresByCategory";
 import { cn } from "@/shared/lib/cn";
 import Button from "@/shared/ui/Button";
@@ -15,7 +14,6 @@ interface ScoreManagementModalProps {
 
 export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagementModalProps) {
   const scoresByCategory = useGetCombinedScoresByCategory();
-  const { data: categories } = useGetCategories();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [scoreId, setScoreId] = useState<number>(0);
@@ -68,14 +66,14 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                       </div>
                     </article>
                   ))}
-                  <button
+                  {!category.isMaxReached ? <button
                     className="w-full flex items-center justify-center py-4 text-gray-400 transition-colors border-t border-gray-100 cursor-pointer hover:text-gray-600 hover:bg-gray-50"
                     onClick={() => { handleAddClick(category.categoryType); }}
                   >
-                    <span className="text-body2 font-medium">
-                      추가
+                    <span className="text-body2 font-medsium">
+                      점수 추가하기
                     </span>
-                  </button>
+                  </button> : null}
                 </div>
               ))}
             </section>
