@@ -18,51 +18,55 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
 
   return (
     <>
-      {isOpen ? <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+      {isOpen ? (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 transition-opacity md:hidden"
           onClick={onClose}
-        /> : null}
+        />
+      ) : null}
 
       <div
-        className={`fixed right-0 top-0 z-50 h-full w-64 bg-white shadow-lg transition-transform duration-300 md:hidden ${
+        className={`fixed right-0 top-0 z-50 h-full w-[280px] transform bg-white shadow-lg transition-transform duration-300 ease-in-out md:hidden ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between border-b border-gray-100 p-4">
-            <span className="text-main-800 text-lg font-bold">메뉴</span>
-            <button type="button" onClick={onClose} className="cursor-pointer" aria-label="메뉴 닫기">
-              <Close />
-            </button>
-          </div>
-          <nav className="flex flex-col gap-1 p-4">
-            {HEADER_NAV.map((item) => (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={`rounded-lg px-4 py-3 ${
-                  pathname === item.path
-                    ? 'bg-main-50 font-semibold text-main-800'
-                    : 'text-gray-700 hover:bg-gray-50'
-                }`}
-                onClick={onClose}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="mt-auto border-t border-gray-100 p-4">
-            <button
-              type="button"
-              className="w-full rounded-lg px-4 py-3 text-left font-semibold text-gray-900 hover:bg-gray-50"
-              onClick={() => {
-                signout();
-                onClose();
-              }}
+        <div className="flex items-center justify-between border-b border-gray-100 p-4">
+          <Link href="/main" className="text-main-800 text-xl font-bold" onClick={onClose}>
+            GSMC
+          </Link>
+          <button type="button" onClick={onClose} className="cursor-pointer" aria-label="메뉴 닫기">
+            <Close />
+          </button>
+        </div>
+
+        <nav className="flex flex-col gap-2 p-4">
+          {HEADER_NAV.map((item) => (
+            <Link
+              key={item.path}
+              href={item.path}
+              className={`rounded-lg px-4 py-3 ${
+                pathname === item.path
+                  ? 'bg-main-50 font-semibold text-main-800'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+              onClick={onClose}
             >
-              로그아웃
-            </button>
-          </div>
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="absolute bottom-4 left-0 right-0 px-4">
+          <button
+            type="button"
+            className="w-full cursor-pointer rounded-lg bg-gray-100 px-4 py-3 font-semibold text-gray-900 hover:bg-gray-200"
+            onClick={() => {
+              signout();
+              onClose();
+            }}
+          >
+            로그아웃
+          </button>
         </div>
       </div>
     </>
