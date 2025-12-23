@@ -1,17 +1,10 @@
 import { addScoreByCategoryType } from '@/entities/score/api/addScoreByCategoryType';
 import { editScoreById } from '@/entities/score/api/editScoreById';
 import { removeScoreById } from '@/entities/score/api/removeScoreById';
-import { ScoreFormValues } from '@/feature/score/model/scoreForm.schema';
 
-export const createScoreOperation = async (formData: ScoreFormValues): Promise<string> => {
-  if (formData.toeicAcademy === true) {
-    await addScoreByCategoryType({
-      categoryType: 'toeic-academy',
-      value: formData.value,
-      fileId: formData.fileId || undefined,
-    });
-  }
+import { ScoreActionData } from './handleScoreAction';
 
+export const createScoreOperation = async (formData: ScoreActionData): Promise<string> => {
   await addScoreByCategoryType({
     categoryType: formData.categoryType,
     value: formData.value,
@@ -21,17 +14,9 @@ export const createScoreOperation = async (formData: ScoreFormValues): Promise<s
   return '점수가 성공적으로 추가되었습니다.';
 };
 
-export const updateScoreOperation = async (formData: ScoreFormValues): Promise<string> => {
+export const updateScoreOperation = async (formData: ScoreActionData): Promise<string> => {
   if (!formData.scoreId) {
     throw new Error('Score ID is required for update');
-  }
-
-  if (formData.categoryType === 'toeic-academy') {
-    if (!formData.toeicAcademy) {
-      await removeScoreById({ scoreId: formData.scoreId });
-      return '토익 사관학교 내역이 삭제되었습니다.';
-    }
-    return '수정되었습니다.';
   }
 
   const editableCategories = ['external-activity', 'certificate', 'award'];
@@ -54,7 +39,7 @@ export const updateScoreOperation = async (formData: ScoreFormValues): Promise<s
   return '수정되었습니다.';
 };
 
-export const deleteScoreOperation = async (formData: ScoreFormValues): Promise<string> => {
+export const deleteScoreOperation = async (formData: ScoreActionData): Promise<string> => {
   if (!formData.scoreId) {
     throw new Error('Score ID is required for deletion');
   }

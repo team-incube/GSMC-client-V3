@@ -2,15 +2,16 @@
 
 import React, { useEffect, useRef } from 'react';
 
-import { FileType } from '@/entities/file/model/file';
+import { AllowedExtension, FileType } from '@/entities/file/model/file';
 import Chain from '@/shared/asset/svg/Chain';
 import useFileUploaderState from '@/shared/model/useHandlingFileUploader';
 import FileList from '@/shared/ui/FileList';
 
-interface FileUploaderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
+interface FileUploaderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | "accept"> {
   label: string;
   uploadedFiles?: FileType | FileType[];
   isMultiple?: boolean;
+  accept?: AllowedExtension | AllowedExtension[];
   onChange?: (files: { existing: FileType[], new: File[] }) => void;
 }
 
@@ -44,6 +45,7 @@ export default function FileUploader({
   label,
   uploadedFiles,
   isMultiple = false,
+  accept,
   onChange,
   ...props
 }: FileUploaderProps) {
@@ -86,6 +88,7 @@ export default function FileUploader({
           <input
             ref={inputRef}
             type="file"
+            accept={Array.isArray(accept) ? accept.join(',') : accept}
             className="hidden"
             multiple={isMultiple}
             onChange={handleFileChange}

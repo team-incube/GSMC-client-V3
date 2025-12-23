@@ -1,14 +1,16 @@
 import { HttpStatusCode, isAxiosError } from 'axios';
 import z from 'zod';
 
-import { ScoreFormSchema, ScoreFormValues } from '@/feature/score/model/scoreForm.schema';
 import { ActionState } from '@/shared/model/actionState';
 
+import { ScoreActionData } from './handleScoreAction';
+import { ScoreActionSchema } from './scoreActionSchema';
+
 export const executeScoreAction = async (
-  data: ScoreFormValues,
-  operation: (data: ScoreFormValues) => Promise<string>,
+  data: ScoreActionData,
+  operation: (data: ScoreActionData) => Promise<string>,
   skipValidation = false,
-): Promise<ActionState<ScoreFormValues>> => {
+): Promise<ActionState<ScoreActionData>> => {
   try {
     if (!skipValidation) {
       const validationError = validateScore(data);
@@ -28,8 +30,8 @@ export const executeScoreAction = async (
   }
 };
 
-const validateScore = (data: ScoreFormValues): ActionState<ScoreFormValues> | null => {
-  const result = ScoreFormSchema.safeParse(data);
+const validateScore = (data: ScoreActionData): ActionState<ScoreActionData> | null => {
+  const result = ScoreActionSchema.safeParse(data);
 
   if (!result.success) {
     return {
@@ -43,7 +45,7 @@ const validateScore = (data: ScoreFormValues): ActionState<ScoreFormValues> | nu
   return null;
 };
 
-const handleScoreError = (error: unknown, data: ScoreFormValues): ActionState<ScoreFormValues> => {
+const handleScoreError = (error: unknown, data: ScoreActionData): ActionState<ScoreActionData> => {
   let errorMessage = '작업에 실패했습니다.';
 
   if (isAxiosError(error)) {
