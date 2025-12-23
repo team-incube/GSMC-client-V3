@@ -46,15 +46,14 @@ export default function ScoreForm({
   );
   const queryClient = useQueryClient();
 
-  // 폼 기본값 설정
   const getDefaultValue = (): string => {
-    if (initialData?.scoreValue !== undefined) {
+    if (initialData?.scoreValue !== undefined && initialData?.scoreValue !== null && initialData?.scoreValue !== '') {
       return String(initialData.scoreValue);
     }
-    if (initialData?.activityName !== undefined) {
+    if (initialData?.activityName) {
       return initialData.activityName;
     }
-    // 카테고리별 기본값
+
     if (category.englishName === 'JLPT') return '1';
     if (category.englishName === 'READ-A-THON') return '1';
     if (category.englishName === 'NCS') return '1';
@@ -83,7 +82,6 @@ export default function ScoreForm({
     formState: { errors },
   } = methods;
 
-  // 서버 액션 후 성공/실패 처리
   useEffect(() => {
     if (state.message) {
       if (state.status === 'success') {
@@ -96,7 +94,6 @@ export default function ScoreForm({
     }
   }, [state, setIsModalOpen, queryClient]);
 
-  // 폼 제출 핸들러
   const onSubmit = (intent: 'create' | 'update' | 'delete') => {
     handleSubmit((data) => {
       const formData = new FormData();
@@ -110,7 +107,6 @@ export default function ScoreForm({
         formData.append('scoreId', String(data.scoreId));
       }
 
-      // 파일 처리
       data.files.existing.forEach((file: FileType) => {
         formData.append('existingFileIds', String(file.id));
       });
@@ -124,7 +120,6 @@ export default function ScoreForm({
     })();
   };
 
-  // 파일 변경 핸들러
   const handleFilesChange = (files: { existing: FileType[]; new: File[] }) => {
     setValue('files', files);
   };
@@ -176,7 +171,7 @@ export default function ScoreForm({
                 disabled={isPending}
                 onClick={() => onSubmit(mode === 'create' ? 'create' : 'update')}
               >
-                {mode === 'create' ? '추가하기' : '수정하기'}
+                {isPending ? '처리 중...' : mode === 'create' ? '추가하기' : '수정하기'}
               </Button>
             )}
           </div>
