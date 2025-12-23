@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useGetCategories } from "@/entities/category/model/useGetCategories";
-import { useGetScoresByCategory } from "@/entities/score/model/useGetScoresByCategory";
+import { useGetCombinedScoresByCategory } from "@/entities/score/model/useGetCombinedScoresByCategory";
 import { cn } from "@/shared/lib/cn";
 import Button from "@/shared/ui/Button";
 import ModalWrapper from "@/shared/ui/ModalWrapper";
@@ -14,7 +14,7 @@ interface ScoreManagementModalProps {
 }
 
 export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagementModalProps) {
-  const { data: scoresByCategory } = useGetScoresByCategory({});
+  const scoresByCategory = useGetCombinedScoresByCategory();
   const { data: categories } = useGetCategories();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -77,7 +77,7 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                   <div key={category.categoryType} className="w-full flex flex-col">
                     <div className="flex justify-between px-5 py-2 bg-gray-50 text-sm font-bold text-gray-500">
                       <p>{category.categoryNames.koreanName}</p>
-                      <p>{category.recognizedScore}점</p>
+                      <p>{category.approvedScore}점 / {category.expectedScore}점</p>
                     </div>
                     {category.scores.map((score) => (
                       <article
