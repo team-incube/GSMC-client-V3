@@ -42,18 +42,16 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <Bell onClick={() => setIsModalOpen((prev) => !prev)} className="cursor-pointer" />
+            <div className="relative">
+              <Bell onClick={() => setIsModalOpen((prev) => !prev)} className="cursor-pointer" />
+              {isModalOpen ? <div className="absolute right-0 top-full mt-2 z-50">
+                <AlertsModal />
+              </div> : null}
+            </div>
             <Menu onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" />
           </div>
         </div>
       </header>
-
-      <div className="relative">
-        <Bell onClick={() => setIsModalOpen(((prev) => !prev))} className="cursor-pointer" />
-        {isModalOpen ? <div className="absolute top-full right-0 mt-2 z-50">
-          <AlertsModal />
-        </div> : null}
-      </div>
 
       <MobileSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </>
