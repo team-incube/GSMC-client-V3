@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import Link from 'next/link';
 
 import { CategoryType } from '@/entities/category/model/category';
@@ -27,9 +25,6 @@ export default function CategoryInputs({
   initialData,
   state,
 }: CategoryInputsProps) {
-  const [selectedType, setSelectedType] = useState<'TOEIC' | 'JLPT'>('TOEIC');
-  const [jlptLevel, setJlptLevel] = useState('1');
-
   // 1. 자격증 (Certificate)
   if (category.englishName === 'CERTIFICATE') {
     return (
@@ -65,141 +60,70 @@ export default function CategoryInputs({
     );
   }
 
-  // 3. 공인점수 (TOEIC, JLPT)
-  if (category.foreignLanguage) {
-    // TOEIC-ACADEMY (토익 사관학교) - 수정 모드 전용
-    if (category.englishName === 'TOEIC-ACADEMY' && mode === 'edit') {
-      return (
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="toeicAcademy"
-            name="toeicAcademy"
-            defaultChecked
-            className="h-4 w-4 accent-main-500 cursor-pointer"
-          />
-          <label htmlFor="toeicAcademy" className="text-sm font-medium">
-            토익 사관학교
-          </label>
-        </div>
-      );
-    }
-
-    // 수정 모드: 이미 선택된 어학 시험만 표시
-    if (mode === 'edit') {
-      if (category.englishName === 'TOEIC') {
-        return (
-          <div className="flex flex-col gap-4">
-            <Input
-              name="value"
-              label="TOEIC 점수"
-              type="number"
-              placeholder="점수를 입력해주세요"
-              defaultValue={initialData?.scoreValue}
-            />
-            <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
-
-            <FileUploader label="성적표 첨부" name="fileId" uploadedFiles={initialData?.file} />
-            <small className="pl-1 text-error">{state.fieldErrors?.fileId}</small>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="toeicAcademy"
-                name="toeicAcademy"
-                className="h-4 w-4 accent-main-500 cursor-pointer"
-              />
-              <label htmlFor="toeicAcademy" className="text-sm font-medium">
-                토익 사관학교
-              </label>
-            </div>
-          </div>
-        );
-      }
-
-      if (category.englishName === 'JLPT') {
-        return (
-          <div className="flex flex-col gap-4">
-            <Dropdown
-              name="value"
-              label="JLPT 등급"
-              options={[
-                { label: 'N1', value: '1' },
-                { label: 'N2', value: '2' },
-                { label: 'N3', value: '3' },
-                { label: 'N4', value: '4' },
-                { label: 'N5', value: '5' }
-              ]}
-              value={initialData?.scoreValue?.toString() || '1'}
-              onChange={() => { }}
-            />
-            <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
-
-            <FileUploader label="성적증명서 첨부" name="fileId" uploadedFiles={initialData?.file} />
-            <small className="pl-1 text-error">{state.fieldErrors?.fileId}</small>
-          </div>
-        );
-      }
-    }
-
-    // 생성 모드: 어학 종류 선택 가능
+  // 3. TOEIC
+  if (category.englishName === 'TOEIC') {
     return (
-      <div className="flex flex-col gap-4">
-        <input type="hidden" name="categoryType" value={selectedType.toLowerCase()} />
-
-        <Dropdown
-          label="어학 종류"
-          options={['TOEIC', 'JLPT']}
-          value={selectedType}
-          onChange={(value) => setSelectedType(value as 'TOEIC' | 'JLPT')}
+      <>
+        <Input
+          name="value"
+          label="TOEIC 점수"
+          type="number"
+          placeholder="점수를 입력해주세요"
+          defaultValue={initialData?.scoreValue}
         />
-
-        {selectedType === 'JLPT' ? (
-          <Dropdown
-            name="value"
-            label="JLPT 등급"
-            options={[
-              { label: 'N1', value: '1' },
-              { label: 'N2', value: '2' },
-              { label: 'N3', value: '3' },
-              { label: 'N4', value: '4' },
-              { label: 'N5', value: '5' }
-            ]}
-            value={jlptLevel}
-            onChange={(value) => setJlptLevel(value)}
-          />
-        ) : (
-          <Input
-            name="value"
-            label="TOEIC 점수"
-            type="number"
-            placeholder="점수를 입력해주세요"
-          />
-        )}
         <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
-
-        <FileUploader
-          label={selectedType === 'JLPT' ? "성적증명서 첨부" : "성적표 첨부"}
-          name="fileId"
-        />
+        <FileUploader label="성적표 첨부" name="fileId" uploadedFiles={initialData?.file} />
         <small className="pl-1 text-error">{state.fieldErrors?.fileId}</small>
-
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="toeicAcademy"
-            name="toeicAcademy"
-            className="h-4 w-4 accent-main-500 cursor-pointer"
-          />
-          <label htmlFor="toeicAcademy" className="text-sm font-medium">
-            토익 사관학교
-          </label>
-        </div>
-      </div>
+      </>
     );
   }
 
-  // 4. 독서활동 (Reading)
+  // 4. JLPT
+  if (category.englishName === 'JLPT') {
+    return (
+      <>
+        <Dropdown
+          name="value"
+          label="JLPT 등급"
+          options={[
+            { label: 'N1', value: '1' },
+            { label: 'N2', value: '2' },
+            { label: 'N3', value: '3' },
+            { label: 'N4', value: '4' },
+            { label: 'N5', value: '5' }
+          ]}
+          value={initialData?.scoreValue?.toString() || '1'}
+          onChange={() => { }}
+        />
+        <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
+        <FileUploader label="성적증명서 첨부" name="fileId" uploadedFiles={initialData?.file} />
+        <small className="pl-1 text-error">{state.fieldErrors?.fileId}</small>
+      </>
+    );
+  }
+
+  // 5. TOEIC-ACADEMY (토익 사관학교)
+  if (category.englishName === 'TOEIC-ACADEMY') {
+    return (
+      <>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="toeicAcademy"
+            name="value"
+            defaultChecked={mode === 'edit'}
+            className="h-4 w-4 accent-main-500 cursor-pointer"
+          />
+          <label htmlFor="toeicAcademy" className="text-sm font-medium">
+            토익 사관학교 수료
+          </label>
+        </div>
+        <small className="pl-1 text-error">{state.fieldErrors?.value}</small>
+      </>
+    );
+  }
+
+  // 6. 독서활동 (Reading)
   if (category.englishName === 'READ-A-THON') {
     return (
       <>
@@ -225,7 +149,7 @@ export default function CategoryInputs({
     );
   }
 
-  // 5. 봉사 (Volunteer)
+  // 7. 봉사 (Volunteer)
   if (category.englishName === 'VOLUNTEER') {
     return (
       <>
@@ -242,7 +166,7 @@ export default function CategoryInputs({
     );
   }
 
-  // 6. 직업기초 능력평가 (NCS)
+  // 8. 직업기초 능력평가 (NCS)
   if (category.englishName === 'NCS') {
     return (
       <>
@@ -266,7 +190,7 @@ export default function CategoryInputs({
     );
   }
 
-  // 7. 수상경력 (Award)
+  // 9. 수상경력 (Award)
   if (category.englishName === 'AWARD') {
     return (
       <>
@@ -283,7 +207,7 @@ export default function CategoryInputs({
     );
   }
 
-  // 8. 뉴로우스쿨 참여 (Neuro School)
+  // 10. 뉴로우스쿨 참여 (Neuro School)
   if (category.englishName === 'NEWRROW-SCHOOL') {
     return (
       <>
@@ -301,7 +225,7 @@ export default function CategoryInputs({
     );
   }
 
-  // 9. 교과성적 (Academic Grade)
+  // 11. 교과성적 (Academic Grade)
   if (category.englishName === 'ACADEMIC-GRADE') {
     return (
       <>
@@ -331,7 +255,7 @@ export default function CategoryInputs({
     );
   }
 
-  // 10. 프로젝트 참여 (Project Participation)
+  // 12. 프로젝트 참여 (Project Participation)
   if (category.englishName === 'PROJECT-PARTICIPATION') {
     return (
       <div className="flex flex-col gap-4 items-center justify-center py-6">
@@ -348,7 +272,7 @@ export default function CategoryInputs({
     );
   }
 
-  // 11. 외부활동 (External Activity)
+  // 13. 외부활동 (External Activity)
   if (category.englishName === 'EXTERNAL-ACTIVITY') {
     return (
       <>

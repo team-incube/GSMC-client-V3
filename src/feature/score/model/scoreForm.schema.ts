@@ -4,10 +4,12 @@ export const ScoreFormSchema = z
   .object({
     scoreId: z.number().optional(),
     categoryType: z.string().toLowerCase().min(1, '카테고리 타입을 선택해주세요.'),
-    value: z.union([z.string().min(1, '제목을 입력해주세요.'), z.number().min(1, '점수를 입력해주세요.')]),
-    fileId: z.number("파일을 첨부해주세요.").nullable(),
+    value: z.union([
+      z.string().min(1, '제목을 입력해주세요.'),
+      z.number().min(1, '점수를 입력해주세요.'),
+    ]),
+    fileId: z.number('파일을 첨부해주세요.').nullable(),
     evidenceType: z.enum(['EVIDENCE', 'FILE', 'UNREQUIRED']),
-    toeicAcademy: z.boolean().optional(),
   })
   .refine(
     (data) => {
