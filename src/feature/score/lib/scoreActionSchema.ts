@@ -11,7 +11,7 @@ export const ScoreActionSchema = z
   .superRefine((data, ctx) => {
     if (data.evidenceType === 'FILE' && !data.fileId) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: '파일을 첨부해주세요.',
         path: ['fileId'],
       });
