@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { faqData } from '@/view/faq/mock/faqData';
+import { faqData } from '@/view/faq/model/faqData';
 import FAQElement from '@/widget/faq/ui/FAQElement';
 
 export default function FAQ() {
