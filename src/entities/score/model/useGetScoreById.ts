@@ -4,7 +4,7 @@ import { getScoreById, getScoreByIdRequest } from '../api/getScoreById';
 
 export const useGetScoreById = (
   { scoreId }: getScoreByIdRequest,
-  options?: { enabled?: boolean }
+  options?: { enabled?: boolean },
 ) => {
   return useQuery({
     queryKey: ['score', scoreId],
