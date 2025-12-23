@@ -31,7 +31,9 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between border-b border-gray-100 p-4">
             <span className="text-main-800 text-lg font-bold">메뉴</span>
-            <Close onClick={onClose} className="cursor-pointer" />
+            <button type="button" onClick={onClose} className="cursor-pointer" aria-label="메뉴 닫기">
+              <Close />
+            </button>
           </div>
           <nav className="flex flex-col gap-1 p-4">
             {HEADER_NAV.map((item) => (

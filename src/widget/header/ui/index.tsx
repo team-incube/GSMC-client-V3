@@ -42,8 +42,10 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <Bell onClick={() => setIsModalOpen((prev) => !prev)} className="cursor-pointer" />
-            <Menu onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" />
+            <Bell onClick={() => setIsModalOpen(prev => !prev)} className="cursor-pointer" />
+            <button type="button" onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" aria-label="메뉴 열기">
+              <Menu />
+            </button>
           </div>
         </div>
       </header>
