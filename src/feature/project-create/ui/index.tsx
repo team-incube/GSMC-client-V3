@@ -161,9 +161,10 @@ export default function ProjectCreateForm({
           control={control}
           render={({ field }) => (
             <FileUploader
-              label="파일"
+              label="이미지"
               placeholder="파일을 업로드해주세요"
               uploadedFiles={initialData?.files}
+              accept={['.jpeg', '.jpg', '.png']}
               isMultiple
               onChange={(files) => {
                 const existingFileIds = files.existing.map(f => Number(f.id));
