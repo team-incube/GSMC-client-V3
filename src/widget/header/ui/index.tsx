@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import { signout } from '@/feature/google-auth/lib/signout';
 import Bell from '@/shared/asset/svg/Bell';
@@ -15,6 +16,7 @@ import MobileSidebar from './MobileSidebar';
 export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <>
@@ -24,10 +26,13 @@ export default function Header() {
             GSMC
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden items-center gap-8 text-sm md:flex">
             {HEADER_NAV.map((item) => (
-              <Link key={item.path} className="text-gray-500" href={item.path}>
+              <Link
+                key={item.path}
+                className={pathname === item.path ? 'font-semibold text-main-800' : 'text-gray-500'}
+                href={item.path}
+              >
                 {item.label}
               </Link>
             ))}
@@ -36,7 +41,6 @@ export default function Header() {
             </button>
           </nav>
 
-          {/* Desktop Bell & Mobile Menu */}
           <div className="flex items-center gap-4">
             <Bell onClick={() => setIsModalOpen((prev) => !prev)} className="cursor-pointer" />
             <Menu onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" />
@@ -44,7 +48,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Alerts Modal */}
       {isModalOpen ? (
         <div className="pointer-events-none fixed left-1/2 top-[70px] z-50 w-full max-w-[1200px] -translate-x-1/2 px-4 md:px-6 lg:w-150 lg:px-3">
           <div className="pointer-events-auto">
@@ -53,7 +56,6 @@ export default function Header() {
         </div>
       ) : null}
 
-      {/* Mobile Sidebar */}
       <MobileSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </>
   );
