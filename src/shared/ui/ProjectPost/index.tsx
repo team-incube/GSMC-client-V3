@@ -8,7 +8,7 @@ export default function ProjectPost({ ...project }: ProjectType) {
   return (
     <article className="flex flex-col w-[188px] h-fit rounded-[10px] border border-black/10 bg-white overflow-hidden">
       <Link href={`/project/${project.id}`}>
-        <div className="w-full h-[138px] object-cover overflow-hidden" role="img">
+        <div className="w-full h-[138px] object-cover overflow-hidden">
           <Image src={project.files[0].uri || replace_logo} alt="project_image" width={300} height={138} />
         </div>
 
