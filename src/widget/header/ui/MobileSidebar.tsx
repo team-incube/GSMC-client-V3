@@ -50,9 +50,11 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                 {item.label}
               </Link>
             ))}
+          </nav>
+          <div className="mt-auto border-t border-gray-100 p-4">
             <button
               type="button"
-              className="rounded-lg px-4 py-3 text-left font-semibold text-gray-900 hover:bg-gray-50"
+              className="w-full rounded-lg px-4 py-3 text-left font-semibold text-gray-900 hover:bg-gray-50"
               onClick={() => {
                 signout();
                 onClose();
@@ -60,7 +62,7 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             >
               로그아웃
             </button>
-          </nav>
+          </div>
         </div>
       </div>
     </>
