@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,7 +16,14 @@ import MobileSidebar from './MobileSidebar';
 export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
+
+  const handleSignout = () => {
+    startTransition(async () => {
+      await signout();
+    });
+  };
 
   return (
     <>
@@ -36,8 +43,8 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
-            <button type="button" className="cursor-pointer font-semibold text-gray-900" onClick={signout}>
-              로그아웃
+            <button type="button" className="cursor-pointer font-semibold text-gray-900 disabled:opacity-50" onClick={handleSignout} disabled={isPending}>
+              {isPending ? '로그아웃 중...' : '로그아웃'}
             </button>
           </nav>
 
