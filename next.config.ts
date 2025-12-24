@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     reactCompiler: true,
     serverActions: {
       bodySizeLimit: '20MB',
+      allowedOrigins: ['gsmc.io.kr', 'www.gsmc.io.kr', 'gsmc-client-v3.vercel.app'],
     },
     middlewareClientMaxBodySize: '20MB',
   },
