@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     reactCompiler: true,
     serverActions: {
       bodySizeLimit: '20MB',
+      allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') ?? [],
     },
     middlewareClientMaxBodySize: '20MB',
   },
