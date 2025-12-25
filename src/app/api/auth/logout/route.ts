@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { deleteAuthCookies } from '@/shared/lib/deleteCookie';
 
 export async function GET(request: NextRequest) {
