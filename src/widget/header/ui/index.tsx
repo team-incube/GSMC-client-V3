@@ -18,7 +18,6 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
 
-
   const handleSignout = () => {
     router.push('/api/auth/logout');
   };
