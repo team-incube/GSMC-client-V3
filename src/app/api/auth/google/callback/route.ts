@@ -41,6 +41,16 @@ export async function POST(request: NextRequest) {
 
     return nextResponse;
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+     if (axios.isAxiosError(error)) {
+      return NextResponse.json(
+        {
+          error: 'Authentication failed',
+          message: error.response?.data?.message || '로그인에 실패했습니다.',
+          details: error.response?.data || error.message,
+        },
+        { status: error.response?.status || 500 },
+      );
+    }
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
