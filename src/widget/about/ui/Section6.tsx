@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 
 import cumulativeTable from '@/shared/asset/img/cumulativeTable.png';
@@ -7,16 +5,10 @@ import scoreTable from '@/shared/asset/img/scoreTable.png';
 import yearTable from '@/shared/asset/img/yearTable.png';
 import Download from '@/shared/asset/svg/Download';
 
-export default function Section6() {
-  const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = '/2025학년도_GSM_역량_인증제_영역별_취득_점수_기준표.pdf';
-    link.download = 'GSM_역량인증제_기준표.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+const PDF_FILE_PATH = '/2025학년도_GSM_역량_인증제_영역별_취득_점수_기준표.pdf';
+const DOWNLOAD_FILE_NAME = 'GSM_역량인증제_기준표.pdf';
 
+export default function Section6() {
   return (
     <section className="mb-16 flex flex-col items-center gap-8 px-4 md:mb-24 md:gap-12 lg:mb-[11.5625rem] lg:gap-[4rem]">
       <p className="text-center text-2xl font-bold md:text-3xl lg:text-[2.75rem]">
@@ -49,15 +41,16 @@ export default function Section6() {
         </div>
       </div>
 
-      <button
-        onClick={handleDownload}
+      <a
+        href={PDF_FILE_PATH}
+        download={DOWNLOAD_FILE_NAME}
         className="mt-8 flex items-center gap-3 rounded-full bg-[#385B97] px-8 py-4 text-white transition-all hover:bg-[#2d4a7a] md:gap-4 md:px-10 lg:px-12 lg:py-5"
       >
         <Download className="h-5 w-5 md:h-6 md:w-6" color="white" />
         <span className="text-base font-semibold md:text-lg lg:text-xl">
           GSM 역량 인증제 기준표 다운로드
         </span>
-      </button>
+      </a>
     </section>
   );
 }
