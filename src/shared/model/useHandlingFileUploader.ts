@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 import { FileType } from '@/entities/file/model/file';
 
@@ -13,6 +14,8 @@ interface LocalFile {
   name: string;
   file: File;
 }
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export default function useFileUploaderState({ uploadedFiles, isMultiple, onChange }: FileUploaderProps) {
   const [existingFiles, setExistingFiles] = useState<FileType[]>([]);
@@ -33,6 +36,13 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple, onChan
 
     if (!isMultiple) {
       const file = selectedFiles[0];
+
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error('파일 용량은 10MB를 초과할 수 없습니다.');
+        e.target.value = '';
+        return;
+      }
+
       const newExisting: FileType[] = [];
       const newLocal = [
         {
@@ -46,14 +56,34 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple, onChan
       onChange?.({ existing: newExisting, new: [file] });
     } else {
       const fileArray = Array.from(selectedFiles);
-      const localFiles: LocalFile[] = fileArray.map((file) => ({
-        id: crypto.randomUUID(),
-        name: file.name,
-        file: file,
-      }));
-      const newLocalFiles = [...newFiles, ...localFiles];
-      setNewFiles(newLocalFiles);
-      onChange?.({ existing: existingFiles, new: newLocalFiles.map(f => f.file) });
+      const validLocalFiles: LocalFile[] = [];
+      const pendingFilesSize = newFiles.reduce((acc, f) => acc + f.file.size, 0);
+      let currentBatchSize = 0;
+
+      for (const file of fileArray) {
+        if (file.size > MAX_FILE_SIZE) {
+          toast.error(`${file.name}의 용량이 10MB를 초과하여 제외되었습니다.`);
+          continue;
+        }
+
+        if (pendingFilesSize + currentBatchSize + file.size > MAX_FILE_SIZE) {
+          toast.error('전체 업로드 용량은 10MB를 초과할 수 없습니다.');
+          break;
+        }
+
+        currentBatchSize += file.size;
+        validLocalFiles.push({
+          id: crypto.randomUUID(),
+          name: file.name,
+          file: file,
+        });
+      }
+
+      if (validLocalFiles.length > 0) {
+        const updatedNewFiles = [...newFiles, ...validLocalFiles];
+        setNewFiles(updatedNewFiles);
+        onChange?.({ existing: existingFiles, new: updatedNewFiles.map((f) => f.file) });
+      }
     }
 
     e.target.value = '';
@@ -64,14 +94,14 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple, onChan
     let newLocal = newFiles;
 
     if (typeof id === 'number') {
-      newExisting = existingFiles.filter((file) => file.id !== id);
+      newExisting = existingFiles.filter((file: FileType) => file.id !== id);
       setExistingFiles(newExisting);
     } else {
-      newLocal = newFiles.filter((file) => file.id !== id);
+      newLocal = newFiles.filter((file: LocalFile) => file.id !== id);
       setNewFiles(newLocal);
     }
 
-    onChange?.({ existing: newExisting, new: newLocal.map(f => f.file) });
+    onChange?.({ existing: newExisting, new: newLocal.map((f: LocalFile) => f.file) });
   };
 
   const getButtonText = () => {
@@ -91,7 +121,7 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple, onChan
 
   const displayFiles: FileType[] = [
     ...existingFiles,
-    ...newFiles.map((file) => ({
+    ...newFiles.map((file: LocalFile) => ({
       id: file.id,
       originalName: file.name,
       storeName: '',
