@@ -8,7 +8,7 @@ interface DownloadProps {
 export default function Download({
   width = 24,
   height = 24,
-  color = 'currentColor',
+  color = 'white',
   className,
 }: DownloadProps) {
   return (
