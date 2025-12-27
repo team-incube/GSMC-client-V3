@@ -1,16 +1,11 @@
-interface DownloadProps {
-  width?: number;
-  height?: number;
-  color?: string;
-  className?: string;
-}
+import { SVGProps } from './types';
 
 export default function Download({
   width = 24,
   height = 24,
   color = 'white',
   className,
-}: DownloadProps) {
+}: SVGProps) {
   return (
     <svg
       width={width}

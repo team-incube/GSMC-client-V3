@@ -1,16 +1,11 @@
-interface PeopleProps {
-  width?: number;
-  height?: number;
-  color?: string;
-  className?: string;
-}
+import { SVGProps } from './types';
 
 export default function People({
   width = 120,
   height = 99,
   color = '#385B97',
   className,
-}: PeopleProps) {
+}: SVGProps) {
   return (
     <svg
       width={width}
