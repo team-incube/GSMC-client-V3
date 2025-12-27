@@ -44,9 +44,9 @@ export default function Section6() {
       <a
         href={PDF_FILE_PATH}
         download={DOWNLOAD_FILE_NAME}
-        className="mt-8 flex items-center gap-3 rounded-full bg-[#385B97] px-8 py-4 text-white transition-all hover:bg-[#2d4a7a] md:gap-4 md:px-10 lg:px-12 lg:py-5"
+        className="mt-8 flex items-center gap-3 rounded-full bg-main-700 px-8 py-4 text-white transition-all hover:bg-main-800 md:gap-4 md:px-10 lg:px-12 lg:py-5"
       >
-        <Download className="h-5 w-5 md:h-6 md:w-6" color="white" />
+        <Download className="h-5 w-5 md:h-6 md:w-6" />
         <span className="text-base font-semibold md:text-lg lg:text-xl">
           GSM 역량 인증제 기준표 다운로드
         </span>
