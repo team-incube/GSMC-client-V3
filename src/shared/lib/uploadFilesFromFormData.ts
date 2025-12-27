@@ -39,7 +39,18 @@ export async function uploadFilesFromFormData(
     if (idsToRollback.length > 0) {
       await Promise.allSettled(idsToRollback.map((id) => removeFileById({ id })));
     }
-    throw new Error(`파일 업로드 중 일부가 실패하여 전체 취소되었습니다.`);
+
+    const firstError = failedUploads[0].reason;
+
+    if (firstError?.response?.status === 400) {
+      throw new Error('잘못된 파일 형식입니다.');
+    }
+
+    if (firstError?.response?.status === 413) {
+      throw new Error('파일 업로드 용량이 초과되었습니다.');
+    }
+
+    throw new Error('파일 업로드에 실패했습니다.');
   }
 
   const newUploadedIds = successfulUploads
