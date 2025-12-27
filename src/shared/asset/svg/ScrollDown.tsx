@@ -1,9 +1,7 @@
-interface ScrollDownProps {
-  width?: number;
-  height?: number;
-  color?: string;
+import { SVGProps } from './types';
+
+interface ScrollDownProps extends SVGProps {
   onClick?: React.MouseEventHandler<SVGSVGElement>;
-  className?: string;
 }
 
 export default function ScrollDown({

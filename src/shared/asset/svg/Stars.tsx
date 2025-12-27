@@ -1,11 +1,6 @@
-interface StarsProps {
-  width?: number;
-  height?: number;
-  color?: string;
-  className?: string;
-}
+import { SVGProps } from './types';
 
-export default function Stars({ width = 60, height = 80, color = 'black', className }: StarsProps) {
+export default function Stars({ width = 60, height = 80, color = 'black', className }: SVGProps) {
   return (
     <svg
       width={width}

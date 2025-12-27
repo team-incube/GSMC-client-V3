@@ -1,16 +1,11 @@
-interface TrophyProps {
-  width?: number;
-  height?: number;
-  color?: string;
-  className?: string;
-}
+import { SVGProps } from './types';
 
 export default function Trophy({
   width = 80,
   height = 80,
   color = 'black',
   className,
-}: TrophyProps) {
+}: SVGProps) {
   return (
     <svg
       width={width}
