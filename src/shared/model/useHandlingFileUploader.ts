@@ -57,7 +57,8 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple, onChan
     } else {
       const fileArray = Array.from(selectedFiles);
       const validLocalFiles: LocalFile[] = [];
-      let currentTotalSize = 0; // 우리는 새로 올리는 파일들의 합계 혹은 개별 파일 크기를 체크합니다.
+      const pendingFilesSize = newFiles.reduce((acc, f) => acc + f.file.size, 0);
+      let currentBatchSize = 0;
 
       for (const file of fileArray) {
         if (file.size > MAX_FILE_SIZE) {
@@ -65,16 +66,12 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple, onChan
           continue;
         }
 
-        // 기존에 이미 올라가 있는(newFiles) 파일들과의 합계를 체크할지, 아니면 이번에 선택한 파일들만의 합계를 체크할지 고민입니다.
-        // 일반적인 UX상 현재 업로드 대기 중인 모든 '새 파일'의 합계를 체크하는 것이 안전합니다.
-        const pendingFilesSize = newFiles.reduce((acc: number, f: LocalFile) => acc + f.file.size, 0);
-        const currentBatchSize = validLocalFiles.reduce((acc: number, f: LocalFile) => acc + f.file.size, 0);
-
         if (pendingFilesSize + currentBatchSize + file.size > MAX_FILE_SIZE) {
           toast.error('전체 업로드 용량은 10MB를 초과할 수 없습니다.');
           break;
         }
 
+        currentBatchSize += file.size;
         validLocalFiles.push({
           id: crypto.randomUUID(),
           name: file.name,
@@ -85,7 +82,7 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple, onChan
       if (validLocalFiles.length > 0) {
         const updatedNewFiles = [...newFiles, ...validLocalFiles];
         setNewFiles(updatedNewFiles);
-        onChange?.({ existing: existingFiles, new: updatedNewFiles.map(f => f.file) });
+        onChange?.({ existing: existingFiles, new: updatedNewFiles.map((f) => f.file) });
       }
     }
 
