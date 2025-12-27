@@ -43,10 +43,6 @@ export async function uploadFilesFromFormData(
     const firstError = failedUploads[0].reason;
 
     if (firstError?.response?.status === 400) {
-      throw new Error('잘못된 파일 형식입니다.');
-    }
-
-    if (firstError?.response?.status === 413) {
       throw new Error('파일 업로드 용량이 초과되었습니다.');
     }
 
