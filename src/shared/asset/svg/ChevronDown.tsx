@@ -1,16 +1,11 @@
-interface ChevronDownProps {
-  width?: number;
-  height?: number;
-  color?: string;
-  className?: string;
-}
+import { SVGProps } from './types';
 
 export default function ChevronDown({
   width = 32,
   height = 32,
   color = '#385B97',
   className = ''
-}: ChevronDownProps) {
+}: SVGProps) {
   return (
     <svg
       width={width}

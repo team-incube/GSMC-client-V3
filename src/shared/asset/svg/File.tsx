@@ -1,11 +1,6 @@
-interface FileProps {
-  width?: number;
-  height?: number;
-  color?: string;
-  className?: string;
-}
+import { SVGProps } from './types';
 
-export default function File({ width = 60, height = 80, color = 'black', className }: FileProps) {
+export default function File({ width = 60, height = 80, color = 'black', className }: SVGProps) {
   return (
     <svg
       width={width}
