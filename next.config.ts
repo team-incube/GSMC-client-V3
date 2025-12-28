@@ -5,19 +5,19 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
     serverActions: {
-      bodySizeLimit: '20MB',
+      bodySizeLimit: '15MB',
       allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') ?? [],
     },
-    middlewareClientMaxBodySize: '20MB',
+    middlewareClientMaxBodySize: '15MB',
   },
   images: {
     remotePatterns: process.env.S3_IMAGE_HOSTNAME
       ? [
-          {
-            protocol: 'https',
-            hostname: process.env.S3_IMAGE_HOSTNAME,
-          },
-        ]
+        {
+          protocol: 'https',
+          hostname: process.env.S3_IMAGE_HOSTNAME,
+        },
+      ]
       : [],
   },
 };

@@ -1,16 +1,11 @@
-interface LanguageProps {
-  width?: number;
-  height?: number;
-  color?: string;
-  className?: string;
-}
+import { SVGProps } from './types';
 
 export default function Language({
   width = 97,
   height = 97,
   color = '#385B97',
   className,
-}: LanguageProps) {
+}: SVGProps) {
   return (
     <svg
       width={width}
