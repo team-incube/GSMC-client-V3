@@ -3,19 +3,12 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
 
 import { CategoryType } from '@/entities/category/model/category';
 import { FileType } from '@/entities/file/model/file';
-import { useAttachFiles } from '@/entities/file/model/useAttachFiles';
 import { ScoreStatus } from '@/entities/score/model/score';
 import { ScoreFormSchema, ScoreFormValues } from '@/feature/score/model/scoreForm.schema';
-import {
-  ScoreMutationData,
-  useCreateScore,
-  useDeleteScore,
-  useUpdateScore,
-} from '@/feature/score/model/useScoreMutation';
+import { useOptimisticScoreMutation } from '@/feature/score/model/useOptimisticScoreMutation';
 import CategoryInputs from '@/feature/score/ui/CategoryInputs';
 import Button from '@/shared/ui/Button';
 import Textarea from '@/shared/ui/Textarea';
@@ -42,12 +35,7 @@ export default function ScoreForm({
 }: ScoreFormProps) {
   const closeModal = () => setIsModalOpen(false);
 
-  const { mutateAsync: attachFiles, isPending: isUploading } = useAttachFiles();
-  const { mutate: createScore, isPending: isCreating } = useCreateScore(closeModal);
-  const { mutate: updateScore, isPending: isUpdating } = useUpdateScore(closeModal);
-  const { mutate: deleteScore, isPending: isDeleting } = useDeleteScore(closeModal);
-
-  const isPending = isUploading || isCreating || isUpdating || isDeleting;
+  const { createScore, updateScore, deleteScore } = useOptimisticScoreMutation();
 
   const getDefaultValue = (): string => {
     if (initialData?.scoreValue !== undefined && initialData?.scoreValue !== null && initialData?.scoreValue !== '') {
@@ -84,37 +72,23 @@ export default function ScoreForm({
     formState: { errors },
   } = methods;
 
-  const processSubmit = async (data: ScoreFormValues, intent: 'create' | 'update' | 'delete') => {
+  const processSubmit = (data: ScoreFormValues, intent: 'create' | 'update' | 'delete') => {
     if (intent === 'delete' && data.scoreId) {
-      deleteScore(data.scoreId);
+      deleteScore(data.scoreId, closeModal);
       return;
     }
 
-    let fileId: number | undefined;
-
-    try {
-      if (data.files.new.length > 0) {
-        const uploadedFiles = await attachFiles(data.files.new);
-        fileId = Number(uploadedFiles[0]?.id);
-      } else if (data.files.existing.length > 0) {
-        fileId = Number(data.files.existing[0].id);
-      }
-    } catch {
-      toast.error('파일 업로드에 실패했습니다.');
-      return;
-    }
-
-    const mutationData: ScoreMutationData = {
+    const optimisticData = {
       scoreId: data.scoreId,
       categoryType: data.categoryType,
       value: data.value,
-      fileId,
+      files: data.files,
     };
 
     if (intent === 'create') {
-      createScore(mutationData);
+      createScore(optimisticData, closeModal);
     } else {
-      updateScore(mutationData);
+      updateScore(optimisticData, closeModal);
     }
   };
 
@@ -165,10 +139,9 @@ export default function ScoreForm({
             {category.englishName !== 'ACADEMIC-GRADE' && category.englishName !== 'VOLUNTEER' && (
               <Button
                 type="button"
-                disabled={isPending}
                 onClick={() => onSubmit(mode === 'create' ? 'create' : 'update')}
               >
-                {isPending ? '처리 중...' : mode === 'create' ? '추가하기' : '수정하기'}
+                {mode === 'create' ? '추가하기' : '수정하기'}
               </Button>
             )}
           </div>

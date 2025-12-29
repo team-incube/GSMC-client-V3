@@ -1,23 +1,16 @@
 'use client';
 
+import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
 
 import { FileType } from '@/entities/file/model/file';
-import { useAttachFiles } from '@/entities/file/model/useAttachFiles';
 import { StudentType } from '@/entities/student/model/student';
 import { ProjectFormSchema, ProjectFormValues } from '@/feature/project-create/model/projectForm.schema';
-import {
-  ProjectMutationData,
-  useCreateProject,
-  useDeleteProject,
-  useDraftProject,
-  useUpdateProject,
-} from '@/feature/project-create/model/useProjectMutation';
+import { useOptimisticProjectMutation } from '@/feature/project-create/model/useOptimisticProjectMutation';
 import Button from '@/shared/ui/Button';
 import FileUploader from '@/shared/ui/FileUploader';
 import Input from '@/shared/ui/Input';
@@ -48,6 +41,7 @@ export default function ProjectCreateForm({
   redirectOnSuccess = '/main',
 }: ProjectCreateFormProps) {
   const router = useRouter();
+  const newFilesRef = useRef<File[]>([]);
 
   const handleCreateSuccess = () => router.push(redirectOnSuccess);
   const handleUpdateSuccess = () => {
@@ -58,13 +52,7 @@ export default function ProjectCreateForm({
   const handleDeleteSuccess = () => router.push('/main');
   const handleDraftSuccess = () => router.push(redirectOnSuccess);
 
-  const { mutateAsync: attachFiles, isPending: isUploading } = useAttachFiles();
-  const { mutate: createProject, isPending: isCreating } = useCreateProject(handleCreateSuccess);
-  const { mutate: updateProject, isPending: isUpdating } = useUpdateProject(handleUpdateSuccess);
-  const { mutate: draftProject, isPending: isDrafting } = useDraftProject(handleDraftSuccess);
-  const { mutate: deleteProject, isPending: isDeleting } = useDeleteProject(handleDeleteSuccess);
-
-  const isPending = isUploading || isCreating || isUpdating || isDrafting || isDeleting;
+  const { createProject, updateProject, draftProject, deleteProject } = useOptimisticProjectMutation();
 
   const {
     register,
@@ -86,55 +74,34 @@ export default function ProjectCreateForm({
   });
 
   const descriptionLength = watch('description')?.length ?? 0;
-  const isDraftForm = watch('isDraft');
   const isDraft = initialData?.isDraft ?? false;
 
-  const processSubmit = async (data: ProjectFormValues, intent: string) => {
+  const processSubmit = (data: ProjectFormValues, intent: string) => {
     if (intent === 'delete') {
-      deleteProject({ projectId: data.projectId, isDraft });
+      deleteProject({ projectId: data.projectId, isDraft }, handleDeleteSuccess);
       return;
     }
 
-    let fileIds = data.fileIds.filter((id) => id > 0);
+    const existingFileIds = data.fileIds.filter((id) => id > 0);
 
-    const newFilesCount = data.fileIds.filter((id) => id < 0).length;
-    if (newFilesCount > 0) {
-      const fileInput = document.querySelectorAll<HTMLInputElement>('input[name="newFiles"]');
-      const newFiles: File[] = [];
-      fileInput.forEach((input) => {
-        if (input.files?.[0]) {
-          newFiles.push(input.files[0]);
-        }
-      });
-
-      if (newFiles.length > 0) {
-        try {
-          const uploadedFiles = await attachFiles(newFiles);
-          fileIds = [...fileIds, ...uploadedFiles.map((f) => Number(f.id))];
-        } catch {
-          toast.error('파일 업로드에 실패했습니다.');
-          return;
-        }
-      }
-    }
-
-    const mutationData: ProjectMutationData = {
+    const optimisticData = {
       projectId: data.projectId,
       title: data.title,
       description: data.description,
-      fileIds,
       participantIds: data.participantIds,
+      existingFileIds,
+      newFiles: newFilesRef.current,
     };
 
     switch (intent) {
       case 'create':
-        createProject(mutationData);
+        createProject(optimisticData, handleCreateSuccess);
         break;
       case 'update':
-        updateProject(mutationData);
+        updateProject(optimisticData, handleUpdateSuccess);
         break;
       case 'draft':
-        draftProject(mutationData);
+        draftProject(optimisticData, handleDraftSuccess);
         break;
     }
   };
@@ -185,6 +152,7 @@ export default function ProjectCreateForm({
                 const existingFileIds = files.existing.map((f) => Number(f.id));
                 const newFileIds = files.new.map((_, index) => -(index + 1));
                 field.onChange([...existingFileIds, ...newFileIds]);
+                newFilesRef.current = files.new;
               }}
             />
           )}
@@ -197,25 +165,23 @@ export default function ProjectCreateForm({
           <Button
             type="button"
             variant="border"
-            disabled={isPending}
             onClick={() => {
               setValue('isDraft', true);
               handleSubmit((data) => processSubmit(data, 'draft'))();
             }}
           >
-            {isPending && isDraftForm ? '저장 중...' : '임시저장'}
+            임시저장
           </Button>
         )}
 
         <Button
           type="button"
-          disabled={isPending}
           onClick={() => {
             setValue('isDraft', false);
             handleSubmit((data) => processSubmit(data, mode === 'create' ? 'create' : 'update'))();
           }}
         >
-          {isPending && !isDraftForm ? '처리 중...' : mode === 'create' ? '작성 완료' : '수정하기'}
+          {mode === 'create' ? '작성 완료' : '수정하기'}
         </Button>
 
         {actions.showDelete === true && (

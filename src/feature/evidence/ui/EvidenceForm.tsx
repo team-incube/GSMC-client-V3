@@ -1,22 +1,15 @@
 'use client';
 
+import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
 
 import { FileType } from '@/entities/file/model/file';
-import { useAttachFiles } from '@/entities/file/model/useAttachFiles';
 import { EvidenceFormSchema, EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema';
-import {
-  EvidenceMutationData,
-  useCreateEvidence,
-  useDeleteEvidence,
-  useDraftEvidence,
-  useUpdateEvidence,
-} from '@/feature/evidence/model/useEvidenceMutation';
+import { useOptimisticEvidenceMutation } from '@/feature/evidence/model/useOptimisticEvidenceMutation';
 import Button from '@/shared/ui/Button';
 import FileUploader from '@/shared/ui/FileUploader';
 import Input from '@/shared/ui/Input';
@@ -48,6 +41,7 @@ export default function EvidenceForm({
   redirectOnSuccess = '/main',
 }: EvidenceFormProps) {
   const router = useRouter();
+  const newFilesRef = useRef<File[]>([]);
 
   const handleSuccess = () => {
     if (redirectOnSuccess) {
@@ -55,13 +49,7 @@ export default function EvidenceForm({
     }
   };
 
-  const { mutateAsync: attachFiles, isPending: isUploading } = useAttachFiles();
-  const { mutate: createEvidence, isPending: isCreating } = useCreateEvidence(handleSuccess);
-  const { mutate: updateEvidence, isPending: isUpdating } = useUpdateEvidence(handleSuccess);
-  const { mutate: draftEvidence, isPending: isDrafting } = useDraftEvidence(handleSuccess);
-  const { mutate: deleteEvidence, isPending: isDeleting } = useDeleteEvidence(handleSuccess);
-
-  const isPending = isUploading || isCreating || isUpdating || isDrafting || isDeleting;
+  const { createEvidence, updateEvidence, draftEvidence, deleteEvidence } = useOptimisticEvidenceMutation();
 
   const {
     register,
@@ -84,55 +72,39 @@ export default function EvidenceForm({
   });
 
   const contentLength = watch('content')?.length ?? 0;
-  const isDraftForm = watch('isDraft');
 
-  const processSubmit = async (data: EvidenceFormValues, intent: string) => {
+  const processSubmit = (data: EvidenceFormValues, intent: string) => {
     if (intent === 'delete') {
-      deleteEvidence({ scoreId: data.scoreId, evidenceId: data.evidenceId });
+      deleteEvidence({ scoreId: data.scoreId, evidenceId: data.evidenceId }, handleSuccess);
       return;
     }
 
-    let fileIds = data.fileIds.filter((id) => id > 0);
+    const existingFileIds = data.fileIds.filter((id) => id > 0);
 
-    const newFilesCount = data.fileIds.filter((id) => id < 0).length;
-    if (newFilesCount > 0) {
-      const fileInput = document.querySelectorAll<HTMLInputElement>('input[name="newFiles"]');
-      const newFiles: File[] = [];
-      fileInput.forEach((input) => {
-        if (input.files?.[0]) {
-          newFiles.push(input.files[0]);
-        }
-      });
-
-      if (newFiles.length > 0) {
-        try {
-          const uploadedFiles = await attachFiles(newFiles);
-          fileIds = [...fileIds, ...uploadedFiles.map((f) => Number(f.id))];
-        } catch {
-          toast.error('파일 업로드에 실패했습니다.');
-          return;
-        }
-      }
-    }
-
-    const mutationData: EvidenceMutationData = {
+    const optimisticData = {
       projectId: data.projectId,
       evidenceId: data.evidenceId,
       scoreId: data.scoreId,
       title: data.title,
       content: data.content,
-      fileIds,
+      existingFileIds,
+      newFiles: newFilesRef.current,
     };
 
     switch (intent) {
       case 'create':
-        createEvidence(mutationData);
+        createEvidence(optimisticData, handleSuccess);
         break;
       case 'update':
-        updateEvidence(mutationData);
+        updateEvidence(optimisticData, handleSuccess);
         break;
       case 'draft':
-        draftEvidence({ title: data.title, content: data.content, fileIds });
+        draftEvidence({
+          title: data.title,
+          content: data.content,
+          existingFileIds,
+          newFiles: newFilesRef.current,
+        }, handleSuccess);
         break;
     }
   };
@@ -171,6 +143,7 @@ export default function EvidenceForm({
                 const existingFileIds = files.existing.map((f) => Number(f.id));
                 const newFileIds = files.new.map((_, index) => -(index + 1));
                 field.onChange([...existingFileIds, ...newFileIds]);
+                newFilesRef.current = files.new;
               }}
             />
           )}
@@ -187,25 +160,23 @@ export default function EvidenceForm({
           <Button
             type="button"
             variant="border"
-            disabled={isPending}
             onClick={() => {
               setValue('isDraft', true);
               handleSubmit((data) => processSubmit(data, 'draft'))();
             }}
           >
-            {isPending && isDraftForm ? '저장 중...' : '임시저장'}
+            임시저장
           </Button>
         )}
 
         <Button
           type="button"
-          disabled={isPending}
           onClick={() => {
             setValue('isDraft', false);
             handleSubmit((data) => processSubmit(data, mode === 'create' ? 'create' : 'update'))();
           }}
         >
-          {isPending && !isDraftForm ? '처리 중...' : mode === 'create' ? '작성 완료' : '수정하기'}
+          {mode === 'create' ? '작성 완료' : '수정하기'}
         </Button>
 
         {actions.showDelete === true && (
