@@ -125,7 +125,7 @@ export default function EvidenceForm({
         <Textarea
           label="내용"
           placeholder="최소 300자, 최대 2000자 입력해주세요"
-          description={`${contentLength}/300`}
+          description={`${contentLength}자 / 최소 300자 - 최대 2000자`}
           {...register('content')}
         />
         <small className="pl-1 text-error">{errors.content?.message}</small>

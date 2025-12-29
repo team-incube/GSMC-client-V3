@@ -131,9 +131,9 @@ export default function ProjectCreateForm({
         <small className="pl-1 text-error">{errors.participantIds?.message}</small>
 
         <Textarea
-          label="프로젝트 설명"
+          label="내용"
           placeholder="최소 300자, 최대 2000자 입력해주세요"
-          description={`${descriptionLength}/300`}
+          description={`${descriptionLength}자 / 최소 300자 - 최대 2000자`}
           {...register('description')}
         />
         <small className="pl-1 text-error">{errors.description?.message}</small>
