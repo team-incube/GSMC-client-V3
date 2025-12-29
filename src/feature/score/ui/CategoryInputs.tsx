@@ -360,7 +360,7 @@ export default function CategoryInputs({
     return (
       <div className="flex flex-col gap-4 items-center justify-center py-6">
         <p className="text-center text-gray-600 mb-4">
-          프로젝트 참여 활동은 별도의 프로젝트 생성 페이지에서 진행해주세요.
+          프로젝트 참여 활동은 프로젝트 페이지에서 참여 활동을 작성해주세요.
         </p>
         <Link
           href="/projects/create"
