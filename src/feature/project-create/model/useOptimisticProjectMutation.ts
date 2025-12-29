@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { HttpStatusCode, isAxiosError } from 'axios';
 import { toast } from 'sonner';
 
-import { attachFile } from '@/entities/file/api/attachFile';
+import { useOptimisticFileUpload } from '@/entities/file/model/useOptimisticFileUpload';
 import { createDraftProject } from '@/entities/project/api/createDraftProject';
 import { createProject } from '@/entities/project/api/createProject';
 import { editProjectById } from '@/entities/project/api/editProjectById';
@@ -34,12 +34,7 @@ export const useOptimisticProjectMutation = () => {
   const queryClient = useQueryClient();
   const toastIdRef = useRef<string | number | undefined>(undefined);
 
-  const uploadFiles = async (files: File[]): Promise<number[]> => {
-    if (files.length === 0) return [];
-
-    const uploadedFiles = await Promise.all(files.map((file) => attachFile({ file })));
-    return uploadedFiles.map((f) => Number(f.id));
-  };
+  const { mutateAsync: uploadFiles } = useOptimisticFileUpload({ toastIdRef });
 
   const createProjectMutation = useCallback(
     async (data: OptimisticProjectData, onSuccess: () => void) => {
@@ -71,7 +66,7 @@ export const useOptimisticProjectMutation = () => {
         toast.error(handleProjectError(error), { id: toastIdRef.current });
       }
     },
-    [queryClient],
+    [queryClient, uploadFiles],
   );
 
   const updateProject = useCallback(
@@ -108,7 +103,7 @@ export const useOptimisticProjectMutation = () => {
         toast.error(handleProjectError(error), { id: toastIdRef.current });
       }
     },
-    [queryClient],
+    [queryClient, uploadFiles],
   );
 
   const draftProject = useCallback(
@@ -139,7 +134,7 @@ export const useOptimisticProjectMutation = () => {
         toast.error(handleProjectError(error), { id: toastIdRef.current });
       }
     },
-    [queryClient],
+    [queryClient, uploadFiles],
   );
 
   const deleteProject = useCallback(

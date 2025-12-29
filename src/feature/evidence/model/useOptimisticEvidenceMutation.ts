@@ -9,7 +9,7 @@ import { addEvidence } from '@/entities/evidence/api/addEvidence';
 import { editEvidenceById } from '@/entities/evidence/api/editEvidenceById';
 import { removeDraftEvidence } from '@/entities/evidence/api/removeDraftEvidence';
 import { removeEvidence } from '@/entities/evidence/api/removeEvidence';
-import { attachFile } from '@/entities/file/api/attachFile';
+import { useOptimisticFileUpload } from '@/entities/file/model/useOptimisticFileUpload';
 import { addProjectScore } from '@/entities/score/api/addProjectScore';
 import { removeScoreById } from '@/entities/score/api/removeScoreById';
 
@@ -37,12 +37,7 @@ export const useOptimisticEvidenceMutation = () => {
   const queryClient = useQueryClient();
   const toastIdRef = useRef<string | number | undefined>(undefined);
 
-  const uploadFiles = async (files: File[]): Promise<number[]> => {
-    if (files.length === 0) return [];
-
-    const uploadedFiles = await Promise.all(files.map((file) => attachFile({ file })));
-    return uploadedFiles.map((f) => Number(f.id));
-  };
+  const { mutateAsync: uploadFiles } = useOptimisticFileUpload({ toastIdRef });
 
   const createEvidence = useCallback(
     async (data: OptimisticEvidenceData, onSuccess: () => void) => {
@@ -88,7 +83,7 @@ export const useOptimisticEvidenceMutation = () => {
         toast.error(handleEvidenceError(error), { id: toastIdRef.current });
       }
     },
-    [queryClient],
+    [queryClient, uploadFiles],
   );
 
   const updateEvidence = useCallback(
@@ -125,7 +120,7 @@ export const useOptimisticEvidenceMutation = () => {
         toast.error(handleEvidenceError(error), { id: toastIdRef.current });
       }
     },
-    [queryClient],
+    [queryClient, uploadFiles],
   );
 
   const draftEvidence = useCallback(
@@ -158,7 +153,7 @@ export const useOptimisticEvidenceMutation = () => {
         toast.error(handleEvidenceError(error), { id: toastIdRef.current });
       }
     },
-    [queryClient],
+    [queryClient, uploadFiles],
   );
 
   const deleteEvidence = useCallback(

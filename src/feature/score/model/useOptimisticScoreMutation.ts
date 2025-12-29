@@ -3,8 +3,8 @@ import { useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { attachFile } from '@/entities/file/api/attachFile';
 import { FileType } from '@/entities/file/model/file';
+import { useOptimisticSingleFileUpload } from '@/entities/file/model/useOptimisticFileUpload';
 import { addScoreByCategoryType } from '@/entities/score/api/addScoreByCategoryType';
 import { editScoreById } from '@/entities/score/api/editScoreById';
 import { removeScoreById } from '@/entities/score/api/removeScoreById';
@@ -25,12 +25,7 @@ export const useOptimisticScoreMutation = () => {
   const queryClient = useQueryClient();
   const toastIdRef = useRef<string | number | undefined>(undefined);
 
-  const uploadFiles = async (files: File[]): Promise<number | undefined> => {
-    if (files.length === 0) return undefined;
-
-    const uploadedFile = await attachFile({ file: files[0] });
-    return Number(uploadedFile.id);
-  };
+  const { mutateAsync: uploadFile } = useOptimisticSingleFileUpload({ toastIdRef });
 
   const createScore = useCallback(
     async (data: OptimisticScoreData, onClose: () => void) => {
@@ -45,7 +40,7 @@ export const useOptimisticScoreMutation = () => {
         let fileId: number | undefined;
 
         if (data.files.new.length > 0) {
-          fileId = await uploadFiles(data.files.new);
+          fileId = await uploadFile(data.files.new);
         } else if (data.files.existing.length > 0) {
           fileId = Number(data.files.existing[0].id);
         }
@@ -64,7 +59,7 @@ export const useOptimisticScoreMutation = () => {
         toast.error('점수 추가에 실패했습니다. 다시 시도해주세요.', { id: toastIdRef.current });
       }
     },
-    [queryClient],
+    [queryClient, uploadFile],
   );
 
   const updateScore = useCallback(
@@ -85,7 +80,7 @@ export const useOptimisticScoreMutation = () => {
         let fileId: number | undefined;
 
         if (data.files.new.length > 0) {
-          fileId = await uploadFiles(data.files.new);
+          fileId = await uploadFile(data.files.new);
         } else if (data.files.existing.length > 0) {
           fileId = Number(data.files.existing[0].id);
         }
@@ -113,7 +108,7 @@ export const useOptimisticScoreMutation = () => {
         toast.error('수정에 실패했습니다. 다시 시도해주세요.', { id: toastIdRef.current });
       }
     },
-    [queryClient],
+    [queryClient, uploadFile],
   );
 
   const deleteScore = useCallback(
