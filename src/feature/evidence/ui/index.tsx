@@ -1,2 +1,2 @@
-export { default } from './EvidenceForm';
 export type { EvidenceFormProps } from './EvidenceForm';
+export { default } from './EvidenceForm';
