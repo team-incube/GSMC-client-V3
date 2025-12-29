@@ -34,7 +34,7 @@ export const useOptimisticProjectMutation = () => {
   const queryClient = useQueryClient();
   const toastIdRef = useRef<string | number | undefined>(undefined);
 
-  const { mutateAsync: uploadFiles } = useOptimisticFileUpload({ toastIdRef });
+  const { mutateAsync: uploadFiles } = useOptimisticFileUpload();
 
   const createProjectMutation = useCallback(
     async (data: OptimisticProjectData, onSuccess: () => void) => {

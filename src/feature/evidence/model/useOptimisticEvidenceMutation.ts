@@ -37,7 +37,7 @@ export const useOptimisticEvidenceMutation = () => {
   const queryClient = useQueryClient();
   const toastIdRef = useRef<string | number | undefined>(undefined);
 
-  const { mutateAsync: uploadFiles } = useOptimisticFileUpload({ toastIdRef });
+  const { mutateAsync: uploadFiles } = useOptimisticFileUpload();
 
   const createEvidence = useCallback(
     async (data: OptimisticEvidenceData, onSuccess: () => void) => {

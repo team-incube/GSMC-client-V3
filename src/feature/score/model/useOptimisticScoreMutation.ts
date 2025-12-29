@@ -25,7 +25,7 @@ export const useOptimisticScoreMutation = () => {
   const queryClient = useQueryClient();
   const toastIdRef = useRef<string | number | undefined>(undefined);
 
-  const { mutateAsync: uploadFile } = useOptimisticSingleFileUpload({ toastIdRef });
+  const { mutateAsync: uploadFile } = useOptimisticSingleFileUpload();
 
   const createScore = useCallback(
     async (data: OptimisticScoreData, onClose: () => void) => {

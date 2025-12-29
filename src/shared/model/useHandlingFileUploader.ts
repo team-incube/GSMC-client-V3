@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import { toast } from 'sonner';
-
 import { FileType } from '@/entities/file/model/file';
 
 interface FileUploaderProps {
   uploadedFiles?: FileType | FileType[];
   isMultiple?: boolean;
-  onChange?: (files: { existing: FileType[], new: File[] }) => void;
+  onChange?: (files: { existing: FileType[]; new: File[] }) => void;
 }
 
 interface LocalFile {
@@ -16,9 +14,11 @@ interface LocalFile {
   file: File;
 }
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-
-export default function useFileUploaderState({ uploadedFiles, isMultiple, onChange }: FileUploaderProps) {
+export default function useFileUploaderState({
+  uploadedFiles,
+  isMultiple,
+  onChange,
+}: FileUploaderProps) {
   const [existingFiles, setExistingFiles] = useState<FileType[]>([]);
   const [newFiles, setNewFiles] = useState<LocalFile[]>([]);
 
@@ -38,12 +38,6 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple, onChan
     if (!isMultiple) {
       const file = selectedFiles[0];
 
-      if (file.size > MAX_FILE_SIZE) {
-        toast.error('파일 용량은 10MB를 초과할 수 없습니다.');
-        e.target.value = '';
-        return;
-      }
-
       const newExisting: FileType[] = [];
       const newLocal = [
         {
@@ -57,29 +51,11 @@ export default function useFileUploaderState({ uploadedFiles, isMultiple, onChan
       onChange?.({ existing: newExisting, new: [file] });
     } else {
       const fileArray = Array.from(selectedFiles);
-      const validLocalFiles: LocalFile[] = [];
-      const pendingFilesSize = newFiles.reduce((acc, f) => acc + f.file.size, 0);
-      let currentBatchSize = 0;
-
-      for (const file of fileArray) {
-        if (file.size > MAX_FILE_SIZE) {
-          toast.error(`${file.name}의 용량이 10MB를 초과하여 제외되었습니다.`);
-          continue;
-        }
-
-        if (pendingFilesSize + currentBatchSize + file.size > MAX_FILE_SIZE) {
-          toast.error('전체 업로드 용량은 10MB를 초과할 수 없습니다.');
-          break;
-        }
-
-        currentBatchSize += file.size;
-        validLocalFiles.push({
-          id: crypto.randomUUID(),
-          name: file.name,
-          file: file,
-        });
-      }
-
+      const validLocalFiles: LocalFile[] = fileArray.map((file) => ({
+        id: crypto.randomUUID(),
+        name: file.name,
+        file: file,
+      }));
       if (validLocalFiles.length > 0) {
         const updatedNewFiles = [...newFiles, ...validLocalFiles];
         setNewFiles(updatedNewFiles);
