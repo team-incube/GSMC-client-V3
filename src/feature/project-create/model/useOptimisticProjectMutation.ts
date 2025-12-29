@@ -33,23 +33,14 @@ const handleProjectError = (error: unknown): string => {
 export const useOptimisticProjectMutation = () => {
   const queryClient = useQueryClient();
   const toastIdRef = useRef<string | number | undefined>(undefined);
-
   const { mutateAsync: uploadFiles } = useOptimisticFileUpload();
-
   const createProjectMutation = useCallback(
     async (data: OptimisticProjectData, onSuccess: () => void) => {
-      // 즉시 페이지 이동 (낙관적 UX)
       onSuccess();
-
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('프로젝트를 생성하는 중...');
-
       try {
-        // 1. 파일 업로드
         const uploadedFileIds = await uploadFiles(data.newFiles);
         const fileIds = [...data.existingFileIds, ...uploadedFileIds];
-
-        // 2. 프로젝트 생성
         await createProject({
           title: data.title,
           description: data.description,
@@ -57,8 +48,6 @@ export const useOptimisticProjectMutation = () => {
           participantIds: data.participantIds,
         });
         await removeDraftProject();
-
-        // 3. 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['project'] });
         await queryClient.invalidateQueries({ queryKey: ['draftProject'] });
         toast.success('프로젝트를 생성했습니다.', { id: toastIdRef.current });
@@ -68,26 +57,17 @@ export const useOptimisticProjectMutation = () => {
     },
     [queryClient, uploadFiles],
   );
-
   const updateProject = useCallback(
     async (data: OptimisticProjectData, onSuccess: () => void) => {
       if (data.projectId === undefined) {
         toast.error('프로젝트 ID가 필요합니다.');
         return;
       }
-
-      // 즉시 페이지 이동 (낙관적 UX)
       onSuccess();
-
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('프로젝트를 수정하는 중...');
-
       try {
-        // 1. 파일 업로드
         const uploadedFileIds = await uploadFiles(data.newFiles);
         const fileIds = [...data.existingFileIds, ...uploadedFileIds];
-
-        // 2. 프로젝트 수정
         await editProjectById({
           projectId: data.projectId,
           title: data.title,
@@ -95,8 +75,6 @@ export const useOptimisticProjectMutation = () => {
           fileIds,
           participantIds: data.participantIds,
         });
-
-        // 3. 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['project'] });
         toast.success('프로젝트를 수정했습니다.', { id: toastIdRef.current });
       } catch (error) {
@@ -105,29 +83,19 @@ export const useOptimisticProjectMutation = () => {
     },
     [queryClient, uploadFiles],
   );
-
   const draftProject = useCallback(
     async (data: OptimisticProjectData, onSuccess: () => void) => {
-      // 즉시 페이지 이동 (낙관적 UX)
       onSuccess();
-
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('임시저장하는 중...');
-
       try {
-        // 1. 파일 업로드
         const uploadedFileIds = await uploadFiles(data.newFiles);
         const fileIds = [...data.existingFileIds, ...uploadedFileIds];
-
-        // 2. 임시저장
         await createDraftProject({
           title: data.title,
           description: data.description,
           fileIds,
           participantIds: data.participantIds,
         });
-
-        // 3. 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['draftProject'] });
         toast.success('임시저장되었습니다.', { id: toastIdRef.current });
       } catch (error) {
@@ -136,15 +104,10 @@ export const useOptimisticProjectMutation = () => {
     },
     [queryClient, uploadFiles],
   );
-
   const deleteProject = useCallback(
     async (data: { projectId?: number; isDraft: boolean }, onSuccess: () => void) => {
-      // 즉시 페이지 이동 (낙관적 UX)
       onSuccess();
-
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('삭제하는 중...');
-
       try {
         if (data.isDraft) {
           await removeDraftProject();
@@ -154,8 +117,6 @@ export const useOptimisticProjectMutation = () => {
           }
           await removeProjectById({ projectId: data.projectId });
         }
-
-        // 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['project'] });
         await queryClient.invalidateQueries({ queryKey: ['draftProject'] });
         toast.success('삭제되었습니다.', { id: toastIdRef.current });
@@ -165,7 +126,6 @@ export const useOptimisticProjectMutation = () => {
     },
     [queryClient],
   );
-
   return {
     createProject: createProjectMutation,
     updateProject,

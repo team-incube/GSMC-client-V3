@@ -46,21 +46,16 @@ export const useOptimisticEvidenceMutation = () => {
         return;
       }
 
-      // 즉시 페이지 이동 (낙관적 UX)
       onSuccess();
 
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('프로젝트 참여글을 작성하는 중...');
 
       try {
-        // 1. 파일 업로드
         const uploadedFileIds = await uploadFiles(data.newFiles);
         const fileIds = [...data.existingFileIds, ...uploadedFileIds];
 
-        // 2. 프로젝트 점수 생성
         const scoreResponse = await addProjectScore({ projectId: data.projectId });
 
-        // 3. 증빙 생성
         try {
           await addEvidence({
             scoreId: scoreResponse.scoreId,
@@ -70,12 +65,10 @@ export const useOptimisticEvidenceMutation = () => {
           });
           await removeDraftEvidence();
         } catch (error) {
-          // 실패 시 점수 롤백
           await removeScoreById({ scoreId: scoreResponse.scoreId });
           throw error;
         }
 
-        // 4. 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['evidence'] });
         await queryClient.invalidateQueries({ queryKey: ['score'] });
         toast.success('프로젝트 참여글을 작성했습니다.', { id: toastIdRef.current });
@@ -93,18 +86,14 @@ export const useOptimisticEvidenceMutation = () => {
         return;
       }
 
-      // 즉시 페이지 이동 (낙관적 UX)
       onSuccess();
 
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('수정하는 중...');
 
       try {
-        // 1. 파일 업로드
         const uploadedFileIds = await uploadFiles(data.newFiles);
         const fileIds = [...data.existingFileIds, ...uploadedFileIds];
 
-        // 2. 증빙 수정
         await editEvidenceById({
           evidenceId: data.evidenceId,
           scoreId: data.scoreId,
@@ -113,7 +102,6 @@ export const useOptimisticEvidenceMutation = () => {
           fileIds,
         });
 
-        // 3. 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['evidence'] });
         toast.success('수정되었습니다.', { id: toastIdRef.current });
       } catch (error) {
@@ -128,25 +116,20 @@ export const useOptimisticEvidenceMutation = () => {
       data: Pick<OptimisticEvidenceData, 'title' | 'content' | 'existingFileIds' | 'newFiles'>,
       onSuccess: () => void,
     ) => {
-      // 즉시 페이지 이동 (낙관적 UX)
       onSuccess();
 
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('임시저장하는 중...');
 
       try {
-        // 1. 파일 업로드
         const uploadedFileIds = await uploadFiles(data.newFiles);
         const fileIds = [...data.existingFileIds, ...uploadedFileIds];
 
-        // 2. 임시저장
         await addDraftEvidence({
           title: data.title,
           content: data.content,
           fileIds,
         });
 
-        // 3. 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['evidence'] });
         toast.success('임시저장되었습니다.', { id: toastIdRef.current });
       } catch (error) {
@@ -158,10 +141,8 @@ export const useOptimisticEvidenceMutation = () => {
 
   const deleteEvidence = useCallback(
     async (data: { scoreId?: number; evidenceId?: number }, onSuccess: () => void) => {
-      // 즉시 페이지 이동 (낙관적 UX)
       onSuccess();
 
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('삭제하는 중...');
 
       try {
@@ -172,7 +153,6 @@ export const useOptimisticEvidenceMutation = () => {
           await removeDraftEvidence();
         }
 
-        // 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['evidence'] });
         await queryClient.invalidateQueries({ queryKey: ['score'] });
         toast.success('삭제되었습니다.', { id: toastIdRef.current });

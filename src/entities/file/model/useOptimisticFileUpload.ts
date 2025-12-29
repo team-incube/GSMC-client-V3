@@ -4,10 +4,6 @@ import { toast } from 'sonner';
 
 import { attachFile } from '@/entities/file/api/attachFile';
 
-/**
- * 낙관적 업데이트를 위한 파일 업로드 훅
- * 여러 파일을 업로드하고 ID 배열을 반환합니다.
- */
 export const useOptimisticFileUpload = () => {
   return useMutation({
     mutationFn: async (files: File[]): Promise<number[]> => {
@@ -16,7 +12,6 @@ export const useOptimisticFileUpload = () => {
       return uploadedFiles.map((f) => Number(f.id));
     },
     onError: (error) => {
-      // 파일 업로드 에러는 별도의 토스트로 표시 (toastIdRef 사용 안 함)
       if (isAxiosError(error)) {
         const status = error.response?.status;
         if (status === HttpStatusCode.PayloadTooLarge) {
@@ -33,10 +28,6 @@ export const useOptimisticFileUpload = () => {
   });
 };
 
-/**
- * 낙관적 업데이트를 위한 단일 파일 업로드 훅
- * 첫 번째 파일만 업로드하고 ID를 반환합니다.
- */
 export const useOptimisticSingleFileUpload = () => {
   return useMutation({
     mutationFn: async (files: File[]): Promise<number | undefined> => {
@@ -45,7 +36,6 @@ export const useOptimisticSingleFileUpload = () => {
       return Number(uploadedFile.id);
     },
     onError: (error) => {
-      // 파일 업로드 에러는 별도의 토스트로 표시 (toastIdRef 사용 안 함)
       if (isAxiosError(error)) {
         const status = error.response?.status;
         if (status === HttpStatusCode.PayloadTooLarge) {

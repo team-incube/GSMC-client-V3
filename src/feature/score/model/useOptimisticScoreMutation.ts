@@ -29,30 +29,20 @@ export const useOptimisticScoreMutation = () => {
 
   const createScore = useCallback(
     async (data: OptimisticScoreData, onClose: () => void) => {
-      // 즉시 모달 닫기 (낙관적 UX)
       onClose();
-
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('점수를 추가하는 중...');
-
       try {
-        // 1. 파일 업로드 (있는 경우)
         let fileId: number | undefined;
-
         if (data.files.new.length > 0) {
           fileId = await uploadFile(data.files.new);
         } else if (data.files.existing.length > 0) {
           fileId = Number(data.files.existing[0].id);
         }
-
-        // 2. 점수 생성
         await addScoreByCategoryType({
           categoryType: data.categoryType,
           value: data.value,
           fileId,
         });
-
-        // 3. 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['score'] });
         toast.success('점수가 성공적으로 추가되었습니다.', { id: toastIdRef.current });
       } catch {
@@ -68,24 +58,15 @@ export const useOptimisticScoreMutation = () => {
         toast.error('점수 ID가 필요합니다.');
         return;
       }
-
-      // 즉시 모달 닫기 (낙관적 UX)
       onClose();
-
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('점수를 수정하는 중...');
-
       try {
-        // 1. 파일 업로드 (있는 경우)
         let fileId: number | undefined;
-
         if (data.files.new.length > 0) {
           fileId = await uploadFile(data.files.new);
         } else if (data.files.existing.length > 0) {
           fileId = Number(data.files.existing[0].id);
         }
-
-        // 2. 점수 수정
         if (EDITABLE_CATEGORIES.includes(data.categoryType)) {
           await editScoreById({
             categoryType: data.categoryType as 'external-activity' | 'certificate' | 'award',
@@ -100,8 +81,6 @@ export const useOptimisticScoreMutation = () => {
             fileId,
           });
         }
-
-        // 3. 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['score'] });
         toast.success('수정되었습니다.', { id: toastIdRef.current });
       } catch {
@@ -113,16 +92,10 @@ export const useOptimisticScoreMutation = () => {
 
   const deleteScore = useCallback(
     async (scoreId: number, onClose: () => void) => {
-      // 즉시 모달 닫기 (낙관적 UX)
       onClose();
-
-      // 로딩 토스트 표시
       toastIdRef.current = toast.loading('점수를 삭제하는 중...');
-
       try {
         await removeScoreById({ scoreId });
-
-        // 캐시 무효화 및 성공 토스트
         await queryClient.invalidateQueries({ queryKey: ['score'] });
         toast.success('삭제되었습니다.', { id: toastIdRef.current });
       } catch {
