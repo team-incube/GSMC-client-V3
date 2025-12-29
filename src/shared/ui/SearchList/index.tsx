@@ -32,7 +32,7 @@ const SearchList: React.FC<SearchListProps> = ({ students, onRemove }) => {
               <button
                 type="button"
                 onClick={() => onRemove(student.id)}
-                className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1"
+                className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 cursor-pointer"
               >
                 삭제
               </button>
