@@ -147,7 +147,9 @@ const FileList: React.FC<FileListProps> = ({ files, onRemove }) => {
                 }}
                 className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
               >
-                <span className="text-xs block">✕</span>
+                <span className="flex items-center justify-center">
+                  <Close width={20} height={20} />
+                </span>
               </button> : null}
               <Link href={file.uri || '#'} className="text-sm text-gray-600 mt-1 line-clamp-1 truncate block">
                 {file.originalName}
