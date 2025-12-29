@@ -218,10 +218,9 @@ export default function CategoryInputs({
     return (
       <>
         <Input
-          label="봉사 점수 (담임선생님 입력)"
+          label="봉사 점수"
           type="number"
           placeholder="봉사 점수"
-          readOnly
           {...register('value')}
         />
         <small className="pl-1 text-error">{errors.value?.message}</small>
@@ -238,7 +237,7 @@ export default function CategoryInputs({
           control={control}
           render={({ field }) => (
             <Dropdown
-              label="등급"
+              label="평균 등급"
               options={[
                 { label: '1등급', value: '1' },
                 { label: '2등급', value: '2' },
@@ -330,7 +329,7 @@ export default function CategoryInputs({
           control={control}
           render={({ field }) => (
             <Dropdown
-              label="교과성적 등급 (담임선생님 입력)"
+              label="교과성적 등급"
               options={[
                 { label: '1등급', value: '1' },
                 { label: '2등급', value: '2' },
@@ -361,7 +360,7 @@ export default function CategoryInputs({
     return (
       <div className="flex flex-col gap-4 items-center justify-center py-6">
         <p className="text-center text-gray-600 mb-4">
-          프로젝트 참여 활동은 별도의 프로젝트 생성 페이지에서 진행해주세요.
+          프로젝트 참여 활동은 프로젝트 페이지에서 참여 활동을 작성해주세요.
         </p>
         <Link
           href="/projects/create"

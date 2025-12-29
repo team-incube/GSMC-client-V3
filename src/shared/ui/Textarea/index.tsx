@@ -15,7 +15,7 @@ export default function Textarea({ label = '내용', description = '', ...props 
         <span className="ml-2 text-sm text-gray-500">{description}</span>
       </label>
       <textarea
-        className="w-full resize-none rounded-2xl border border-gray-300 p-[20px]"
+        className="w-full min-h-50 resize-none rounded-2xl border border-gray-300 p-5"
         id={label}
         {...props}
       />

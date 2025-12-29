@@ -7,9 +7,10 @@ export const SignupSchema = z.object({
     .int()
     .refine((val) => {
       const grade = Math.floor(val / 1000);
-      const classNum = val % 1000;
-      return grade >= 1 && grade <= 3 && classNum >= 101 && classNum <= 418;
-    }, '학번은 1101~1418, 2101~2418, 3101~3418 범위여야 합니다.'),
+      const classNum = Math.floor((val % 1000) / 100);
+      const studentNum = val % 100;
+      return grade >= 1 && grade <= 3 && classNum >= 1 && classNum <= 4 && studentNum >= 1 && studentNum <= 18;
+    }, '유효하지 않은 학번입니다.'),
 });
 
 export type SignupFormType = z.infer<typeof SignupSchema>;
