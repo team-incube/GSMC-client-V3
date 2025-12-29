@@ -36,7 +36,7 @@ export default function ProjectView() {
     <div className="flex w-full justify-center px-4 py-15.5">
       <div className="flex w-full max-w-[600px] flex-col" >
         <div className="flex items-baseline justify-between">
-          <h1 className="text-main-700 text-titleMedium">{project?.title}</h1>
+          <h1 className="flex-1 text-main-700 text-titleMedium">{project?.title}</h1>
           {project?.ownerId === student?.id && isSuccess ? <div className="space-x-2">
             <button type="button" className="cursor-pointer" onClick={() => router.push(`/project-create?projectId=${projectId}`)}>수정</button>
             <button type="button" className="cursor-pointer" onClick={handleRemoveProject}>삭제</button>

@@ -20,7 +20,7 @@ interface SearchDropdownProps extends Omit<React.InputHTMLAttributes<HTMLInputEl
 export default function SearchDropdown({ label, name, selectedStudents, onChange, ...props }: SearchDropdownProps) {
   const [keyword, setKeyword] = useState('');
   const [inputValue, setInputValue] = useState('');
-  const { data: searchResults = [], isLoading } = useGetSearchStudent({ name: keyword, page: 0, limit: 10 })
+  const { data: searchResults = [], isLoading } = useGetSearchStudent({ name: keyword, role: "STUDENT", page: 0, limit: 10 })
 
   const [students, setStudents] = useState<StudentType[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
