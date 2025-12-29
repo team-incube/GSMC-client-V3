@@ -3,8 +3,6 @@
 import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { useRouter } from 'next/navigation';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { FileType } from '@/entities/file/model/file';
@@ -40,17 +38,7 @@ export default function ProjectCreateForm({
   actions = { showDraft: true, showDelete: false },
   redirectOnSuccess = '/main',
 }: ProjectCreateFormProps) {
-  const router = useRouter();
   const newFilesRef = useRef<File[]>([]);
-
-  const handleCreateSuccess = () => router.push(redirectOnSuccess);
-  const handleUpdateSuccess = () => {
-    if (initialData?.projectId) {
-      router.push(`/project/${initialData.projectId}`);
-    }
-  };
-  const handleDeleteSuccess = () => router.push('/main');
-  const handleDraftSuccess = () => router.push(redirectOnSuccess);
 
   const { createProject, updateProject, draftProject, deleteProject } = useOptimisticProjectMutation();
 
@@ -78,7 +66,11 @@ export default function ProjectCreateForm({
 
   const processSubmit = (data: ProjectFormValues, intent: string) => {
     if (intent === 'delete') {
-      deleteProject({ projectId: data.projectId, isDraft }, handleDeleteSuccess);
+      deleteProject.mutate({
+        projectId: data.projectId,
+        isDraft,
+        redirectPath: '/main',
+      });
       return;
     }
 
@@ -91,17 +83,18 @@ export default function ProjectCreateForm({
       participantIds: data.participantIds,
       existingFileIds,
       newFiles: newFilesRef.current,
+      redirectPath: intent === 'update' && data.projectId ? `/project/${data.projectId}` : redirectOnSuccess,
     };
 
     switch (intent) {
       case 'create':
-        createProject(optimisticData, handleCreateSuccess);
+        createProject.mutate(optimisticData);
         break;
       case 'update':
-        updateProject(optimisticData, handleUpdateSuccess);
+        updateProject.mutate(optimisticData);
         break;
       case 'draft':
-        draftProject(optimisticData, handleDraftSuccess);
+        draftProject.mutate(optimisticData);
         break;
     }
   };

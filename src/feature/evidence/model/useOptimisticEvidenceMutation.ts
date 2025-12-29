@@ -1,6 +1,8 @@
-import { useCallback, useRef } from 'react';
+import { useRef } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { HttpStatusCode, isAxiosError } from 'axios';
 import { toast } from 'sonner';
 
@@ -21,6 +23,7 @@ export interface OptimisticEvidenceData {
   content: string;
   existingFileIds: number[];
   newFiles: File[];
+  redirectPath?: string;
 }
 
 const handleEvidenceError = (error: unknown): string => {
@@ -35,133 +38,136 @@ const handleEvidenceError = (error: unknown): string => {
 
 export const useOptimisticEvidenceMutation = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const toastIdRef = useRef<string | number | undefined>(undefined);
+  const fileUploadMutation = useOptimisticFileUpload();
 
-  const { mutateAsync: uploadFiles } = useOptimisticFileUpload();
+  const createEvidence = useMutation({
+    mutationFn: async (data: OptimisticEvidenceData) => {
+      if (!data.projectId) throw new Error('프로젝트 ID가 필요합니다.');
 
-  const createEvidence = useCallback(
-    async (data: OptimisticEvidenceData, onSuccess: () => void) => {
-      if (!data.projectId) {
-        toast.error('프로젝트 ID가 필요합니다.');
-        return;
+      const uploadedFileIds = await fileUploadMutation.mutateAsync(data.newFiles);
+      const fileIds = [...data.existingFileIds, ...uploadedFileIds];
+      const scoreResponse = await addProjectScore({ projectId: data.projectId });
+
+      try {
+        await addEvidence({
+          scoreId: scoreResponse.scoreId,
+          title: data.title,
+          content: data.content,
+          fileIds,
+        });
+        await removeDraftEvidence();
+      } catch (error) {
+        await removeScoreById({ scoreId: scoreResponse.scoreId });
+        throw error;
       }
-
-      onSuccess();
-
+    },
+    onMutate: async (data) => {
       toastIdRef.current = toast.loading('프로젝트 참여글을 작성하는 중...');
 
-      try {
-        const uploadedFileIds = await uploadFiles(data.newFiles);
-        const fileIds = [...data.existingFileIds, ...uploadedFileIds];
-
-        const scoreResponse = await addProjectScore({ projectId: data.projectId });
-
-        try {
-          await addEvidence({
-            scoreId: scoreResponse.scoreId,
-            title: data.title,
-            content: data.content,
-            fileIds,
-          });
-          await removeDraftEvidence();
-        } catch (error) {
-          await removeScoreById({ scoreId: scoreResponse.scoreId });
-          throw error;
-        }
-
-        await queryClient.invalidateQueries({ queryKey: ['evidence'] });
-        await queryClient.invalidateQueries({ queryKey: ['score'] });
-        toast.success('프로젝트 참여글을 작성했습니다.', { id: toastIdRef.current });
-      } catch (error) {
-        toast.error(handleEvidenceError(error), { id: toastIdRef.current });
+      if (data.redirectPath) {
+        router.push(data.redirectPath);
       }
     },
-    [queryClient, uploadFiles],
-  );
+    onSuccess: () => {
+      toast.success('프로젝트 참여글을 작성했습니다.', { id: toastIdRef.current });
+      queryClient.invalidateQueries({ queryKey: ['evidence'] });
+      queryClient.invalidateQueries({ queryKey: ['score'] });
+    },
+    onError: (error) => {
+      toast.error(handleEvidenceError(error), { id: toastIdRef.current });
+    },
+  });
 
-  const updateEvidence = useCallback(
-    async (data: OptimisticEvidenceData, onSuccess: () => void) => {
-      if (!data.evidenceId || !data.scoreId) {
-        toast.error('증빙 ID와 점수 ID가 필요합니다.');
-        return;
-      }
+  const updateEvidence = useMutation({
+    mutationFn: async (data: OptimisticEvidenceData) => {
+      if (!data.evidenceId || !data.scoreId) throw new Error('증빙 ID와 점수 ID가 필요합니다.');
 
-      onSuccess();
+      const uploadedFileIds = await fileUploadMutation.mutateAsync(data.newFiles);
+      const fileIds = [...data.existingFileIds, ...uploadedFileIds];
 
+      await editEvidenceById({
+        evidenceId: data.evidenceId,
+        scoreId: data.scoreId,
+        title: data.title,
+        content: data.content,
+        fileIds,
+      });
+    },
+    onMutate: async (data) => {
       toastIdRef.current = toast.loading('수정하는 중...');
 
-      try {
-        const uploadedFileIds = await uploadFiles(data.newFiles);
-        const fileIds = [...data.existingFileIds, ...uploadedFileIds];
-
-        await editEvidenceById({
-          evidenceId: data.evidenceId,
-          scoreId: data.scoreId,
-          title: data.title,
-          content: data.content,
-          fileIds,
-        });
-
-        await queryClient.invalidateQueries({ queryKey: ['evidence'] });
-        toast.success('수정되었습니다.', { id: toastIdRef.current });
-      } catch (error) {
-        toast.error(handleEvidenceError(error), { id: toastIdRef.current });
+      if (data.redirectPath) {
+        router.push(data.redirectPath);
       }
     },
-    [queryClient, uploadFiles],
-  );
+    onSuccess: () => {
+      toast.success('수정되었습니다.', { id: toastIdRef.current });
+      queryClient.invalidateQueries({ queryKey: ['evidence'] });
+    },
+    onError: (error) => {
+      toast.error(handleEvidenceError(error), { id: toastIdRef.current });
+    },
+  });
 
-  const draftEvidence = useCallback(
-    async (
-      data: Pick<OptimisticEvidenceData, 'title' | 'content' | 'existingFileIds' | 'newFiles'>,
-      onSuccess: () => void,
+  const draftEvidence = useMutation({
+    mutationFn: async (
+      data: Pick<
+        OptimisticEvidenceData,
+        'title' | 'content' | 'existingFileIds' | 'newFiles' | 'redirectPath'
+      >,
     ) => {
-      onSuccess();
+      const uploadedFileIds = await fileUploadMutation.mutateAsync(data.newFiles);
+      const fileIds = [...data.existingFileIds, ...uploadedFileIds];
 
+      await addDraftEvidence({
+        title: data.title,
+        content: data.content,
+        fileIds,
+      });
+    },
+    onMutate: async (data) => {
       toastIdRef.current = toast.loading('임시저장하는 중...');
 
-      try {
-        const uploadedFileIds = await uploadFiles(data.newFiles);
-        const fileIds = [...data.existingFileIds, ...uploadedFileIds];
-
-        await addDraftEvidence({
-          title: data.title,
-          content: data.content,
-          fileIds,
-        });
-
-        await queryClient.invalidateQueries({ queryKey: ['evidence'] });
-        toast.success('임시저장되었습니다.', { id: toastIdRef.current });
-      } catch (error) {
-        toast.error(handleEvidenceError(error), { id: toastIdRef.current });
+      if (data.redirectPath) {
+        router.push(data.redirectPath);
       }
     },
-    [queryClient, uploadFiles],
-  );
+    onSuccess: () => {
+      toast.success('임시저장되었습니다.', { id: toastIdRef.current });
+      queryClient.invalidateQueries({ queryKey: ['evidence'] });
+    },
+    onError: (error) => {
+      toast.error(handleEvidenceError(error), { id: toastIdRef.current });
+    },
+  });
 
-  const deleteEvidence = useCallback(
-    async (data: { scoreId?: number; evidenceId?: number }, onSuccess: () => void) => {
-      onSuccess();
-
+  const deleteEvidence = useMutation({
+    mutationFn: async (data: { scoreId?: number; evidenceId?: number; redirectPath?: string }) => {
+      if (data.scoreId && data.evidenceId) {
+        await removeScoreById({ scoreId: data.scoreId });
+        await removeEvidence({ evidenceId: data.evidenceId });
+      } else {
+        await removeDraftEvidence();
+      }
+    },
+    onMutate: async (data) => {
       toastIdRef.current = toast.loading('삭제하는 중...');
 
-      try {
-        if (data.scoreId && data.evidenceId) {
-          await removeScoreById({ scoreId: data.scoreId });
-          await removeEvidence({ evidenceId: data.evidenceId });
-        } else {
-          await removeDraftEvidence();
-        }
-
-        await queryClient.invalidateQueries({ queryKey: ['evidence'] });
-        await queryClient.invalidateQueries({ queryKey: ['score'] });
-        toast.success('삭제되었습니다.', { id: toastIdRef.current });
-      } catch (error) {
-        toast.error(handleEvidenceError(error), { id: toastIdRef.current });
+      if (data.redirectPath) {
+        router.push(data.redirectPath);
       }
     },
-    [queryClient],
-  );
+    onSuccess: () => {
+      toast.success('삭제되었습니다.', { id: toastIdRef.current });
+      queryClient.invalidateQueries({ queryKey: ['evidence'] });
+      queryClient.invalidateQueries({ queryKey: ['score'] });
+    },
+    onError: (error) => {
+      toast.error(handleEvidenceError(error), { id: toastIdRef.current });
+    },
+  });
 
   return {
     createEvidence,

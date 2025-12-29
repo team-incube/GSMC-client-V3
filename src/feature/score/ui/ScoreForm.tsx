@@ -74,7 +74,10 @@ export default function ScoreForm({
 
   const processSubmit = (data: ScoreFormValues, intent: 'create' | 'update' | 'delete') => {
     if (intent === 'delete' && data.scoreId) {
-      deleteScore(data.scoreId, closeModal);
+      deleteScore.mutate({
+        scoreId: data.scoreId,
+        onSuccessCallback: closeModal,
+      });
       return;
     }
 
@@ -83,12 +86,13 @@ export default function ScoreForm({
       categoryType: data.categoryType,
       value: data.value,
       files: data.files,
+      onSuccessCallback: closeModal,
     };
 
     if (intent === 'create') {
-      createScore(optimisticData, closeModal);
+      createScore.mutate(optimisticData);
     } else {
-      updateScore(optimisticData, closeModal);
+      updateScore.mutate(optimisticData);
     }
   };
 

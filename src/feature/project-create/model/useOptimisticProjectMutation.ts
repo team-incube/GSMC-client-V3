@@ -1,6 +1,8 @@
-import { useCallback, useRef } from 'react';
+import { useRef } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { HttpStatusCode, isAxiosError } from 'axios';
 import { toast } from 'sonner';
 
@@ -18,6 +20,7 @@ export interface OptimisticProjectData {
   participantIds: number[];
   existingFileIds: number[];
   newFiles: File[];
+  redirectPath?: string;
 }
 
 const handleProjectError = (error: unknown): string => {
@@ -32,100 +35,125 @@ const handleProjectError = (error: unknown): string => {
 
 export const useOptimisticProjectMutation = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const toastIdRef = useRef<string | number | undefined>(undefined);
-  const { mutateAsync: uploadFiles } = useOptimisticFileUpload();
-  const createProjectMutation = useCallback(
-    async (data: OptimisticProjectData, onSuccess: () => void) => {
-      onSuccess();
+  const fileUploadMutation = useOptimisticFileUpload();
+
+  const createProjectMutation = useMutation({
+    mutationFn: async (data: OptimisticProjectData) => {
+      const uploadedFileIds = await fileUploadMutation.mutateAsync(data.newFiles);
+      const fileIds = [...data.existingFileIds, ...uploadedFileIds];
+
+      await createProject({
+        title: data.title,
+        description: data.description,
+        fileIds,
+        participantIds: data.participantIds,
+      });
+      await removeDraftProject();
+    },
+    onMutate: async (data) => {
       toastIdRef.current = toast.loading('프로젝트를 생성하는 중...');
-      try {
-        const uploadedFileIds = await uploadFiles(data.newFiles);
-        const fileIds = [...data.existingFileIds, ...uploadedFileIds];
-        await createProject({
-          title: data.title,
-          description: data.description,
-          fileIds,
-          participantIds: data.participantIds,
-        });
-        await removeDraftProject();
-        await queryClient.invalidateQueries({ queryKey: ['project'] });
-        await queryClient.invalidateQueries({ queryKey: ['draftProject'] });
-        toast.success('프로젝트를 생성했습니다.', { id: toastIdRef.current });
-      } catch (error) {
-        toast.error(handleProjectError(error), { id: toastIdRef.current });
+
+      if (data.redirectPath) {
+        router.push(data.redirectPath);
       }
     },
-    [queryClient, uploadFiles],
-  );
-  const updateProject = useCallback(
-    async (data: OptimisticProjectData, onSuccess: () => void) => {
-      if (data.projectId === undefined) {
-        toast.error('프로젝트 ID가 필요합니다.');
-        return;
-      }
-      onSuccess();
+    onSuccess: () => {
+      toast.success('프로젝트를 생성했습니다.', { id: toastIdRef.current });
+      queryClient.invalidateQueries({ queryKey: ['project'] });
+      queryClient.invalidateQueries({ queryKey: ['draftProject'] });
+    },
+    onError: (error) => {
+      toast.error(handleProjectError(error), { id: toastIdRef.current });
+    },
+  });
+
+  const updateProject = useMutation({
+    mutationFn: async (data: OptimisticProjectData) => {
+      if (data.projectId === undefined) throw new Error('프로젝트 ID가 필요합니다.');
+
+      const uploadedFileIds = await fileUploadMutation.mutateAsync(data.newFiles);
+      const fileIds = [...data.existingFileIds, ...uploadedFileIds];
+
+      await editProjectById({
+        projectId: data.projectId,
+        title: data.title,
+        description: data.description,
+        fileIds,
+        participantIds: data.participantIds,
+      });
+    },
+    onMutate: async (data) => {
       toastIdRef.current = toast.loading('프로젝트를 수정하는 중...');
-      try {
-        const uploadedFileIds = await uploadFiles(data.newFiles);
-        const fileIds = [...data.existingFileIds, ...uploadedFileIds];
-        await editProjectById({
-          projectId: data.projectId,
-          title: data.title,
-          description: data.description,
-          fileIds,
-          participantIds: data.participantIds,
-        });
-        await queryClient.invalidateQueries({ queryKey: ['project'] });
-        toast.success('프로젝트를 수정했습니다.', { id: toastIdRef.current });
-      } catch (error) {
-        toast.error(handleProjectError(error), { id: toastIdRef.current });
+
+      if (data.redirectPath) {
+        router.push(data.redirectPath);
       }
     },
-    [queryClient, uploadFiles],
-  );
-  const draftProject = useCallback(
-    async (data: OptimisticProjectData, onSuccess: () => void) => {
-      onSuccess();
+    onSuccess: () => {
+      toast.success('프로젝트를 수정했습니다.', { id: toastIdRef.current });
+      queryClient.invalidateQueries({ queryKey: ['project'] });
+    },
+    onError: (error) => {
+      toast.error(handleProjectError(error), { id: toastIdRef.current });
+    },
+  });
+
+  const draftProject = useMutation({
+    mutationFn: async (data: OptimisticProjectData) => {
+      const uploadedFileIds = await fileUploadMutation.mutateAsync(data.newFiles);
+      const fileIds = [...data.existingFileIds, ...uploadedFileIds];
+
+      await createDraftProject({
+        title: data.title,
+        description: data.description,
+        fileIds,
+        participantIds: data.participantIds,
+      });
+    },
+    onMutate: async (data) => {
       toastIdRef.current = toast.loading('임시저장하는 중...');
-      try {
-        const uploadedFileIds = await uploadFiles(data.newFiles);
-        const fileIds = [...data.existingFileIds, ...uploadedFileIds];
-        await createDraftProject({
-          title: data.title,
-          description: data.description,
-          fileIds,
-          participantIds: data.participantIds,
-        });
-        await queryClient.invalidateQueries({ queryKey: ['draftProject'] });
-        toast.success('임시저장되었습니다.', { id: toastIdRef.current });
-      } catch (error) {
-        toast.error(handleProjectError(error), { id: toastIdRef.current });
+
+      if (data.redirectPath) {
+        router.push(data.redirectPath);
       }
     },
-    [queryClient, uploadFiles],
-  );
-  const deleteProject = useCallback(
-    async (data: { projectId?: number; isDraft: boolean }, onSuccess: () => void) => {
-      onSuccess();
+    onSuccess: () => {
+      toast.success('임시저장되었습니다.', { id: toastIdRef.current });
+      queryClient.invalidateQueries({ queryKey: ['draftProject'] });
+    },
+    onError: (error) => {
+      toast.error(handleProjectError(error), { id: toastIdRef.current });
+    },
+  });
+
+  const deleteProject = useMutation({
+    mutationFn: async (data: { projectId?: number; isDraft: boolean; redirectPath?: string }) => {
+      if (data.isDraft) {
+        await removeDraftProject();
+      } else {
+        if (data.projectId === undefined) throw new Error('Project ID is required');
+        await removeProjectById({ projectId: data.projectId });
+      }
+    },
+    onMutate: async (data) => {
       toastIdRef.current = toast.loading('삭제하는 중...');
-      try {
-        if (data.isDraft) {
-          await removeDraftProject();
-        } else {
-          if (data.projectId === undefined) {
-            throw new Error('Project ID is required');
-          }
-          await removeProjectById({ projectId: data.projectId });
-        }
-        await queryClient.invalidateQueries({ queryKey: ['project'] });
-        await queryClient.invalidateQueries({ queryKey: ['draftProject'] });
-        toast.success('삭제되었습니다.', { id: toastIdRef.current });
-      } catch (error) {
-        toast.error(handleProjectError(error), { id: toastIdRef.current });
+
+      if (data.redirectPath) {
+        router.push(data.redirectPath);
       }
     },
-    [queryClient],
-  );
+    onSuccess: () => {
+      toast.success('삭제되었습니다.', { id: toastIdRef.current });
+      queryClient.invalidateQueries({ queryKey: ['project'] });
+      queryClient.invalidateQueries({ queryKey: ['draftProject'] });
+    },
+    onError: (error) => {
+      toast.error(handleProjectError(error), { id: toastIdRef.current });
+    },
+  });
+
   return {
     createProject: createProjectMutation,
     updateProject,

@@ -3,8 +3,6 @@
 import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { useRouter } from 'next/navigation';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { FileType } from '@/entities/file/model/file';
@@ -40,14 +38,7 @@ export default function EvidenceForm({
   actions = { showDraft: true, showDelete: false },
   redirectOnSuccess = '/main',
 }: EvidenceFormProps) {
-  const router = useRouter();
   const newFilesRef = useRef<File[]>([]);
-
-  const handleSuccess = () => {
-    if (redirectOnSuccess) {
-      router.push(redirectOnSuccess);
-    }
-  };
 
   const { createEvidence, updateEvidence, draftEvidence, deleteEvidence } = useOptimisticEvidenceMutation();
 
@@ -75,7 +66,11 @@ export default function EvidenceForm({
 
   const processSubmit = (data: EvidenceFormValues, intent: string) => {
     if (intent === 'delete') {
-      deleteEvidence({ scoreId: data.scoreId, evidenceId: data.evidenceId }, handleSuccess);
+      deleteEvidence.mutate({
+        scoreId: data.scoreId,
+        evidenceId: data.evidenceId,
+        redirectPath: redirectOnSuccess,
+      });
       return;
     }
 
@@ -89,22 +84,24 @@ export default function EvidenceForm({
       content: data.content,
       existingFileIds,
       newFiles: newFilesRef.current,
+      redirectPath: redirectOnSuccess,
     };
 
     switch (intent) {
       case 'create':
-        createEvidence(optimisticData, handleSuccess);
+        createEvidence.mutate(optimisticData);
         break;
       case 'update':
-        updateEvidence(optimisticData, handleSuccess);
+        updateEvidence.mutate(optimisticData);
         break;
       case 'draft':
-        draftEvidence({
+        draftEvidence.mutate({
           title: data.title,
           content: data.content,
           existingFileIds,
           newFiles: newFilesRef.current,
-        }, handleSuccess);
+          redirectPath: redirectOnSuccess,
+        });
         break;
     }
   };
