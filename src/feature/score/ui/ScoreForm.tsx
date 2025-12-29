@@ -136,14 +136,12 @@ export default function ScoreForm({
             <Button type="button" variant="border" onClick={() => setIsModalOpen(false)}>
               취소
             </Button>
-            {category.englishName !== 'ACADEMIC-GRADE' && category.englishName !== 'VOLUNTEER' && (
-              <Button
-                type="button"
-                onClick={() => onSubmit(mode === 'create' ? 'create' : 'update')}
-              >
-                {mode === 'create' ? '추가하기' : '수정하기'}
-              </Button>
-            )}
+            <Button
+              type="button"
+              onClick={() => onSubmit(mode === 'create' ? 'create' : 'update')}
+            >
+              {mode === 'create' ? '추가하기' : '수정하기'}
+            </Button>
           </div>
         )}
       </form>

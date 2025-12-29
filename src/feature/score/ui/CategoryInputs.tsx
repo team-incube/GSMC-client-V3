@@ -218,10 +218,9 @@ export default function CategoryInputs({
     return (
       <>
         <Input
-          label="봉사 점수 (담임선생님 입력)"
+          label="봉사 점수"
           type="number"
           placeholder="봉사 점수"
-          readOnly
           {...register('value')}
         />
         <small className="pl-1 text-error">{errors.value?.message}</small>
@@ -238,7 +237,7 @@ export default function CategoryInputs({
           control={control}
           render={({ field }) => (
             <Dropdown
-              label="등급"
+              label="평균 등급"
               options={[
                 { label: '1등급', value: '1' },
                 { label: '2등급', value: '2' },
@@ -330,7 +329,7 @@ export default function CategoryInputs({
           control={control}
           render={({ field }) => (
             <Dropdown
-              label="교과성적 등급 (담임선생님 입력)"
+              label="교과성적 등급"
               options={[
                 { label: '1등급', value: '1' },
                 { label: '2등급', value: '2' },
