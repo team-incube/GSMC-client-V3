@@ -39,7 +39,7 @@ export const useOptimisticSingleFileUpload = () => {
       if (isAxiosError(error)) {
         const status = error.response?.status;
         if (status === HttpStatusCode.PayloadTooLarge) {
-          toast.error('파일 크기가 너무 큽니다.');
+          toast.error('파일 크기가 너무 큽니다. 10MB 이하의 파일을 업로드 해주세요.');
           return;
         }
         if (status === HttpStatusCode.UnsupportedMediaType) {
