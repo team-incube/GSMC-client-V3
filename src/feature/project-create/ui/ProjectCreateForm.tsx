@@ -63,7 +63,7 @@ export default function ProjectCreateForm({
     formState: { errors },
   } = useForm<ProjectFormValues>({
     resolver: zodResolver(ProjectFormSchema),
-    values: {
+    defaultValues: {
       projectId: initialData?.projectId,
       title: initialData?.title ?? '',
       description: initialData?.description ?? '',
