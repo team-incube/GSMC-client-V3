@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useGetCombinedScoresByCategory } from "@/entities/score/model/useGetCombinedScoresByCategory";
 import { cn } from "@/shared/lib/cn";
@@ -17,13 +17,22 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
   const [scoreId, setScoreId] = useState<number>(0);
   const [englishName, setEnglishName] = useState<string>('');
 
+  const scrollRef = useRef<HTMLElement>(null);
+  const savedScrollPosition = useRef<number>(0);
+
   const handleEditClick = (scoreId: number, englishName: string) => {
+    if (scrollRef.current) {
+      savedScrollPosition.current = scrollRef.current.scrollTop;
+    }
     setModalMode('edit');
     setScoreId(scoreId);
     setEnglishName(englishName);
   };
 
   const handleAddClick = (englishName: string) => {
+    if (scrollRef.current) {
+      savedScrollPosition.current = scrollRef.current.scrollTop;
+    }
     setModalMode('create');
     setEnglishName(englishName);
   };
@@ -33,6 +42,12 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
       setModalMode('list');
     }
   };
+
+  useEffect(() => {
+    if (modalMode === 'list' && scrollRef.current) {
+      scrollRef.current.scrollTop = savedScrollPosition.current;
+    }
+  }, [modalMode]);
 
   return (
     <div>
@@ -46,7 +61,7 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
             <h2 className="text-titleMedium text-center">
               내 점수 수정하기
             </h2>
-            <section className="flex flex-col justify-start items-start overflow-y-scroll">
+            <section ref={scrollRef} className="flex flex-col justify-start items-start overflow-y-scroll">
               {scoresByCategory?.map((category) => (
                 <div key={category.categoryType} className="w-full flex flex-col">
                   <div className="flex justify-between px-5 py-2 bg-gray-50 text-sm font-bold text-gray-500">
