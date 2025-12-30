@@ -74,7 +74,7 @@ export default function ScoreModal({ mode, setIsModalOpen, categoryType, scoreId
   }
 
   return (
-    <ModalWrapper>
+    <ModalWrapper className='max-w-100'>
       <ScoreForm
         mode={mode}
         category={category}
