@@ -89,9 +89,7 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                       <Button
                         variant="border"
                         className="w-auto px-3 py-0.5 shrink-0"
-                        onClick={() => {
-                          handleEditClick(score.scoreId, score.categoryNames.englishName);
-                        }}
+                        onClick={() => handleEditClick(score.scoreId, score.categoryNames.englishName)}
                       >
                         수정
                       </Button>
@@ -112,8 +110,9 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
               뒤로가기
             </Button>
           </div>
-        </ModalWrapper>
-      )}
-    </div>
+        </ModalWrapper >
+      )
+      }
+    </div >
   );
 }
