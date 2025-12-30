@@ -68,11 +68,18 @@ export default function ProjectCreateForm({
 
   const processSubmit = (data: ProjectFormValues, intent: string) => {
     if (intent === 'delete') {
-      deleteProject.mutate({
-        projectId: data.projectId,
-        isDraft,
-        redirectPath: '/main',
-      });
+      deleteProject.mutate(
+        {
+          projectId: data.projectId,
+          isDraft,
+          redirectPath: '/main',
+        },
+        {
+          onSettled: () => {
+            setShowDeleteConfirm(false);
+          },
+        }
+      );
       return;
     }
 
@@ -107,7 +114,6 @@ export default function ProjectCreateForm({
 
   const handleDeleteConfirm = () => {
     handleSubmit((data) => processSubmit(data, 'delete'))();
-    setShowDeleteConfirm(false);
   };
 
   return (

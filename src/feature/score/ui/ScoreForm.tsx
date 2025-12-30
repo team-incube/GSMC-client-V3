@@ -77,10 +77,17 @@ export default function ScoreForm({
 
   const processSubmit = (data: ScoreFormValues, intent: 'create' | 'update' | 'delete') => {
     if (intent === 'delete' && data.scoreId) {
-      deleteScore.mutate({
-        scoreId: data.scoreId,
-        onSuccessCallback: closeModal,
-      });
+      deleteScore.mutate(
+        {
+          scoreId: data.scoreId,
+          onSuccessCallback: closeModal,
+        },
+        {
+          onSettled: () => {
+            setShowDeleteConfirm(false);
+          },
+        }
+      );
       return;
     }
 
@@ -109,7 +116,6 @@ export default function ScoreForm({
 
   const handleDeleteConfirm = () => {
     onSubmit('delete');
-    setShowDeleteConfirm(false);
   };
 
   return (

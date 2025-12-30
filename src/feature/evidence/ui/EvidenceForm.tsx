@@ -68,11 +68,18 @@ export default function EvidenceForm({
 
   const processSubmit = (data: EvidenceFormValues, intent: string) => {
     if (intent === 'delete') {
-      deleteEvidence.mutate({
-        scoreId: data.scoreId,
-        evidenceId: data.evidenceId,
-        redirectPath: redirectOnSuccess,
-      });
+      deleteEvidence.mutate(
+        {
+          scoreId: data.scoreId,
+          evidenceId: data.evidenceId,
+          redirectPath: redirectOnSuccess,
+        },
+        {
+          onSettled: () => {
+            setShowDeleteConfirm(false);
+          },
+        }
+      );
       return;
     }
 
@@ -114,7 +121,6 @@ export default function EvidenceForm({
 
   const handleDeleteConfirm = () => {
     handleSubmit((data) => processSubmit(data, 'delete'))();
-    setShowDeleteConfirm(false);
   };
 
   return (
