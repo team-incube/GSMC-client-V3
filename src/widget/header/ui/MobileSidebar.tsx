@@ -30,8 +30,7 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
       ) : null}
 
       <div
-        className={`fixed right-0 top-0 z-50 h-full w-[280px] transform bg-white shadow-lg transition-transform duration-300 ease-in-out md:hidden ${isOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
+        className={`fixed right-0 top-0 z-50 h-full w-[280px] transform bg-white shadow-lg transition-transform duration-300 ease-in-out md:hidden ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex items-center justify-between border-b border-gray-100 p-4">
           <Link href="/main" className="text-main-800 text-xl font-bold" onClick={onClose}>

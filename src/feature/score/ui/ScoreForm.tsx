@@ -114,7 +114,7 @@ export default function ScoreForm({
 
   return (
     <FormProvider {...methods}>
-      <form className="flex min-w-[400px] flex-col gap-4">
+      <form className="flex w-full flex-col gap-4">
         {initialData?.scoreStatus === 'REJECTED' && (
           <p className="text-error text-body2 font-bold -mb-4">탈락됨</p>
         )}
