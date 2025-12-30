@@ -1,3 +1,9 @@
+export interface S3FileType {
+  presignedUrl: string;
+  fileKey: string;
+  expiresAt: string;
+}
+
 export interface FileType {
   id: number | string;
   originalName: string;

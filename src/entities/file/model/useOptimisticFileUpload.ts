@@ -1,14 +1,39 @@
 import { useMutation } from '@tanstack/react-query';
 import { HttpStatusCode, isAxiosError } from 'axios';
+import axios from 'axios';
 import { toast } from 'sonner';
 
-import { attachFile } from '@/entities/file/api/attachFile';
+import { confirmFileUpload } from '@/entities/file/api/confirmFileUpload';
+import { createPresignedUrl } from '@/entities/file/api/createPresignedUrl';
 
 export const useOptimisticFileUpload = () => {
   return useMutation({
     mutationFn: async (files: File[]): Promise<number[]> => {
       if (files.length === 0) return [];
-      const uploadedFiles = await Promise.all(files.map((file) => attachFile({ file })));
+
+      const uploadedFiles = await Promise.all(
+        files.map(async (file) => {
+          const contentType = file.type || 'application/octet-stream';
+
+          const presignedData = await createPresignedUrl({
+            fileName: file.name,
+            fileSize: file.size,
+            contentType,
+          });
+
+          await axios.put(presignedData.presignedUrl, file, {
+            headers: { 'Content-Type': contentType },
+          });
+
+          const confirmedFile = await confirmFileUpload({
+            fileKey: presignedData.fileKey,
+            originalFileName: file.name,
+          });
+
+          return confirmedFile;
+        })
+      );
+
       return uploadedFiles.map((f) => Number(f.id));
     },
     onError: (error) => {
@@ -32,8 +57,26 @@ export const useOptimisticSingleFileUpload = () => {
   return useMutation({
     mutationFn: async (files: File[]): Promise<number | undefined> => {
       if (files.length === 0) return undefined;
-      const uploadedFile = await attachFile({ file: files[0] });
-      return Number(uploadedFile.id);
+
+      const file = files[0];
+      const contentType = file.type || 'application/octet-stream';
+
+      const presignedData = await createPresignedUrl({
+        fileName: file.name,
+        fileSize: file.size,
+        contentType,
+      });
+
+      await axios.put(presignedData.presignedUrl, file, {
+        headers: { 'Content-Type': contentType },
+      });
+
+      const confirmedFile = await confirmFileUpload({
+        fileKey: presignedData.fileKey,
+        originalFileName: file.name,
+      });
+
+      return Number(confirmedFile.id);
     },
     onError: (error) => {
       if (isAxiosError(error)) {
