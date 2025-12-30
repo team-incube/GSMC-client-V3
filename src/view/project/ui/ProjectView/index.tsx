@@ -78,7 +78,7 @@ export default function ProjectView() {
           </div>
           <hr className="my-4" />
           {
-            project?.participants.every((p) => p.id !== student?.id) ? (
+            !project?.participants?.some((p) => p.id === student?.id) ? (
               <Button variant="disabled" className="cursor-not-allowed" disabled>
                 참여한 프로젝트가 아닙니다.
               </Button>
