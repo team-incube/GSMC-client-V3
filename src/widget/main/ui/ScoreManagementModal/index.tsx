@@ -41,7 +41,7 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
       ) : modalMode === 'create' ? (
         <ScoreModal mode="create" setIsModalOpen={handleCloseModal} categoryType={englishName} />
       ) : (
-        <ModalWrapper>
+        <ModalWrapper onClose={() => setIsModalOpen(false)}>
           <div className="flex flex-col justify-center gap-10 w-150 overflow-hidden">
             <h2 className="text-titleMedium text-center">
               내 점수 수정하기
