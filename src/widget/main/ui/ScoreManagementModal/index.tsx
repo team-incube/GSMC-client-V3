@@ -20,19 +20,22 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
   const scrollRef = useRef<HTMLElement>(null);
   const savedScrollPosition = useRef<number>(0);
 
-  const handleEditClick = (scoreId: number, englishName: string) => {
+
+  const saveScrollPosition = () => {
     if (scrollRef.current) {
       savedScrollPosition.current = scrollRef.current.scrollTop;
     }
+  };
+
+  const handleEditClick = (scoreId: number, englishName: string) => {
+    saveScrollPosition();
     setModalMode('edit');
     setScoreId(scoreId);
     setEnglishName(englishName);
   };
 
   const handleAddClick = (englishName: string) => {
-    if (scrollRef.current) {
-      savedScrollPosition.current = scrollRef.current.scrollTop;
-    }
+    saveScrollPosition();
     setModalMode('create');
     setEnglishName(englishName);
   };
