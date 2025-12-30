@@ -54,20 +54,32 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                     <p>{category.approvedScore}점 / {category.expectedScore}점</p>
                   </div>
                   {category.scores.map((score) => (
-                    <article key={score.scoreId} className="flex justify-between items-center w-full px-5 py-4 border-b border-gray-100 last:border-none">
-                      <div className="flex items-center gap-3">
-                        <div className={cn("w-2 h-2 aspect-square rounded-full", { "bg-main-500": score.scoreStatus === "APPROVED", "bg-gray-600": score.scoreStatus === "PENDING", "bg-error": score.scoreStatus === "REJECTED" })} />
-                        <p className="text-body2"> {score.activityName || score.categoryNames.koreanName} </p>
+                    <article
+                      key={score.scoreId}
+                      className="flex justify-between items-center w-full px-5 py-4 border-b border-gray-100 last:border-none gap-3"
+                    >
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className={cn(
+                          "w-2 h-2 shrink-0 rounded-full",
+                          {
+                            "bg-main-500": score.scoreStatus === "APPROVED",
+                            "bg-gray-600": score.scoreStatus === "PENDING",
+                            "bg-error": score.scoreStatus === "REJECTED"
+                          }
+                        )} />
+                        <p className="text-body2 wrap-break-word overflow-hidden">
+                          {score.activityName || score.categoryNames.koreanName}
+                        </p>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <Button
-                          variant="border"
-                          className="w-auto px-3 py-0.5"
-                          onClick={() => { handleEditClick(score.scoreId, score.categoryNames.englishName); }}
-                        >
-                          수정
-                        </Button>
-                      </div>
+                      <Button
+                        variant="border"
+                        className="w-auto px-3 py-0.5 shrink-0"
+                        onClick={() => {
+                          handleEditClick(score.scoreId, score.categoryNames.englishName);
+                        }}
+                      >
+                        수정
+                      </Button>
                     </article>
                   ))}
                   {!category.isMaxReached ? <button
