@@ -15,7 +15,7 @@ export default function IntroView() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-around px-4 py-8 sm:px-6 md:px-8 lg:py-12">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-10 px-4 py-8 sm:px-6 md:px-8 lg:py-12">
       <Image
         alt="GSMC logo"
         src={LogoImage}
