@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,6 +9,7 @@ import { FileType } from '@/entities/file/model/file';
 import { EvidenceFormSchema, EvidenceFormValues } from '@/feature/evidence/model/evidenceForm.schema';
 import { useOptimisticEvidenceMutation } from '@/feature/evidence/model/useOptimisticEvidenceMutation';
 import Button from '@/shared/ui/Button';
+import ConfirmModal from '@/shared/ui/ConfirmModal';
 import FileUploader from '@/shared/ui/FileUploader';
 import Input from '@/shared/ui/Input';
 import Textarea from '@/shared/ui/Textarea';
@@ -38,6 +39,7 @@ export default function EvidenceForm({
   actions = { showDraft: true, showDelete: false },
   redirectOnSuccess = '/main',
 }: EvidenceFormProps) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const newFilesRef = useRef<File[]>([]);
 
   const { createEvidence, updateEvidence, draftEvidence, deleteEvidence } = useOptimisticEvidenceMutation();
@@ -66,11 +68,18 @@ export default function EvidenceForm({
 
   const processSubmit = (data: EvidenceFormValues, intent: string) => {
     if (intent === 'delete') {
-      deleteEvidence.mutate({
-        scoreId: data.scoreId,
-        evidenceId: data.evidenceId,
-        redirectPath: redirectOnSuccess,
-      });
+      deleteEvidence.mutate(
+        {
+          scoreId: data.scoreId,
+          evidenceId: data.evidenceId,
+          redirectPath: redirectOnSuccess,
+        },
+        {
+          onSettled: () => {
+            setShowDeleteConfirm(false);
+          },
+        }
+      );
       return;
     }
 
@@ -106,87 +115,106 @@ export default function EvidenceForm({
     }
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    handleSubmit((data) => processSubmit(data, 'delete'))();
+  };
+
   return (
-    <form className="flex w-full flex-col gap-16" onSubmit={(e) => e.preventDefault()}>
-      <div className="flex flex-col gap-6">
-        {initialData?.scoreStatus === 'REJECTED' && (
-          <p className="text-error text-body2 font-bold -mb-4">탈락됨</p>
-        )}
-        <Input
-          label="제목"
-          placeholder="제목을 입력해주세요"
-          {...register('title')}
-        />
-        <small className="pl-1 text-error">{errors.title?.message}</small>
-
-        <Textarea
-          label="내용"
-          placeholder="최소 300자, 최대 2000자 입력해주세요"
-          description={`${contentLength}자 / 최소 300자 - 최대 2000자`}
-          {...register('content')}
-        />
-        <small className="pl-1 text-error">{errors.content?.message}</small>
-
-        <Controller
-          name="fileIds"
-          control={control}
-          render={({ field }) => (
-            <FileUploader
-              label="파일"
-              placeholder="파일을 업로드해주세요"
-              uploadedFiles={initialData?.files}
-              isMultiple
-              onChange={(files) => {
-                const existingFileIds = files.existing.map((f) => Number(f.id));
-                const newFileIds = files.new.map((_, index) => -(index + 1));
-                field.onChange([...existingFileIds, ...newFileIds]);
-                newFilesRef.current = files.new;
-              }}
-            />
+    <>
+      <form className="flex w-full flex-col gap-16" onSubmit={(e) => e.preventDefault()}>
+        <div className="flex flex-col gap-6">
+          {initialData?.scoreStatus === 'REJECTED' && (
+            <p className="text-error text-body2 font-bold -mb-4">탈락됨</p>
           )}
-        />
-        <small className="pl-1 text-error">{errors.fileIds?.message}</small>
+          <Input
+            label="제목"
+            placeholder="제목을 입력해주세요"
+            {...register('title')}
+          />
+          <small className="pl-1 text-error">{errors.title?.message}</small>
 
-        {initialData?.scoreStatus === 'REJECTED' && !!initialData.rejectionReason && (
-          <Textarea label="반려 사유" readOnly defaultValue={initialData.rejectionReason} />
-        )}
-      </div>
+          <Textarea
+            label="내용"
+            placeholder="최소 300자, 최대 2000자 입력해주세요"
+            description={`${contentLength}자 / 최소 300자 - 최대 2000자`}
+            {...register('content')}
+          />
+          <small className="pl-1 text-error">{errors.content?.message}</small>
 
-      <div className="flex flex-col gap-2.5">
-        {actions.showDraft === true && (
+          <Controller
+            name="fileIds"
+            control={control}
+            render={({ field }) => (
+              <FileUploader
+                label="파일"
+                placeholder="파일을 업로드해주세요"
+                uploadedFiles={initialData?.files}
+                isMultiple
+                onChange={(files) => {
+                  const existingFileIds = files.existing.map((f) => Number(f.id));
+                  const newFileIds = files.new.map((_, index) => -(index + 1));
+                  field.onChange([...existingFileIds, ...newFileIds]);
+                  newFilesRef.current = files.new;
+                }}
+              />
+            )}
+          />
+          <small className="pl-1 text-error">{errors.fileIds?.message}</small>
+
+          {initialData?.scoreStatus === 'REJECTED' && !!initialData.rejectionReason && (
+            <Textarea label="반려 사유" readOnly defaultValue={initialData.rejectionReason} />
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2.5">
+          {actions.showDraft === true && (
+            <Button
+              type="button"
+              variant="border"
+              onClick={() => {
+                setValue('isDraft', true);
+                handleSubmit((data) => processSubmit(data, 'draft'))();
+              }}
+            >
+              임시저장
+            </Button>
+          )}
+
           <Button
             type="button"
-            variant="border"
             onClick={() => {
-              setValue('isDraft', true);
-              handleSubmit((data) => processSubmit(data, 'draft'))();
+              setValue('isDraft', false);
+              handleSubmit((data) => processSubmit(data, mode === 'create' ? 'create' : 'update'))();
             }}
           >
-            임시저장
+            {mode === 'create' ? '작성 완료' : '수정하기'}
           </Button>
-        )}
 
-        <Button
-          type="button"
-          onClick={() => {
-            setValue('isDraft', false);
-            handleSubmit((data) => processSubmit(data, mode === 'create' ? 'create' : 'update'))();
-          }}
-        >
-          {mode === 'create' ? '작성 완료' : '수정하기'}
-        </Button>
+          {actions.showDelete === true && (
+            <Button
+              type="button"
+              variant="border"
+              className="text-error underline"
+              onClick={handleDeleteClick}
+            >
+              삭제
+            </Button>
+          )}
+        </div>
+      </form>
 
-        {actions.showDelete === true && (
-          <Button
-            type="button"
-            variant="border"
-            className="text-error underline"
-            onClick={handleSubmit((data) => processSubmit(data, 'delete'))}
-          >
-            삭제
-          </Button>
-        )}
-      </div>
-    </form>
+      {showDeleteConfirm ? <ConfirmModal
+        title="증빙 삭제"
+        message="정말 삭제하시겠습니까?"
+        confirmText="삭제"
+        cancelText="취소"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setShowDeleteConfirm(false)}
+      /> : null}
+    </>
   );
 }

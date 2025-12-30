@@ -25,8 +25,8 @@ export default function ScoreModal({ mode, setIsModalOpen, categoryType, scoreId
 
   if (isLoading) {
     return (
-      <ModalWrapper>
-        <div className="flex h-[300px] w-[400px] items-center justify-center">
+      <ModalWrapper className='"w-full max-w-100'>
+        <div className="flex h-[300px] w-full items-center justify-center">
           <p>로딩 중...</p>
         </div>
       </ModalWrapper>
@@ -35,8 +35,8 @@ export default function ScoreModal({ mode, setIsModalOpen, categoryType, scoreId
 
   if (!category || (mode === 'edit' && !scoreData)) {
     return (
-      <ModalWrapper>
-        <div className="flex h-[300px] w-[400px] items-center justify-center">
+      <ModalWrapper className='w-full max-w-100'>
+        <div className="flex h-[300px] w-full items-center justify-center">
           <p>{mode === 'edit' ? '점수 정보를 불러올 수 없습니다.' : '카테고리를 불러올 수 없습니다.'}</p>
         </div>
       </ModalWrapper>
@@ -45,7 +45,7 @@ export default function ScoreModal({ mode, setIsModalOpen, categoryType, scoreId
 
   if (category.evidenceType === 'EVIDENCE') {
     return (
-      <ModalWrapper>
+      <ModalWrapper className='w-full max-w-100'>
         <div className="flex min-w-[400px] flex-col gap-4">
           <h2 className="mb-4 text-xl font-bold">
             {category.koreanName} {mode === 'create' ? '추가' : '수정'}
@@ -74,7 +74,7 @@ export default function ScoreModal({ mode, setIsModalOpen, categoryType, scoreId
   }
 
   return (
-    <ModalWrapper>
+    <ModalWrapper className='max-w-100'>
       <ScoreForm
         mode={mode}
         category={category}

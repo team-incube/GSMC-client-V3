@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +12,7 @@ import { ScoreFormSchema, ScoreFormValues } from '@/feature/score/model/scoreFor
 import { useOptimisticScoreMutation } from '@/feature/score/model/useOptimisticScoreMutation';
 import CategoryInputs from '@/feature/score/ui/CategoryInputs';
 import Button from '@/shared/ui/Button';
+import ConfirmModal from '@/shared/ui/ConfirmModal';
 import Textarea from '@/shared/ui/Textarea';
 
 export interface ScoreFormProps {
@@ -33,6 +35,7 @@ export default function ScoreForm({
   initialData,
   setIsModalOpen,
 }: ScoreFormProps) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const closeModal = () => setIsModalOpen(false);
 
   const { createScore, updateScore, deleteScore } = useOptimisticScoreMutation();
@@ -74,10 +77,17 @@ export default function ScoreForm({
 
   const processSubmit = (data: ScoreFormValues, intent: 'create' | 'update' | 'delete') => {
     if (intent === 'delete' && data.scoreId) {
-      deleteScore.mutate({
-        scoreId: data.scoreId,
-        onSuccessCallback: closeModal,
-      });
+      deleteScore.mutate(
+        {
+          scoreId: data.scoreId,
+          onSuccessCallback: closeModal,
+        },
+        {
+          onSettled: () => {
+            setShowDeleteConfirm(false);
+          },
+        }
+      );
       return;
     }
 
@@ -100,9 +110,17 @@ export default function ScoreForm({
     handleSubmit((data) => processSubmit(data, intent))();
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    onSubmit('delete');
+  };
+
   return (
     <FormProvider {...methods}>
-      <form className="flex min-w-[400px] flex-col gap-4">
+      <form className="flex w-full flex-col gap-4">
         {initialData?.scoreStatus === 'REJECTED' && (
           <p className="text-error text-body2 font-bold -mb-4">탈락됨</p>
         )}
@@ -113,10 +131,10 @@ export default function ScoreForm({
           {mode === 'edit' && category.englishName !== 'ACADEMIC-GRADE' && (
             <button
               type="button"
-              onClick={() => onSubmit('delete')}
+              onClick={handleDeleteClick}
               className="w-auto cursor-pointer"
             >
-              점수 삭제
+              삭제
             </button>
           )}
         </div>
@@ -149,6 +167,15 @@ export default function ScoreForm({
           </div>
         )}
       </form>
+
+      {showDeleteConfirm ? <ConfirmModal
+        title="점수 삭제"
+        message="정말 삭제하시겠습니까?"
+        confirmText="삭제"
+        cancelText="취소"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setShowDeleteConfirm(false)}
+      /> : null}
     </FormProvider>
   );
 }
