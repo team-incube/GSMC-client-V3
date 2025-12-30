@@ -46,7 +46,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <div className="relative">
+            <div className="relative flex items-center">
               <button type="button" onClick={() => setIsModalOpen(prev => !prev)} className="cursor-pointer" aria-label="알림 열기">
                 <Bell />
               </button>
