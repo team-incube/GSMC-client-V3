@@ -41,12 +41,12 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
       ) : modalMode === 'create' ? (
         <ScoreModal mode="create" setIsModalOpen={handleCloseModal} categoryType={englishName} />
       ) : (
-        <ModalWrapper onClose={() => setIsModalOpen(false)}>
-          <div className="flex flex-col justify-center gap-10 w-150 overflow-hidden">
+        <ModalWrapper className="w-full h-full sm:h-[80%] sm:max-w-150 max-sm:px-1 max-sm:py-3 max-sm:rounded-none" onClose={() => setIsModalOpen(false)}>
+          <div className="flex flex-col justify-between h-full gap-5 overflow-hidden">
             <h2 className="text-titleMedium text-center">
               내 점수 수정하기
             </h2>
-            <section className="flex flex-col justify-start items-start max-h-160 overflow-y-scroll">
+            <section className="flex flex-col justify-start items-start overflow-y-scroll">
               {scoresByCategory?.map((category) => (
                 <div key={category.categoryType} className="w-full flex flex-col">
                   <div className="flex justify-between px-5 py-2 bg-gray-50 text-sm font-bold text-gray-500">
@@ -55,14 +55,14 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                   </div>
                   {category.scores.map((score) => (
                     <article key={score.scoreId} className="flex justify-between items-center w-full px-5 py-4 border-b border-gray-100 last:border-none">
-                      <div className="flex items-center gap-[0.75rem]">
+                      <div className="flex items-center gap-3">
                         <div className={cn("w-2 h-2 aspect-square rounded-full", { "bg-main-500": score.scoreStatus === "APPROVED", "bg-gray-600": score.scoreStatus === "PENDING", "bg-error": score.scoreStatus === "REJECTED" })} />
                         <p className="text-body2"> {score.activityName || score.categoryNames.koreanName} </p>
                       </div>
-                      <div className="flex items-center gap-[0.75rem]">
+                      <div className="flex items-center gap-3">
                         <Button
                           variant="border"
-                          className="w-auto px-[0.75rem] py-[0.125rem]"
+                          className="w-auto px-3 py-0.5"
                           onClick={() => { handleEditClick(score.scoreId, score.categoryNames.englishName); }}
                         >
                           수정
@@ -81,10 +81,10 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                 </div>
               ))}
             </section>
+            <Button variant="border" onClick={() => setIsModalOpen(false)}>
+              뒤로가기
+            </Button>
           </div>
-          <Button variant="border" onClick={() => setIsModalOpen(false)}>
-            뒤로가기
-          </Button>
         </ModalWrapper>
       )}
     </div>

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function ModalWrapper({ children, onClose }: { children: React.ReactNode, onClose?: () => void }) {
+export default function ModalWrapper({ children, className, onClose }: { children: React.ReactNode, className?: string, onClose?: () => void }) {
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -11,7 +11,7 @@ export default function ModalWrapper({ children, onClose }: { children: React.Re
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(17,17,17,0.20)]" onClick={onClose}>
-      <div className="relative z-10 rounded-[20px] bg-white px-10 py-6" onClick={(e) => e.stopPropagation()}>{children}</div>
+      <div className={`relative z-10 rounded-[20px] bg-white px-10 py-6 ${className}`} onClick={(e) => e.stopPropagation()}>{children}</div>
     </div>
   );
 }
