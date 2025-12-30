@@ -25,7 +25,7 @@ export default function ScoreModal({ mode, setIsModalOpen, categoryType, scoreId
 
   if (isLoading) {
     return (
-      <ModalWrapper className='"w-full min-w-100 max-w-150'>
+      <ModalWrapper className='w-full min-w-100 max-w-150'>
         <div className="flex h-[300px] w-full items-center justify-center">
           <p>로딩 중...</p>
         </div>
