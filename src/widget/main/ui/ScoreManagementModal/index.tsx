@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useGetCombinedScoresByCategory } from "@/entities/score/model/useGetCombinedScoresByCategory";
 import { cn } from "@/shared/lib/cn";
@@ -17,13 +17,25 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
   const [scoreId, setScoreId] = useState<number>(0);
   const [englishName, setEnglishName] = useState<string>('');
 
+  const scrollRef = useRef<HTMLElement>(null);
+  const savedScrollPosition = useRef<number>(0);
+
+
+  const saveScrollPosition = () => {
+    if (scrollRef.current) {
+      savedScrollPosition.current = scrollRef.current.scrollTop;
+    }
+  };
+
   const handleEditClick = (scoreId: number, englishName: string) => {
+    saveScrollPosition();
     setModalMode('edit');
     setScoreId(scoreId);
     setEnglishName(englishName);
   };
 
   const handleAddClick = (englishName: string) => {
+    saveScrollPosition();
     setModalMode('create');
     setEnglishName(englishName);
   };
@@ -33,6 +45,12 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
       setModalMode('list');
     }
   };
+
+  useEffect(() => {
+    if (modalMode === 'list' && scrollRef.current) {
+      scrollRef.current.scrollTop = savedScrollPosition.current;
+    }
+  }, [modalMode]);
 
   return (
     <div>
@@ -46,7 +64,7 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
             <h2 className="text-titleMedium text-center">
               내 점수 수정하기
             </h2>
-            <section className="flex flex-col justify-start items-start overflow-y-scroll">
+            <section ref={scrollRef} className="flex flex-col justify-start items-start overflow-y-scroll">
               {scoresByCategory?.map((category) => (
                 <div key={category.categoryType} className="w-full flex flex-col">
                   <div className="flex justify-between px-5 py-2 bg-gray-50 text-sm font-bold text-gray-500">
@@ -54,20 +72,30 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
                     <p>{category.approvedScore}점 / {category.expectedScore}점</p>
                   </div>
                   {category.scores.map((score) => (
-                    <article key={score.scoreId} className="flex justify-between items-center w-full px-5 py-4 border-b border-gray-100 last:border-none">
-                      <div className="flex items-center gap-3">
-                        <div className={cn("w-2 h-2 aspect-square rounded-full", { "bg-main-500": score.scoreStatus === "APPROVED", "bg-gray-600": score.scoreStatus === "PENDING", "bg-error": score.scoreStatus === "REJECTED" })} />
-                        <p className="text-body2"> {score.activityName || score.categoryNames.koreanName} </p>
+                    <article
+                      key={score.scoreId}
+                      className="flex justify-between items-center w-full px-5 py-4 border-b border-gray-100 last:border-none gap-3"
+                    >
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className={cn(
+                          "w-2 h-2 shrink-0 rounded-full",
+                          {
+                            "bg-main-500": score.scoreStatus === "APPROVED",
+                            "bg-gray-600": score.scoreStatus === "PENDING",
+                            "bg-error": score.scoreStatus === "REJECTED"
+                          }
+                        )} />
+                        <p className="text-body2 wrap-break-word overflow-hidden">
+                          {score.activityName || score.categoryNames.koreanName}
+                        </p>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <Button
-                          variant="border"
-                          className="w-auto px-3 py-0.5"
-                          onClick={() => { handleEditClick(score.scoreId, score.categoryNames.englishName); }}
-                        >
-                          수정
-                        </Button>
-                      </div>
+                      <Button
+                        variant="border"
+                        className="w-auto px-3 py-0.5 shrink-0"
+                        onClick={() => handleEditClick(score.scoreId, score.categoryNames.englishName)}
+                      >
+                        수정
+                      </Button>
                     </article>
                   ))}
                   {!category.isMaxReached ? <button
@@ -85,8 +113,9 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
               뒤로가기
             </Button>
           </div>
-        </ModalWrapper>
-      )}
-    </div>
+        </ModalWrapper >
+      )
+      }
+    </div >
   );
 }
