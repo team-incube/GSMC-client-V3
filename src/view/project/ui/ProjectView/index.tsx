@@ -33,9 +33,11 @@ export default function ProjectView() {
     mutate({ projectId }, {
       onSuccess: () => {
         router.replace('/main');
+      },
+      onSettled: () => {
+        setShowDeleteConfirm(false);
       }
     });
-    setShowDeleteConfirm(false);
   };
 
   return (
