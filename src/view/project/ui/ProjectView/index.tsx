@@ -77,9 +77,18 @@ export default function ProjectView() {
             ))}
           </div>
           <hr className="my-4" />
-          <Button onClick={() => router.push(`/project-participation?projectId=${projectId}`)}>
-            프로젝트 참여글 작성하기
-          </Button>
+          {
+            project?.participants.every((p) => p.id !== student?.id) ? (
+              <Button variant="disabled" className="cursor-not-allowed" disabled>
+                참여한 프로젝트가 아닙니다.
+              </Button>
+            ) : (
+              <Button onClick={() => router.push(`/project-participation?projectId=${projectId}`)}>
+                프로젝트 참여글 작성하기
+              </Button>
+            )
+          }
+
         </div>
       </div>
 
