@@ -6,7 +6,7 @@ categories:
   - title: '✨ 새로운 기능'
     labels:
       - 'feat'
-  - title: '🔄 코드 수정'
+  - title: '🔄 기능 수정'
     labels:
       - 'change'
   - title: '♻️ 리팩토링'
@@ -24,19 +24,12 @@ categories:
   - title: '🔧 기타'
     labels:
       - 'chore'
-      - 'style'
-      - 'test'
 
 version-resolver:
-  major:
-    labels:
-      - 'breaking'
-      - 'major'
   minor:
     labels:
       - 'feat'
       - 'remove'
-      - 'minor'
   default: patch
 
 exclude-labels:
@@ -67,12 +60,6 @@ autolabeler:
   - label: 'chore'
     title:
       - '/^chore(\(.+\))?:/i'
-  - label: 'style'
-    title:
-      - '/^style(\(.+\))?:/i'
-  - label: 'test'
-    title:
-      - '/^test(\(.+\))?:/i'
 
 template: |
   ## 변경사항
