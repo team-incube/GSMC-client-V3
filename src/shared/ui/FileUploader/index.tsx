@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { AllowedExtension, FileType } from '@/entities/file/model/file';
 import Chain from '@/shared/asset/svg/Chain';
@@ -55,8 +55,27 @@ export default function FileUploader({
     displayFiles,
     buttonText,
     handleFileChange,
+    handleFiles,
     handleRemoveFile,
   } = useFileUploaderState({ uploadedFiles, isMultiple, onChange });
+
+  const [isDragging, setIsDragging] = useState(false);
+
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const onDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    handleFiles(e.dataTransfer.files);
+  };
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -72,7 +91,12 @@ export default function FileUploader({
         <div
           role="button"
           tabIndex={0}
-          className="focus:ring-main-500 flex cursor-pointer items-center gap-2 rounded-xl border border-gray-300 p-3 hover:border-gray-300 focus:outline-none"
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          onDrop={onDrop}
+          className={`focus:ring-main-500 flex cursor-pointer items-center gap-2 rounded-xl border p-3 focus:outline-none ${
+            isDragging ? 'border-main-500 bg-blue-50' : 'border-gray-300 hover:border-gray-300'
+          }`}
           onClick={openFileDialog}
         >
           <span className="text-gray-400">
