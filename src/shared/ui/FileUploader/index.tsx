@@ -91,7 +91,7 @@ export default function FileUploader({
           onDragLeave={onDragLeave}
           onDrop={onDrop}
           className={`focus:ring-main-500 flex cursor-pointer items-center gap-2 rounded-xl border p-3 focus:outline-none ${
-            isDragging ? 'border-main-500 bg-blue-50' : 'border-gray-300 hover:border-gray-300'
+            isDragging ? 'border-main-500 bg-blue-50' : 'border-gray-300'
           }`}
           onClick={openFileDialog}
         >
