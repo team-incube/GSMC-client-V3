@@ -7,12 +7,15 @@ import Chain from '@/shared/asset/svg/Chain';
 import useFileUploaderState from '@/shared/model/useHandlingFileUploader';
 import FileList from '@/shared/ui/FileList';
 
-interface FileUploaderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | "accept"> {
+interface FileUploaderProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'value' | 'onChange' | 'accept'
+> {
   label: string;
   uploadedFiles?: FileType | FileType[];
   isMultiple?: boolean;
   accept?: AllowedExtension | AllowedExtension[];
-  onChange?: (files: { existing: FileType[], new: File[] }) => void;
+  onChange?: (files: { existing: FileType[]; new: File[] }) => void;
 }
 
 interface NewFileInputProps {
@@ -30,15 +33,7 @@ const NewFileInput = ({ file }: NewFileInputProps) => {
     }
   }, [file]);
 
-  return (
-    <input
-      ref={ref}
-      type="file"
-      name="newFiles"
-      className="hidden"
-      readOnly
-    />
-  );
+  return <input ref={ref} type="file" name="newFiles" className="hidden" readOnly />;
 };
 
 export default function FileUploader({
@@ -68,6 +63,7 @@ export default function FileUploader({
 
   const onDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    if (e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget)) return;
     setIsDragging(false);
   };
 
@@ -102,10 +98,7 @@ export default function FileUploader({
           <span className="text-gray-400">
             <Chain />
           </span>
-          <span
-            className="max-w-[220px] truncate text-sm text-gray-400"
-            title={buttonText}
-          >
+          <span className="max-w-[220px] truncate text-sm text-gray-400" title={buttonText}>
             {buttonText}
           </span>
 
@@ -137,10 +130,7 @@ export default function FileUploader({
         ))}
 
         {newFiles.map((localFile) => (
-          <NewFileInput
-            key={localFile.id}
-            file={localFile.file}
-          />
+          <NewFileInput key={localFile.id} file={localFile.file} />
         ))}
       </div>
     </div>
