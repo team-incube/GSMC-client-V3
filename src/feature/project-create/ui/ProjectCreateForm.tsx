@@ -50,6 +50,7 @@ export default function ProjectCreateForm({
     handleSubmit,
     watch,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<ProjectFormValues>({
     resolver: zodResolver(ProjectFormSchema),
@@ -112,8 +113,11 @@ export default function ProjectCreateForm({
     setShowDeleteConfirm(true);
   };
 
-  const handleDeleteConfirm = () => {
-    handleSubmit((data) => processSubmit(data, 'delete'))();
+  const handleDeleteConfirm = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    const data = getValues();
+    processSubmit(data, 'delete');
   };
 
   return (

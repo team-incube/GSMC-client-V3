@@ -8,8 +8,8 @@ interface ConfirmModalProps {
   message: string;
   confirmText?: string;
   cancelText?: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+  onConfirm: (e?: React.MouseEvent) => void;
+  onCancel: (e?: React.MouseEvent) => void;
 }
 
 export default function ConfirmModal({
@@ -28,10 +28,10 @@ export default function ConfirmModal({
           <p className="text-body1 text-gray-700">{message}</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="border" onClick={onCancel}>
+          <Button type="button" variant="border" onClick={onCancel}>
             {cancelText}
           </Button>
-          <Button variant="active" onClick={onConfirm}>
+          <Button type="button" variant="active" onClick={onConfirm}>
             {confirmText}
           </Button>
         </div>

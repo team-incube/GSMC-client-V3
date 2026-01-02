@@ -114,8 +114,11 @@ export default function ScoreForm({
     setShowDeleteConfirm(true);
   };
 
-  const handleDeleteConfirm = () => {
-    onSubmit('delete');
+  const handleDeleteConfirm = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    const data = methods.getValues();
+    processSubmit(data, 'delete');
   };
 
   return (
