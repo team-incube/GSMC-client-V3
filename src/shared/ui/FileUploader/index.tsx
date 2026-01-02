@@ -1,18 +1,21 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { AllowedExtension, FileType } from '@/entities/file/model/file';
 import Chain from '@/shared/asset/svg/Chain';
 import useFileUploaderState from '@/shared/model/useHandlingFileUploader';
 import FileList from '@/shared/ui/FileList';
 
-interface FileUploaderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | "accept"> {
+interface FileUploaderProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'value' | 'onChange' | 'accept'
+> {
   label: string;
   uploadedFiles?: FileType | FileType[];
   isMultiple?: boolean;
   accept?: AllowedExtension | AllowedExtension[];
-  onChange?: (files: { existing: FileType[], new: File[] }) => void;
+  onChange?: (files: { existing: FileType[]; new: File[] }) => void;
 }
 
 interface NewFileInputProps {
@@ -30,15 +33,7 @@ const NewFileInput = ({ file }: NewFileInputProps) => {
     }
   }, [file]);
 
-  return (
-    <input
-      ref={ref}
-      type="file"
-      name="newFiles"
-      className="hidden"
-      readOnly
-    />
-  );
+  return <input ref={ref} type="file" name="newFiles" className="hidden" readOnly />;
 };
 
 export default function FileUploader({
@@ -55,8 +50,28 @@ export default function FileUploader({
     displayFiles,
     buttonText,
     handleFileChange,
+    handleFiles,
     handleRemoveFile,
   } = useFileUploaderState({ uploadedFiles, isMultiple, onChange });
+
+  const [isDragging, setIsDragging] = useState(false);
+
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const onDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget)) return;
+    setIsDragging(false);
+  };
+
+  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    handleFiles(e.dataTransfer.files);
+  };
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -72,16 +87,18 @@ export default function FileUploader({
         <div
           role="button"
           tabIndex={0}
-          className="focus:ring-main-500 flex cursor-pointer items-center gap-2 rounded-xl border border-gray-300 p-3 hover:border-gray-300 focus:outline-none"
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          onDrop={onDrop}
+          className={`focus:ring-main-500 flex cursor-pointer items-center gap-2 rounded-xl border p-3 focus:outline-none ${
+            isDragging ? 'border-main-500 bg-blue-50' : 'border-gray-300'
+          }`}
           onClick={openFileDialog}
         >
           <span className="text-gray-400">
             <Chain />
           </span>
-          <span
-            className="max-w-[220px] truncate text-sm text-gray-400"
-            title={buttonText}
-          >
+          <span className="max-w-[220px] truncate text-sm text-gray-400" title={buttonText}>
             {buttonText}
           </span>
 
@@ -113,10 +130,7 @@ export default function FileUploader({
         ))}
 
         {newFiles.map((localFile) => (
-          <NewFileInput
-            key={localFile.id}
-            file={localFile.file}
-          />
+          <NewFileInput key={localFile.id} file={localFile.file} />
         ))}
       </div>
     </div>

@@ -31,12 +31,11 @@ export default function useFileUploaderState({
     setExistingFiles(normalizedFiles);
   }, [uploadedFiles]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = e.target.files;
-    if (!selectedFiles || selectedFiles.length === 0) return;
+  const handleFiles = (files: File[] | FileList) => {
+    if (!files || files.length === 0) return;
 
     if (!isMultiple) {
-      const file = selectedFiles[0];
+      const file = files[0];
 
       const newExisting: FileType[] = [];
       const newLocal = [
@@ -50,7 +49,7 @@ export default function useFileUploaderState({
       setNewFiles(newLocal);
       onChange?.({ existing: newExisting, new: [file] });
     } else {
-      const fileArray = Array.from(selectedFiles);
+      const fileArray = Array.from(files);
       const validLocalFiles: LocalFile[] = fileArray.map((file) => ({
         id: crypto.randomUUID(),
         name: file.name,
@@ -62,7 +61,13 @@ export default function useFileUploaderState({
         onChange?.({ existing: existingFiles, new: updatedNewFiles.map((f) => f.file) });
       }
     }
+  };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files;
+    if (selectedFiles) {
+      handleFiles(selectedFiles);
+    }
     e.target.value = '';
   };
 
@@ -112,6 +117,7 @@ export default function useFileUploaderState({
     displayFiles,
     buttonText,
     handleFileChange,
+    handleFiles,
     handleRemoveFile,
   };
 }
