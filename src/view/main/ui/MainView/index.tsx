@@ -7,6 +7,7 @@ import { useGetProjects } from '@/entities/project/model/useGetProjects';
 import { useGetCombinedScoresByCategory } from '@/entities/score/model/useGetCombinedScoresByCategory';
 import { useGetCombinedTotalScore } from '@/entities/score/model/useGetCombinedTotalScore';
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
+import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 import Button from '@/shared/ui/Button';
 import ProjectPost from '@/shared/ui/ProjectPost';
 import SearchBar from '@/shared/ui/SearchBar';
