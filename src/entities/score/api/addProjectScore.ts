@@ -2,13 +2,13 @@ import { instance } from '@/shared/lib/instance';
 
 import { ScoreType } from '../model/score';
 
-export interface addProjectScoreRequest {
+export interface AddProjectScoreRequest {
   projectId: number;
 }
 
 export const addProjectScore = async ({
   projectId,
-}: addProjectScoreRequest): Promise<ScoreType> => {
+}: AddProjectScoreRequest): Promise<ScoreType> => {
   const response = await instance.post('/scores/project-participation', {
     projectId,
   });

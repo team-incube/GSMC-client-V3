@@ -2,7 +2,7 @@ import { instance } from '@/shared/lib/instance';
 
 import { ScoreType } from '../model/score';
 
-export interface editScoreByIdRequest {
+export interface EditScoreByIdRequest {
   categoryType: 'external-activity' | 'certificate' | 'award';
   scoreId: number;
   value: string;
@@ -14,7 +14,7 @@ export const editScoreById = async ({
   scoreId,
   value,
   fileId,
-}: editScoreByIdRequest): Promise<ScoreType> => {
+}: EditScoreByIdRequest): Promise<ScoreType> => {
   const response = await instance.patch(`/scores/${categoryType}/${scoreId}`, {
     value,
     fileId,

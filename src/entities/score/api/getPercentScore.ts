@@ -1,15 +1,17 @@
-import { instance } from "@/shared/lib/instance";
+import { instance } from '@/shared/lib/instance';
 
-export interface getPercentScoreRequest {
-  type: "class" | "grade";
+export interface GetPercentScoreRequest {
+  type: 'class' | 'grade';
 }
 
-export interface getPercentScoreResponse {
+export interface GetPercentScoreResponse {
   topPercentile: number;
   bottomPercentile: number;
 }
 
-export const getPercentScore = async ({ type }: getPercentScoreRequest): Promise<getPercentScoreResponse> => {
+export const getPercentScore = async ({
+  type,
+}: GetPercentScoreRequest): Promise<GetPercentScoreResponse> => {
   const response = await instance.get(`/scores/percent/${type}`);
   return response.data.data;
-}
+};

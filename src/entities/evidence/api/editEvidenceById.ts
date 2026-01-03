@@ -3,7 +3,7 @@ import { instance } from '@/shared/lib/instance';
 
 import { EvidenceType } from '../model/evidence';
 
-export interface editEvidenceByIdRequest extends EvidenceRequestSchema {
+export interface EditEvidenceByIdRequest extends EvidenceRequestSchema {
   evidenceId: number;
 }
 
@@ -12,7 +12,7 @@ export const editEvidenceById = async ({
   title,
   content,
   fileIds,
-}: editEvidenceByIdRequest): Promise<EvidenceType> => {
+}: EditEvidenceByIdRequest): Promise<EvidenceType> => {
   const response = await instance.patch(`/evidences/${evidenceId}`, { title, content, fileIds });
   return response.data;
 };

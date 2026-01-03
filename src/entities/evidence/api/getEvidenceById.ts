@@ -2,7 +2,7 @@ import { instance } from '@/shared/lib/instance';
 
 import { EvidenceType } from '../model/evidence';
 
-export interface getEvidenceByIdRequest {
+export interface GetEvidenceByIdRequest {
   evidenceId: number;
 }
 
@@ -11,7 +11,7 @@ export interface getEvidenceByIdRequest {
  */
 export const getEvidenceById = async ({
   evidenceId,
-}: getEvidenceByIdRequest): Promise<EvidenceType> => {
+}: GetEvidenceByIdRequest): Promise<EvidenceType> => {
   const response = await instance.get(`/evidences/${evidenceId}`);
   return response.data.data;
 };
