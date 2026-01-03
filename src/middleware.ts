@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
   const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
   const isMaintenancePage = currentPath === '/maintenance';
   const isNextStatic = currentPath.startsWith('/_next');
-  const isPublicFile = currentPath.includes('.');
+  const isPublicFile = /\.[^/]+$/.test(currentPath);
   const isApiAuth = currentPath.startsWith('/api/auth');
 
   if (isMaintenanceMode && !isMaintenancePage && !isNextStatic && !isPublicFile && !isApiAuth) {
