@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getSearchStudent, getSearchStudentRequest } from '../api/getSearchStudent';
+import { getSearchStudent, GetSearchStudentRequest } from '../api/getSearchStudent';
 
-export const useGetSearchStudent = (params: getSearchStudentRequest) => {
+export const useGetSearchStudent = (params: GetSearchStudentRequest) => {
   return useQuery({
     queryKey: ['student', 'search', params],
     queryFn: () => getSearchStudent(params),

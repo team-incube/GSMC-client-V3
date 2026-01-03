@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getScores, getScoresRequest } from '../api/getScores';
+import { getScores, GetScoresRequest } from '../api/getScores';
 
-export const useGetScores = (params: getScoresRequest) => {
+export const useGetScores = (params: GetScoresRequest) => {
   return useQuery({
     queryKey: ['score', 'list', params],
     queryFn: () => getScores(params),
