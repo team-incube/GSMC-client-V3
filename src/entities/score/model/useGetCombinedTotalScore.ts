@@ -1,13 +1,9 @@
 import { useQueries } from '@tanstack/react-query';
 
-import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
-
 import { getTotalScore } from '../api/getTotalScore';
 
 export const useGetCombinedTotalScore = () => {
-  const { mode } = useScoreDisplay();
-
-  const results = useQueries({
+  return useQueries({
     queries: [
       {
         queryKey: ['score', 'total', { includeApprovedOnly: true }],
@@ -18,27 +14,9 @@ export const useGetCombinedTotalScore = () => {
         queryFn: () => getTotalScore({ includeApprovedOnly: false }),
       },
     ],
+    combine: (results) => ({
+      approved: results[0].data?.totalScore,
+      expected: results[1].data?.totalScore,
+    }),
   });
-
-  const actualScore = Number(results[0].data?.totalScore ?? 0);
-  const combinedScore = Number(results[1].data?.totalScore ?? 0);
-
-  const getValue = () => {
-    switch (mode) {
-      case 'ACTUAL':
-        return actualScore;
-      case 'PENDING':
-        return combinedScore;
-      case 'COMBINED':
-        return combinedScore;
-      default:
-        return 0;
-    }
-  };
-
-  return {
-    value: getValue(),
-    actual: actualScore,
-    combined: combinedScore,
-  };
 };
