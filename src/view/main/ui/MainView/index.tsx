@@ -55,8 +55,8 @@ export default function MainView() {
               </p>
             </div>
             <div className="flex flex-wrap justify-center items-baseline gap-2">
-              <p className='bg-[#f3f3f3] text-main-500 px-2 py-1 rounded-xl'>학급 상위 {Math.floor(classPercentScore?.topPercentile ?? 0)}%</p>
-              <p className='bg-[#f3f3f3] text-main-500 px-2 py-1 rounded-xl'>학년 상위 {Math.floor(gradePercentScore?.topPercentile ?? 0)}%</p>
+              <p className="bg-[#f3f3f3] text-main-500 px-2 py-1 rounded-xl">학급 상위 {Math.floor(classPercentScore?.topPercentile ?? 0)}%</p>
+              <p className="bg-[#f3f3f3] text-main-500 px-2 py-1 rounded-xl">학년 상위 {Math.floor(gradePercentScore?.topPercentile ?? 0)}%</p>
             </div>
           </div>
         </section>
