@@ -18,7 +18,6 @@ export async function middleware(request: NextRequest) {
   const isMaintenancePage = currentPath === '/maintenance';
   const isNextStatic = currentPath.startsWith('/_next');
   const isPublicFile = /\.[^/]+$/.test(currentPath);
-  const isApiAuth = currentPath.startsWith('/api/auth');
 
   if (isMaintenanceMode && !isMaintenancePage && !isNextStatic && !isPublicFile) {
     return NextResponse.redirect(new URL('/maintenance', request.url));
