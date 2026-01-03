@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useEffect,useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 import { cn } from '@/shared/lib/cn';
+import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 
 export default function SettingDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,8 +40,7 @@ export default function SettingDropdown() {
         설정
       </button>
 
-      {isOpen && (
-        <div className="absolute top-full right-0 z-50 mt-2 w-56 transform overflow-hidden rounded-xl border border-gray-100 bg-white p-2">
+      {isOpen ? <div className="absolute top-full right-0 z-50 mt-2 w-56 transform overflow-hidden rounded-xl border border-gray-100 bg-white p-2">
           <div className="flex flex-col gap-1">
             <div className="px-3 py-2 text-xs font-bold text-gray-400">점수 표시 설정</div>
 
@@ -74,8 +73,7 @@ export default function SettingDropdown() {
               로그아웃
             </button>
           </div>
-        </div>
-      )}
+        </div> : null}
     </div>
   );
 }

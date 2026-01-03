@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import Bell from '@/shared/asset/svg/Bell';
 import Menu from '@/shared/asset/svg/Menu';

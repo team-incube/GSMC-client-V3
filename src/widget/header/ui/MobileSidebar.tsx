@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 import Close from '@/shared/asset/svg/Close';
-import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 import { cn } from '@/shared/lib/cn';
+import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 
 import { HEADER_NAV } from '../config/navigation';
 

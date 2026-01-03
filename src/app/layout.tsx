@@ -6,7 +6,6 @@ import localFont from 'next/font/local';
 import { Toaster } from 'sonner';
 
 import { QueryProvider } from '@/shared/lib/query';
-
 import { ScoreDisplayProvider } from '@/shared/provider/ScoreDisplayProvider';
 
 import './globals.css';
