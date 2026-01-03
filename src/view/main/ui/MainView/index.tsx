@@ -8,6 +8,7 @@ import { useGetCombinedScoresByCategory } from '@/entities/score/model/useGetCom
 import { useGetCombinedTotalScore } from '@/entities/score/model/useGetCombinedTotalScore';
 import { useGetPercentScore } from '@/entities/score/model/useGetPercentScore';
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
+import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 import Button from '@/shared/ui/Button';
 import ProjectPost from '@/shared/ui/ProjectPost';
 import SearchBar from '@/shared/ui/SearchBar';
@@ -16,16 +17,15 @@ import ScoreManagementModal from '@/widget/main/ui/ScoreManagementModal';
 export default function MainView() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { mode } = useScoreDisplay();
   const { data: student } = useGetCurrentStudent();
   const totalScore = useGetCombinedTotalScore();
   const scoresByCategory = useGetCombinedScoresByCategory();
   const { data: classPercentScore } = useGetPercentScore({
     type: 'class',
-    includeApprovedOnly: true,
   });
   const { data: gradePercentScore } = useGetPercentScore({
     type: 'grade',
-    includeApprovedOnly: true,
   });
   const { data: allProjects } = useGetProjects();
   const { data: searchedProjects } = useGetProjectBySearch({
@@ -48,19 +48,42 @@ export default function MainView() {
                 {student?.name ?? '사용자'}
               </p>
               <p className="text-left text-lg text-black sm:text-xl md:text-2xl">
-                님의 인증제 점수는
+                님의{' '}
+                {mode !== 'COMBINED' && (
+                  <span className="text-main-500">{mode === 'ACTUAL' ? '취득한' : '예상되는'}</span>
+                )}
+                {mode !== 'COMBINED' && ' '}
+                인증제 점수는
               </p>
             </div>
             <div className="flex flex-wrap items-baseline justify-center gap-2">
               <div className="flex items-center justify-center gap-2.5 rounded-full bg-[#f3f3f3] px-6 py-2 sm:px-8 sm:py-2.5 md:px-9 md:py-3">
-                <p className="text-main-500 text-center text-3xl sm:text-4xl md:text-5xl">
-                  {totalScore.approved ?? 0}점
-                </p>
+                <div className="flex items-baseline gap-1">
+                  {mode === 'COMBINED' ? (
+                    <div className="flex items-baseline gap-2">
+                      <p className="text-main-500 text-center text-3xl sm:text-4xl md:text-5xl">
+                        {totalScore.actual}
+                      </p>
+                      <p className="text-main-500 text-lg font-medium sm:text-xl">점</p>
+                    </div>
+                  ) : (
+                    <p className="text-main-500 text-center text-3xl sm:text-4xl md:text-5xl">
+                      {totalScore.value ?? 0}점
+                    </p>
+                  )}
+                </div>
               </div>
-              <p className="text-center text-3xl text-black/40 sm:text-4xl md:text-5xl">/</p>
-              <p className="text-center text-lg text-black/40 sm:text-xl">
-                {totalScore.expected ?? 0}점
-              </p>
+              {mode === 'COMBINED' && (
+                <>
+                  <p className="text-center text-3xl text-black/40 sm:text-4xl md:text-5xl">/</p>
+                  <div className="flex items-baseline gap-1">
+                    <p className="text-center text-lg text-black/40 sm:text-xl">
+                      {totalScore.combined}
+                    </p>
+                    <p className="text-sm font-medium text-black/40">점</p>
+                  </div>
+                </>
+              )}
             </div>
             <div className="flex flex-wrap items-baseline justify-center gap-2">
               <p className="text-main-500 rounded-xl bg-[#f3f3f3] px-2 py-1">
@@ -98,7 +121,13 @@ export default function MainView() {
                       {category.categoryNames.koreanName}
                     </p>
                     <p className="text-right text-base font-semibold whitespace-nowrap text-gray-600 sm:text-center sm:text-lg">
-                      {category.approvedScore}점 / {category.expectedScore}점
+                      {mode === 'COMBINED' ? (
+                        <>
+                          {category.approvedScore}점 / {category.score}점
+                        </>
+                      ) : (
+                        <>{category.score}점</>
+                      )}
                     </p>
                   </article>
                 ))}

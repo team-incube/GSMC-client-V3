@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import { useState } from 'react';
 
@@ -11,16 +11,12 @@ import AlertsModal from '@/widget/main/ui/AlertsModal';
 
 import { HEADER_NAV } from '../config/navigation';
 import MobileSidebar from './MobileSidebar';
+import SettingDropdown from './SettingDropdown';
 
 export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
-
-  const handleSignout = () => {
-    router.push('/api/auth/logout');
-  };
 
   return (
     <>
@@ -34,27 +30,37 @@ export default function Header() {
             {HEADER_NAV.map((item) => (
               <Link
                 key={item.path}
-                className={pathname === item.path ? 'font-semibold text-main-800' : 'text-gray-500'}
+                className={pathname === item.path ? 'text-main-800 font-semibold' : 'text-gray-500'}
                 href={item.path}
               >
                 {item.label}
               </Link>
             ))}
-            <button type="button" className="cursor-pointer font-semibold text-gray-900 disabled:opacity-50" onClick={handleSignout}>
-              로그아웃
-            </button>
+            <SettingDropdown />
           </nav>
 
           <div className="flex items-center gap-4">
             <div className="relative flex items-center">
-              <button type="button" onClick={() => setIsModalOpen(prev => !prev)} className="cursor-pointer" aria-label="알림 열기">
+              <button
+                type="button"
+                onClick={() => setIsModalOpen((prev) => !prev)}
+                className="cursor-pointer"
+                aria-label="알림 열기"
+              >
                 <Bell />
               </button>
-              {isModalOpen ? <div className="absolute right-0 top-full mt-2 z-50">
-                <AlertsModal />
-              </div> : null}
+              {isModalOpen ? (
+                <div className="absolute top-full right-0 z-50 mt-2">
+                  <AlertsModal />
+                </div>
+              ) : null}
             </div>
-            <button type="button" onClick={() => setIsSidebarOpen(true)} className="cursor-pointer md:hidden" aria-label="메뉴 열기">
+            <button
+              type="button"
+              onClick={() => setIsSidebarOpen(true)}
+              className="cursor-pointer md:hidden"
+              aria-label="메뉴 열기"
+            >
               <Menu />
             </button>
           </div>
