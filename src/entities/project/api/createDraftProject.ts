@@ -1,6 +1,6 @@
 import { instance } from '@/shared/lib/instance';
 
-export interface createDraftProjectRequest {
+export interface CreateDraftProjectRequest {
   title: string;
   description: string;
   fileIds?: number[] | null;
@@ -12,7 +12,7 @@ export const createDraftProject = async ({
   description,
   fileIds,
   participantIds,
-}: createDraftProjectRequest) => {
+}: CreateDraftProjectRequest) => {
   const response = await instance.post('/projects/draft', {
     title,
     description,

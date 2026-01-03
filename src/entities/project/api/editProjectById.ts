@@ -1,6 +1,6 @@
-import { instance } from "@/shared/lib/instance";
+import { instance } from '@/shared/lib/instance';
 
-export interface editProjectByIdRequest {
+export interface EditProjectByIdRequest {
   projectId: number;
   title: string;
   description: string;
@@ -8,12 +8,18 @@ export interface editProjectByIdRequest {
   participantIds: number[];
 }
 
-export const editProjectById = async ({projectId, title, description, fileIds, participantIds}:editProjectByIdRequest) => {
+export const editProjectById = async ({
+  projectId,
+  title,
+  description,
+  fileIds,
+  participantIds,
+}: EditProjectByIdRequest) => {
   const response = await instance.patch(`/projects/${projectId}`, {
     title,
     description,
     fileIds,
-    participantIds
+    participantIds,
   });
   return response.data;
 };

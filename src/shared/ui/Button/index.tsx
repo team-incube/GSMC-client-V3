@@ -2,10 +2,10 @@ import { cn } from '@/shared/lib/cn';
 
 interface ButtonProps {
   children: React.ReactNode;
-  variant?: variant;
+  variant?: Variant;
 }
 
-type variant = 'disabled' | 'active' | 'border' | 'disabled_border';
+type Variant = 'disabled' | 'active' | 'border' | 'disabled_border';
 
 const VARIANT_STYLE = {
   disabled: 'text-gray-500 bg-gray-200',

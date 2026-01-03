@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getScoreById, getScoreByIdRequest } from '../api/getScoreById';
+import { getScoreById, GetScoreByIdRequest } from '../api/getScoreById';
 
 export const useGetScoreById = (
-  { scoreId }: getScoreByIdRequest,
+  { scoreId }: GetScoreByIdRequest,
   options?: { enabled?: boolean },
 ) => {
   return useQuery({

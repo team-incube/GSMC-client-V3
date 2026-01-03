@@ -3,12 +3,12 @@ import { instance } from '@/shared/lib/instance';
 
 import { ScoreStatus, ScoreType } from '../model/score';
 
-export interface getScoresRequest {
+export interface GetScoresRequest {
   categoryType?: CategoryKey;
   status?: ScoreStatus;
 }
 
-export const getScores = async (params: getScoresRequest): Promise<ScoreType[]> => {
+export const getScores = async (params: GetScoresRequest): Promise<ScoreType[]> => {
   const response = await instance.get(`/scores`, { params });
   return response.data.data.scores;
 };

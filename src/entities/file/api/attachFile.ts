@@ -1,11 +1,11 @@
 import { FileType } from '@/entities/file/model/file';
 import { instance } from '@/shared/lib/instance';
 
-export interface attachFileRequest {
+export interface AttachFileRequest {
   file: File;
 }
 
-export const attachFile = async ({ file }: attachFileRequest): Promise<FileType> => {
+export const attachFile = async ({ file }: AttachFileRequest): Promise<FileType> => {
   const formData = new FormData();
   formData.append('file', file);
 

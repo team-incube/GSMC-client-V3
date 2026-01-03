@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { removeScoreById, removeScoreByIdTypeRequest } from '../api/removeScoreById';
+import { removeScoreById, RemoveScoreByIdTypeRequest } from '../api/removeScoreById';
 
-export const useRemoveScoreById = ({ scoreId }: removeScoreByIdTypeRequest) => {
+export const useRemoveScoreById = ({ scoreId }: RemoveScoreByIdTypeRequest) => {
   const queryClient = useQueryClient();
 
   return useMutation({

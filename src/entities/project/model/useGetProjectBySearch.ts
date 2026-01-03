@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getProjectBySearch, getProjectBySearchRequest } from '../api/getProjectBySearch';
+import { getProjectBySearch, GetProjectBySearchRequest } from '../api/getProjectBySearch';
 
-export const useGetProjectBySearch = (params: getProjectBySearchRequest) => {
+export const useGetProjectBySearch = (params: GetProjectBySearchRequest) => {
   return useQuery({
     queryKey: ['project', 'list', 'search', params.title],
     queryFn: () => getProjectBySearch(params),
