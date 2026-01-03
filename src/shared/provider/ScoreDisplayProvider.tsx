@@ -1,6 +1,14 @@
 'use client';
 
-import { createContext, ReactNode,useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from 'react';
 
 export type ScoreDisplayMode = 'ACTUAL' | 'PENDING' | 'COMBINED';
 
@@ -12,27 +20,22 @@ interface ScoreDisplayContextType {
 const ScoreDisplayContext = createContext<ScoreDisplayContextType | undefined>(undefined);
 
 export function ScoreDisplayProvider({ children }: { children: ReactNode }) {
-  const [mode, setModeState] = useState<ScoreDisplayMode>('COMBINED');
-
-  useEffect(() => {
+  const [mode, setModeState] = useState<ScoreDisplayMode>(() => {
+    if (typeof window === 'undefined') return 'COMBINED';
     const savedMode = localStorage.getItem('gsmc_score_display_mode') as ScoreDisplayMode;
-    if (savedMode && ['ACTUAL', 'PENDING', 'COMBINED'].includes(savedMode)) {
-      setModeState(savedMode);
-    } else {
-      setModeState('COMBINED');
-    }
-  }, []);
+    return savedMode && ['ACTUAL', 'PENDING', 'COMBINED'].includes(savedMode)
+      ? savedMode
+      : 'COMBINED';
+  });
 
-  const setMode = (newMode: ScoreDisplayMode) => {
+  const setMode = useCallback((newMode: ScoreDisplayMode) => {
     setModeState(newMode);
     localStorage.setItem('gsmc_score_display_mode', newMode);
-  };
+  }, []);
 
-  return (
-    <ScoreDisplayContext.Provider value={{ mode, setMode }}>
-      {children}
-    </ScoreDisplayContext.Provider>
-  );
+  const value = useMemo(() => ({ mode, setMode }), [mode, setMode]);
+
+  return <ScoreDisplayContext.Provider value={value}>{children}</ScoreDisplayContext.Provider>;
 }
 
 export function useScoreDisplay() {
