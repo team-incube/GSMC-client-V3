@@ -13,6 +13,17 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   const currentPath = request.nextUrl.pathname;
+
+  const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
+  const isMaintenancePage = currentPath === '/maintenance';
+  const isNextStatic = currentPath.startsWith('/_next');
+  const isPublicFile = currentPath.includes('.');
+  const isApiAuth = currentPath.startsWith('/api/auth');
+
+  if (isMaintenanceMode && !isMaintenancePage && !isNextStatic && !isPublicFile && !isApiAuth) {
+    return NextResponse.redirect(new URL('/maintenance', request.url));
+  }
+
   const isProtectedRoute = PROTECT_PAGE.includes(currentPath);
   const isPublicRoute = PUBLIC_PAGE.includes(currentPath);
   const accessToken = request.cookies.get('accessToken')?.value;
@@ -39,8 +50,8 @@ export async function middleware(request: NextRequest) {
         {},
         {
           headers: { Cookie: `refreshToken=${refreshToken}` },
-          withCredentials: true
-        }
+          withCredentials: true,
+        },
       );
 
       userRole = response?.data.data.role ?? null;
