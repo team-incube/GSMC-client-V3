@@ -8,6 +8,7 @@ import { useGetCombinedScoresByCategory } from '@/entities/score/model/useGetCom
 import { useGetCombinedTotalScore } from '@/entities/score/model/useGetCombinedTotalScore';
 import { useGetPercentScore } from '@/entities/score/model/useGetPercentScore';
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
+import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 import Button from '@/shared/ui/Button';
 import ProjectPost from '@/shared/ui/ProjectPost';
 import SearchBar from '@/shared/ui/SearchBar';
