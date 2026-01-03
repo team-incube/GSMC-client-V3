@@ -103,7 +103,11 @@ export default function MainView() {
                       {category.categoryNames.koreanName}
                     </p>
                     <p className="text-right text-base font-semibold whitespace-nowrap text-gray-600 sm:text-center sm:text-lg">
-                      {category.approvedScore}점 / {category.expectedScore}점
+                      {mode === 'APPROVED'
+                        ? `${category.approvedScore}점`
+                        : mode === 'PENDING'
+                          ? `${category.expectedScore}점`
+                          : `${category.approvedScore}점 / ${category.expectedScore}점`}
                     </p>
                   </article>
                 ))}
