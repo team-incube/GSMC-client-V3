@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
   const isPublicFile = /\.[^/]+$/.test(currentPath);
   const isApiAuth = currentPath.startsWith('/api/auth');
 
-  if (isMaintenanceMode && !isMaintenancePage && !isNextStatic && !isPublicFile && !isApiAuth) {
+  if (isMaintenanceMode && !isMaintenancePage && !isNextStatic && !isPublicFile) {
     return NextResponse.redirect(new URL('/maintenance', request.url));
   }
 
