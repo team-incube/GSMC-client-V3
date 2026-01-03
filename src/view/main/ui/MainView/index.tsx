@@ -19,8 +19,14 @@ export default function MainView() {
   const { data: student } = useGetCurrentStudent();
   const totalScore = useGetCombinedTotalScore();
   const scoresByCategory = useGetCombinedScoresByCategory();
-  const { data: classPercentScore } = useGetPercentScore({ type: 'class' });
-  const { data: gradePercentScore } = useGetPercentScore({ type: 'grade' });
+  const { data: classPercentScore } = useGetPercentScore({
+    type: 'class',
+    includeApprovedOnly: true,
+  });
+  const { data: gradePercentScore } = useGetPercentScore({
+    type: 'grade',
+    includeApprovedOnly: true,
+  });
   const { data: allProjects } = useGetProjects();
   const { data: searchedProjects } = useGetProjectBySearch({
     title: searchKeyword,
