@@ -6,7 +6,6 @@ import { useGetProjectBySearch } from '@/entities/project/model/useGetProjectByS
 import { useGetProjects } from '@/entities/project/model/useGetProjects';
 import { useGetCombinedScoresByCategory } from '@/entities/score/model/useGetCombinedScoresByCategory';
 import { useGetCombinedTotalScore } from '@/entities/score/model/useGetCombinedTotalScore';
-import { useGetPercentScore } from '@/entities/score/model/useGetPercentScore';
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
 import Button from '@/shared/ui/Button';
 import ProjectPost from '@/shared/ui/ProjectPost';
