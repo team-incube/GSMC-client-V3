@@ -8,7 +8,7 @@ export const useGetPercentScore = ({
   type,
 }: Omit<GetPercentScoreRequest, 'includeApprovedOnly'>) => {
   const { mode } = useScoreDisplay();
-  const includeApprovedOnly = mode !== 'COMBINED' && mode !== 'PENDING'; // ACTUAL만 true, 나머지는 false
+  const includeApprovedOnly = mode === 'ACTUAL'; // ACTUAL만 true, 나머지는 false
 
   return useQuery({
     queryKey: ['percent', 'score', type, mode],
