@@ -1,4 +1,5 @@
 import { useQueries } from '@tanstack/react-query';
+
 import { getPercentScore } from '../api/getPercentScore';
 
 export const useGetCombinedPercentScore = ({

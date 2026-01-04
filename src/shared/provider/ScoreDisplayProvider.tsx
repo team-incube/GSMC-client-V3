@@ -3,11 +3,11 @@
 import {
   createContext,
   ReactNode,
-  useContext,
-  useState,
-  useMemo,
   useCallback,
+  useContext,
   useEffect,
+  useMemo,
+  useState,
 } from 'react';
 
 export type ScoreDisplayMode = 'APPROVED' | 'PENDING' | 'COMBINED';

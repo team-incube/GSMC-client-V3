@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useGetCombinedScoresByCategory } from '@/entities/score/model/useGetCombinedScoresByCategory';
 import { cn } from '@/shared/lib/cn';
+import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 import Button from '@/shared/ui/Button';
 import ModalWrapper from '@/shared/ui/ModalWrapper';
 
 import ScoreModal from '../ScoreModal';
-import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 
 interface ScoreManagementModalProps {
   setIsModalOpen: (isOpen: boolean) => void;

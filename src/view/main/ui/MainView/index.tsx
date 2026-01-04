@@ -4,15 +4,15 @@ import { useState } from 'react';
 
 import { useGetProjectBySearch } from '@/entities/project/model/useGetProjectBySearch';
 import { useGetProjects } from '@/entities/project/model/useGetProjects';
+import { useGetCombinedPercentScore } from '@/entities/score/model/useGetCombinedPercentScore';
 import { useGetCombinedScoresByCategory } from '@/entities/score/model/useGetCombinedScoresByCategory';
 import { useGetCombinedTotalScore } from '@/entities/score/model/useGetCombinedTotalScore';
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
+import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 import Button from '@/shared/ui/Button';
 import ProjectPost from '@/shared/ui/ProjectPost';
 import SearchBar from '@/shared/ui/SearchBar';
 import ScoreManagementModal from '@/widget/main/ui/ScoreManagementModal';
-import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
-import { useGetCombinedPercentScore } from '@/entities/score/model/useGetCombinedPercentScore';
 
 export default function MainView() {
   const [searchKeyword, setSearchKeyword] = useState('');
