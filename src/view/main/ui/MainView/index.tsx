@@ -54,7 +54,7 @@ export default function MainView() {
             <div className="flex flex-wrap items-baseline justify-center gap-2">
               <div className="flex items-center justify-center gap-2.5 rounded-full bg-[#f3f3f3] px-6 py-2 sm:px-8 sm:py-2.5 md:px-9 md:py-3">
                 <p className="text-main-500 text-center text-3xl sm:text-4xl md:text-5xl">
-                  {mode !== 'PENDING' ? totalScore.approved : totalScore.expected}점
+                  {mode === 'PENDING' ? totalScore.expected : totalScore.approved}점
                 </p>
               </div>
               {mode === 'COMBINED' ? (
