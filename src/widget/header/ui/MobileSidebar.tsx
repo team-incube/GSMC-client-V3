@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 import Close from '@/shared/asset/svg/Close';
+import { cn } from '@/shared/lib/cn';
+import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 
 import { HEADER_NAV } from '../config/navigation';
 
@@ -15,6 +17,7 @@ interface MobileSidebarProps {
 export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { mode, setMode } = useScoreDisplay();
 
   const handleSignout = () => {
     router.push('/api/auth/logout');
@@ -30,7 +33,10 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
       ) : null}
 
       <div
-        className={`fixed right-0 top-0 z-50 h-full w-[280px] transform bg-white shadow-lg transition-transform duration-300 ease-in-out md:hidden ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={cn(
+          'fixed top-0 right-0 z-50 h-full w-[280px] transform bg-white shadow-lg transition-transform duration-300 ease-in-out md:hidden',
+          isOpen ? 'translate-x-0' : 'translate-x-full',
+        )}
       >
         <div className="flex items-center justify-between border-b border-gray-100 p-4">
           <Link href="/main" className="text-main-800 text-xl font-bold" onClick={onClose}>
@@ -41,30 +47,58 @@ export default function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
           </button>
         </div>
 
-        <nav className="flex flex-col gap-2 p-4">
-          {HEADER_NAV.map((item) => (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={`rounded-lg px-4 py-3 ${pathname === item.path
-                ? 'bg-main-50 font-semibold text-main-800'
-                : 'text-gray-700 hover:bg-gray-50'
-                }`}
-              onClick={onClose}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex h-[calc(100%-65px)] flex-col justify-between">
+          <div className="overflow-y-auto">
+            <nav className="flex flex-col gap-2 p-4">
+              <div className="mb-1 px-4 text-xs font-bold text-gray-400">메뉴</div>
+              {HEADER_NAV.map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={cn(
+                    'rounded-lg px-4 py-3 text-sm transition-colors',
+                    pathname === item.path
+                      ? 'bg-main-50 text-main-800 font-semibold'
+                      : 'text-gray-700 hover:bg-gray-50',
+                  )}
+                  onClick={onClose}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
 
-        <div className="absolute bottom-4 left-0 right-0 px-4">
-          <button
-            type="button"
-            className="w-full cursor-pointer rounded-lg bg-gray-100 px-4 py-3 font-semibold text-gray-900 hover:bg-gray-200"
-            onClick={handleSignout}
-          >
-            로그아웃
-          </button>
+            <div className="mt-4 border-t border-gray-100 p-4">
+              <div className="mb-2 px-4 text-xs font-bold text-gray-400">점수 표시 설정</div>
+              <div className="flex flex-col gap-1">
+                {(['APPROVED', 'PENDING', 'COMBINED'] as const).map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setMode(m)}
+                    className={cn(
+                      'w-full cursor-pointer rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors',
+                      mode === m ? 'bg-main-50 text-main-800' : 'text-gray-500 hover:bg-gray-50',
+                    )}
+                  >
+                    {m === 'APPROVED' && '실제'}
+                    {m === 'PENDING' && '예상'}
+                    {m === 'COMBINED' && '실제/예상(기본값)'}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4">
+            <button
+              type="button"
+              className="text-error w-full cursor-pointer rounded-lg bg-gray-50 px-4 py-3 text-left text-sm font-semibold hover:bg-red-50"
+              onClick={handleSignout}
+            >
+              로그아웃
+            </button>
+          </div>
         </div>
       </div>
     </>
