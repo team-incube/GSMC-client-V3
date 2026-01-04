@@ -6,21 +6,23 @@ import { useGetProjectBySearch } from '@/entities/project/model/useGetProjectByS
 import { useGetProjects } from '@/entities/project/model/useGetProjects';
 import { useGetCombinedScoresByCategory } from '@/entities/score/model/useGetCombinedScoresByCategory';
 import { useGetCombinedTotalScore } from '@/entities/score/model/useGetCombinedTotalScore';
-import { useGetPercentScore } from '@/entities/score/model/useGetPercentScore';
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
 import Button from '@/shared/ui/Button';
 import ProjectPost from '@/shared/ui/ProjectPost';
 import SearchBar from '@/shared/ui/SearchBar';
 import ScoreManagementModal from '@/widget/main/ui/ScoreManagementModal';
+import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
+import { useGetCombinedPercentScore } from '@/entities/score/model/useGetCombinedPercentScore';
 
 export default function MainView() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { mode } = useScoreDisplay();
+
   const { data: student } = useGetCurrentStudent();
   const totalScore = useGetCombinedTotalScore();
   const scoresByCategory = useGetCombinedScoresByCategory();
-  const { data: classPercentScore } = useGetPercentScore({ type: 'class' });
-  const { data: gradePercentScore } = useGetPercentScore({ type: 'grade' });
+  const percentScore = useGetCombinedPercentScore({ includeApprovedOnly: mode === 'APPROVED' });
   const { data: allProjects } = useGetProjects();
   const { data: searchedProjects } = useGetProjectBySearch({
     title: searchKeyword,
@@ -41,27 +43,35 @@ export default function MainView() {
               <p className="text-main-700 text-center text-2xl sm:text-3xl md:text-4xl">
                 {student?.name ?? '사용자'}
               </p>
-              <p className="text-left text-lg text-black sm:text-xl md:text-2xl">
-                님의 인증제 점수는
+              <p className="text-lg text-black sm:text-xl md:text-2xl">님의</p>
+              <p className="text-lg text-black sm:text-xl md:text-2xl">
+                <span className="text-main-500">
+                  {mode === 'APPROVED' ? '실제' : mode === 'COMBINED' ? null : '예상'}
+                </span>{' '}
+                인증제 점수는
               </p>
             </div>
             <div className="flex flex-wrap items-baseline justify-center gap-2">
               <div className="flex items-center justify-center gap-2.5 rounded-full bg-[#f3f3f3] px-6 py-2 sm:px-8 sm:py-2.5 md:px-9 md:py-3">
                 <p className="text-main-500 text-center text-3xl sm:text-4xl md:text-5xl">
-                  {totalScore.approved ?? 0}점
+                  {mode === 'APPROVED' ? totalScore.approved : totalScore.expected}점
                 </p>
               </div>
-              <p className="text-center text-3xl text-black/40 sm:text-4xl md:text-5xl">/</p>
-              <p className="text-center text-lg text-black/40 sm:text-xl">
-                {totalScore.expected ?? 0}점
-              </p>
+              {mode === 'COMBINED' ? (
+                <>
+                  <p className="text-center text-3xl text-black/40 sm:text-4xl md:text-5xl">/</p>
+                  <p className="text-center text-lg text-black/40 sm:text-xl">
+                    {totalScore.expected}점
+                  </p>
+                </>
+              ) : null}
             </div>
             <div className="flex flex-wrap items-baseline justify-center gap-2">
               <p className="text-main-500 rounded-xl bg-[#f3f3f3] px-2 py-1">
-                학급 상위 {Math.floor(classPercentScore?.topPercentile ?? 0)}%
+                학급 상위 {Math.floor(percentScore?.classPercentScore?.topPercentile ?? 0)}%
               </p>
               <p className="text-main-500 rounded-xl bg-[#f3f3f3] px-2 py-1">
-                학년 상위 {Math.floor(gradePercentScore?.topPercentile ?? 0)}%
+                학년 상위 {Math.floor(percentScore?.gradePercentScore?.topPercentile ?? 0)}%
               </p>
             </div>
           </div>
@@ -92,7 +102,11 @@ export default function MainView() {
                       {category.categoryNames.koreanName}
                     </p>
                     <p className="text-right text-base font-semibold whitespace-nowrap text-gray-600 sm:text-center sm:text-lg">
-                      {category.approvedScore}점 / {category.expectedScore}점
+                      {mode === 'APPROVED'
+                        ? `${category.approvedScore}점`
+                        : mode === 'PENDING'
+                          ? `${category.expectedScore}점`
+                          : `${category.approvedScore}점 / ${category.expectedScore}점`}
                     </p>
                   </article>
                 ))}
