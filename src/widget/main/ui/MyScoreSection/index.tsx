@@ -7,7 +7,7 @@ import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 import Button from '@/shared/ui/Button';
 import ScoreManagementModal from '@/widget/main/ui/ScoreManagementModal';
 
-export default function MyScoreCard() {
+const MyScoreSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { mode } = useScoreDisplay();
   const scoresByCategory = useGetCombinedScoresByCategory();
@@ -51,4 +51,21 @@ export default function MyScoreCard() {
       </div>
     </section>
   );
-}
+};
+
+const Loading = () => {
+  return <div className="mt-12 h-60 w-full animate-pulse rounded-2xl bg-gray-200" />;
+};
+
+const ErrorFallback = () => {
+  return (
+    <div className="mt-12 h-60 w-full rounded-2xl bg-red-50 p-4 text-red-500">
+      내 점수 정보를 불러오는데 실패했습니다.
+    </div>
+  );
+};
+
+MyScoreSection.Loading = Loading;
+MyScoreSection.Error = ErrorFallback;
+
+export default MyScoreSection;

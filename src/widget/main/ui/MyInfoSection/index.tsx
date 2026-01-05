@@ -5,7 +5,7 @@ import { useGetCombinedTotalScore } from '@/entities/score/model/useGetCombinedT
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
 import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
 
-export default function ScoreHeader() {
+const MyInfoSection = () => {
   const { mode } = useScoreDisplay();
   const { data: student } = useGetCurrentStudent();
   const totalScore = useGetCombinedTotalScore();
@@ -52,4 +52,21 @@ export default function ScoreHeader() {
       </div>
     </section>
   );
-}
+};
+
+const Loading = () => {
+  return <div className="h-40 w-full animate-pulse rounded-xl bg-gray-200" />;
+};
+
+const ErrorFallback = () => {
+  return (
+    <div className="h-40 w-full rounded-xl bg-red-50 p-4 text-red-500">
+      점수 정보를 불러오는데 실패했습니다.
+    </div>
+  );
+};
+
+MyInfoSection.Loading = Loading;
+MyInfoSection.Error = ErrorFallback;
+
+export default MyInfoSection;

@@ -7,7 +7,7 @@ import { useGetProjects } from '@/entities/project/model/useGetProjects';
 import ProjectPost from '@/shared/ui/ProjectPost';
 import SearchBar from '@/shared/ui/SearchBar';
 
-export default function ProjectSection() {
+const ProjectSection = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
 
   const { data: allProjects } = useGetProjects();
@@ -31,4 +31,21 @@ export default function ProjectSection() {
       </div>
     </section>
   );
-}
+};
+
+const Loading = () => {
+  return <div className="mt-6 h-40 w-full animate-pulse rounded-xl bg-gray-200" />;
+};
+
+const ErrorFallback = () => {
+  return (
+    <div className="mt-6 h-40 w-full rounded-xl bg-red-50 p-4 text-red-500">
+      프로젝트 목록을 불러오는데 실패했습니다.
+    </div>
+  );
+};
+
+ProjectSection.Loading = Loading;
+ProjectSection.Error = ErrorFallback;
+
+export default ProjectSection;
