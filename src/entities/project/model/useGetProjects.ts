@@ -1,10 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { getProjects } from '../api/getProjects';
+import { projectQueries } from '../api/queries';
 
 export const useGetProjects = () => {
-  return useQuery({
-    queryKey: ['project', 'list'],
-    queryFn: getProjects,
-  });
+  return useSuspenseQuery(projectQueries.list());
 };

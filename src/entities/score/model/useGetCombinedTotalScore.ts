@@ -1,22 +1,26 @@
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { getTotalScore } from '../api/getTotalScore';
+import { scoreQueries } from '../api/queries';
+import { TotalScoreType } from './score';
 
 export const useGetCombinedTotalScore = () => {
-  return useQueries({
+  return useSuspenseQueries({
     queries: [
       {
-        queryKey: ['score', 'total', { includeApprovedOnly: true }],
-        queryFn: () => getTotalScore({ includeApprovedOnly: true }),
+        ...scoreQueries.total({ includeApprovedOnly: true }),
       },
       {
-        queryKey: ['score', 'total', { includeApprovedOnly: false }],
-        queryFn: () => getTotalScore({ includeApprovedOnly: false }),
+        ...scoreQueries.total({ includeApprovedOnly: false }),
       },
     ],
-    combine: (results) => ({
-      approved: results[0].data?.totalScore,
-      expected: results[1].data?.totalScore,
-    }),
+    combine: (results) => {
+      const approved = results[0].data as TotalScoreType;
+      const expected = results[1].data as TotalScoreType;
+
+      return {
+        approved: approved?.totalScore,
+        expected: expected?.totalScore,
+      };
+    },
   });
 };

@@ -1,17 +1,16 @@
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { getCategories } from '@/entities/category/api/getCategories';
 import { CategoryKey } from '@/entities/category/model/category';
 
-import { getScoresByCategory } from '../api/getScoresByCategory';
+import { scoreQueries } from '../api/queries';
 import { CategoryScoresGroupType } from './score';
 
 export const useGetCombinedScoresByCategory = () => {
-  return useQueries({
+  return useSuspenseQueries({
     queries: [
       {
-        queryKey: ['score', 'list', 'category', { status: 'APPROVED' }],
-        queryFn: () => getScoresByCategory({ status: 'APPROVED' }),
+        ...scoreQueries.category({ status: 'APPROVED' }),
         select: (data: CategoryScoresGroupType[]) =>
           data.map((c) => ({
             ...c,
@@ -19,8 +18,7 @@ export const useGetCombinedScoresByCategory = () => {
           })),
       },
       {
-        queryKey: ['score', 'list', 'category', {}],
-        queryFn: () => getScoresByCategory({}),
+        ...scoreQueries.category({}),
         select: (data: CategoryScoresGroupType[]) =>
           data.map((c) => ({
             ...c,
@@ -33,8 +31,8 @@ export const useGetCombinedScoresByCategory = () => {
       },
     ],
     combine: (results) => {
-      const approved = results[0].data;
-      const all = results[1].data;
+      const approved = results[0].data as CategoryScoresGroupType[];
+      const all = results[1].data as CategoryScoresGroupType[];
       const categories = results[2].data;
 
       const approvedScoresMap = new Map(approved?.map((c) => [c.categoryType, c.recognizedScore]));
