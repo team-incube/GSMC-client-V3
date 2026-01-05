@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getTotalScore, GetTotalScoreRequest } from '../api/getTotalScore';
+import { GetTotalScoreRequest } from '../api/getTotalScore';
+import { scoreQueries } from '../api/queries';
 
 export const useGetTotalScore = (params: GetTotalScoreRequest) => {
-  return useQuery({
-    queryKey: ['score', 'total', params],
-    queryFn: () => getTotalScore(params),
-  });
+  return useQuery(scoreQueries.total(params));
 };
