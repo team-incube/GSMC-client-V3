@@ -59,12 +59,12 @@ const Loading = () => {
       <div className="bg-main-100 w-full overflow-hidden rounded-2xl">
         <div className="bg-main-100 flex flex-col items-start justify-between gap-3 px-4 py-4 sm:flex-row sm:items-center sm:gap-0 sm:px-8 sm:py-5 md:px-9 md:py-6">
           <h3 className="text-main-700 text-xl font-semibold sm:text-2xl">내 점수</h3>
-          <button
-            disabled
-            className="w-full px-[22px] py-[13px] text-center text-base font-semibold sm:w-auto sm:text-lg bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed"
+          <Button
+            variant="disabled"
+            className="w-full px-[22px] py-[13px] cursor-not-allowed text-center text-base font-semibold sm:w-auto sm:text-lg"
           >
             점수 수정
-          </button>
+          </Button>
         </div>
 
         <div className="flex h-full rounded-xl px-4 sm:px-8 md:px-9">
