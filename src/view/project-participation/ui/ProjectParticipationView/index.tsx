@@ -44,7 +44,7 @@ export default function ProjectParticipationView() {
     scoreId: projectScoreEvidence.score.scoreId,
     title: projectScoreEvidence.evidence.title,
     content: projectScoreEvidence.evidence.content,
-    files: projectScoreEvidence.evidence?.files,
+    files: projectScoreEvidence.evidence.files,
     scoreStatus: projectScoreEvidence.score.scoreStatus,
     rejectionReason: projectScoreEvidence.score.rejectionReason || undefined,
   } : draftEvidence ? {
