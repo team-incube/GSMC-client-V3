@@ -1,7 +1,17 @@
-import MainView from "@/view/main/ui/MainView";
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
-export default function MainPage() {
+import { studentQueries } from '@/entities/student/api/queries';
+import { getQueryClient } from '@/shared/lib/query-client';
+import MainView from '@/view/main/ui/MainView';
+
+export default async function MainPage() {
+  const queryClient = getQueryClient();
+
+  await queryClient.prefetchQuery(studentQueries.me());
+
   return (
-    <MainView />
-  )
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <MainView />
+    </HydrationBoundary>
+  );
 }
