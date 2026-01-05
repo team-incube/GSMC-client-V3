@@ -34,7 +34,19 @@ const ProjectSection = () => {
 };
 
 const Loading = () => {
-  return <div className="mt-6 h-40 w-full animate-pulse rounded-xl bg-gray-200" />;
+  return (
+    <section className="mt-6 flex flex-col gap-4 sm:gap-6">
+      <SearchBar
+        placeholder="찾는 내 프로젝트를 입력해주세요."
+        onSearchChange={() => { }}
+      />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-40 animate-pulse rounded-xl bg-gray-200" />
+        ))}
+      </div>
+    </section>
+  );
 };
 
 const ErrorFallback = () => {
