@@ -3,15 +3,19 @@
 import { useSearchParams } from 'next/navigation';
 
 import { useGetDraftEvidence } from '@/entities/evidence/model/useGetDraftEvidence';
+import { useGetProjectById } from '@/entities/project/model/useGetProjectById';
 import { useGetProjectMyScoreById } from '@/entities/project/model/useGetProjectMyScoreById';
+import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
 import EvidenceForm from '@/feature/evidence/ui';
 
 export default function ProjectParticipationView() {
   const projectId = Number(useSearchParams().get('projectId'));
   const { data: projectScoreEvidence, isLoading: isScoreLoading } = useGetProjectMyScoreById({ projectId });
-  const { data: draftEvidence, isLoading: isDraftLoading } = useGetDraftEvidence();
+  const { data: draftEvidence, isLoading: isDraftLoading } = useGetDraftEvidence({ projectScoreEvidence });
+  const { data: project, isLoading: isProjectLoading } = useGetProjectById({ projectId });
+  const { data: student, isLoading: isStudentLoading } = useGetCurrentStudent();
 
-  if (isScoreLoading || isDraftLoading) {
+  if (isScoreLoading || isDraftLoading || isProjectLoading || isStudentLoading) {
     return (
       <div className="flex w-full justify-center px-4 py-15.5">
         <div className="flex w-full max-w-[600px] flex-col items-center justify-center h-[400px]">
@@ -21,12 +25,20 @@ export default function ProjectParticipationView() {
     );
   }
 
-  const initialData = draftEvidence ? {
-    projectId,
-    title: draftEvidence.title,
-    content: draftEvidence.content,
-    files: draftEvidence.files,
-  } : projectScoreEvidence?.evidence ? {
+  const isParticipant = project?.participants.some((p) => p.id === student?.id);
+
+  if (!isParticipant) {
+    return (
+      <div className="flex w-full justify-center px-4 py-15.5">
+        <div className="flex w-full max-w-[600px] flex-col items-center justify-center py-20">
+          <h1 className="text-main-700 text-titleMedium mb-4">권한 없음</h1>
+          <p className="text-gray-600 mb-6">참여한 프로젝트가 아닙니다.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const initialData = projectScoreEvidence?.evidence ? {
     projectId,
     evidenceId: projectScoreEvidence.evidence.evidenceId,
     scoreId: projectScoreEvidence.score.scoreId,
@@ -35,6 +47,11 @@ export default function ProjectParticipationView() {
     files: projectScoreEvidence.evidence?.files,
     scoreStatus: projectScoreEvidence.score.scoreStatus,
     rejectionReason: projectScoreEvidence.score.rejectionReason || undefined,
+  } : draftEvidence ? {
+    projectId,
+    title: draftEvidence.title,
+    content: draftEvidence.content,
+    files: draftEvidence.files,
   } : { projectId };
 
   const mode = initialData.evidenceId ? 'edit' : 'create';
