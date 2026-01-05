@@ -31,7 +31,7 @@ const handleEvidenceError = (error: unknown): string => {
     const status = error.response?.status;
     if (status === HttpStatusCode.Forbidden) return '권한이 없습니다.';
     if (status === HttpStatusCode.NotFound) return '존재하지 않는 데이터입니다.';
-    if (status === HttpStatusCode.Conflict) return '이미 참여한 프로젝트입니다.';
+    if (status === HttpStatusCode.Conflict) return '최대 제한 갯수에 도달했습니다.';
   }
   return '작업에 실패했습니다.';
 };
