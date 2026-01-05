@@ -1,11 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { getCurrentStudent } from '../api/getCurrentStudent';
+import { studentQueries } from '../api/queries';
 
 export const useGetCurrentStudent = () => {
-  return useQuery({
-    queryKey: ['student', 'current'],
-    queryFn: () => getCurrentStudent(),
+  return useSuspenseQuery({
+    ...studentQueries.me(),
     staleTime: 60 * 60 * 1000,
   });
 };
