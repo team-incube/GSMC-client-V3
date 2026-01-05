@@ -32,8 +32,8 @@ const ProjectSection = () => {
             ))}
           </div>
         ) : (
-          projects?.map((project) => (
-            <ProjectPost key={project.id} {...project} />
+          projects?.map((project, index) => (
+            <ProjectPost key={project.id} priority={index < 3} {...project} />
           ))
         )}
       </div>
