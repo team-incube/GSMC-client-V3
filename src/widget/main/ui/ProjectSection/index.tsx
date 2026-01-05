@@ -11,7 +11,7 @@ const ProjectSection = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
 
   const { data: allProjects } = useGetProjects();
-  const { data: searchedProjects } = useGetProjectBySearch({
+  const { data: searchedProjects, isLoading: isSearchLoading } = useGetProjectBySearch({
     title: searchKeyword,
     page: 0,
     size: 10,
@@ -25,9 +25,17 @@ const ProjectSection = () => {
         onSearchChange={setSearchKeyword}
       />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-        {projects?.map((project) => (
-          <ProjectPost key={project.id} {...project} />
-        ))}
+        {isSearchLoading ? (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-40 animate-pulse rounded-xl bg-gray-200" />
+            ))}
+          </div>
+        ) : (
+          projects?.map((project) => (
+            <ProjectPost key={project.id} {...project} />
+          ))
+        )}
       </div>
     </section>
   );
