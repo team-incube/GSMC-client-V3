@@ -16,7 +16,7 @@ export const scoreQueries = {
   detail: (id: number) =>
     queryOptions({
       queryKey: [...scoreQueries.all(), 'detail', id],
-      queryFn: () => getScoreById({ scoreId: Number(id) }),
+      queryFn: () => getScoreById({ scoreId: id }),
     }),
   category: (params?: GetScoresByCategoryRequest) =>
     queryOptions({

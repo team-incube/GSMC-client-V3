@@ -20,11 +20,11 @@ export const projectQueries = {
   detail: (id: number) =>
     queryOptions({
       queryKey: [...projectQueries.all(), 'detail', id],
-      queryFn: () => getProjectById({ projectId: Number(id) }),
+      queryFn: () => getProjectById({ projectId: id }),
     }),
   myScore: (id: number) =>
     queryOptions({
       queryKey: [...projectQueries.all(), 'myScore', id],
-      queryFn: () => getProjectMyScoreById({ projectId: Number(id) }),
+      queryFn: () => getProjectMyScoreById({ projectId: id }),
     }),
 };
