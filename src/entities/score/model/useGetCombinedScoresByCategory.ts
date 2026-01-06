@@ -35,10 +35,10 @@ export const useGetCombinedScoresByCategory = () => {
       const all = results[1].data as CategoryScoresGroupType[];
       const categories = results[2].data;
 
-      const approvedScoresMap = new Map(approved?.map((c) => [c.categoryType, c.recognizedScore]));
-      const categoriesMap = new Map(categories?.map((c) => [c.englishName, c]));
+      const approvedScoresMap = new Map(approved.map((c) => [c.categoryType, c.recognizedScore]));
+      const categoriesMap = new Map(categories.map((c) => [c.englishName, c]));
 
-      return all?.map((category) => {
+      return all.map((category) => {
         const categoryInfo = categoriesMap.get(category.categoryType);
         return {
           categoryType: category.categoryType,
