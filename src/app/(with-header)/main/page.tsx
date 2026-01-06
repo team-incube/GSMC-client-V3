@@ -9,7 +9,7 @@ import MainView from '@/view/main/ui/MainView';
 export default async function MainPage() {
   const queryClient = getQueryClient();
 
-  Promise.all([
+  await Promise.all([
     queryClient.prefetchQuery(studentQueries.me()),
     queryClient.prefetchQuery(scoreQueries.category()),
     queryClient.prefetchQuery(projectQueries.list()),
