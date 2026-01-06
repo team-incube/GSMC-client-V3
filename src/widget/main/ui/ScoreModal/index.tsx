@@ -26,8 +26,19 @@ export default function ScoreModal({ mode, setIsModalOpen, categoryType, scoreId
   if (isLoading) {
     return (
       <ModalWrapper className='w-full max-sm:max-w-100 max-w-150'>
-        <div className="flex h-[300px] w-full items-center justify-center">
-          <p>로딩 중...</p>
+        <div className="flex w-full flex-col gap-6 p-2 animate-pulse">
+          <div className="h-8 w-40 bg-gray-200 rounded" />
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <div className="h-4 w-20 bg-gray-200 rounded" />
+              <div className="h-12 w-full bg-gray-100 rounded-lg border border-gray-100" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-4 w-20 bg-gray-200 rounded" />
+              <div className="h-12 w-full bg-gray-100 rounded-lg border border-gray-100" />
+            </div>
+          </div>
+          <div className="h-12 w-full bg-gray-200 rounded mt-4" />
         </div>
       </ModalWrapper>
     );

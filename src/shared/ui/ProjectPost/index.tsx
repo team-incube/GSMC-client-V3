@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ProjectType } from "@/entities/project/model/project";
 import replace_logo from "@/shared/asset/img/replace_logo.png";
 
-export default function ProjectPost({ ...project }: ProjectType) {
+export default function ProjectPost({ priority = false, ...project }: ProjectType & { priority?: boolean }) {
   return (
     <article className="col-span-1 flex flex-col w-full sm:max-w-none h-fit rounded-[10px] border border-black/10 bg-white overflow-hidden">
       <Link href={`/project/${project.id}`}>
@@ -13,6 +13,8 @@ export default function ProjectPost({ ...project }: ProjectType) {
             src={project.files?.[0]?.uri || replace_logo}
             alt="project_image"
             fill
+            priority={priority}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover"
           />
         </div>

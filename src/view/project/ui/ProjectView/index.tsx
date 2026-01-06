@@ -17,13 +17,9 @@ export default function ProjectView() {
   const router = useRouter();
   const rawId = Array.isArray(params.id) ? params.id[0] : params.id;
   const projectId = Number(rawId);
-  const { data: project, isLoading, isSuccess } = useGetProjectById({ projectId });
+  const { data: project, isSuccess } = useGetProjectById({ projectId });
   const { data: student } = useGetCurrentStudent();
   const { mutate } = useRemoveProjectById();
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
 
   const handleDeleteClick = () => {
     setShowDeleteConfirm(true);
@@ -103,3 +99,43 @@ export default function ProjectView() {
     </>
   )
 }
+
+const Loading = () => {
+  return (
+    <div className="flex w-full justify-center px-4 py-15.5">
+      <div className="flex w-full max-w-[600px] flex-col animate-pulse">
+        <div className="h-8 w-3/4 bg-gray-200 rounded mb-4" />
+        <hr className="my-4" />
+        <div className="space-y-3">
+          <div className="h-4 w-full bg-gray-200 rounded" />
+          <div className="h-4 w-5/6 bg-gray-200 rounded" />
+          <div className="h-4 w-4/6 bg-gray-200 rounded" />
+        </div>
+        <hr className="my-4" />
+        <div className="h-24 w-full bg-gray-100 rounded mb-4" />
+        <hr className="my-4" />
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-12 w-full bg-gray-50 rounded-lg border border-gray-100" />
+          ))}
+        </div>
+        <hr className="my-4" />
+        <div className="h-12 w-full bg-gray-200 rounded" />
+      </div>
+    </div>
+  );
+};
+
+const ErrorFallback = () => {
+  return (
+    <div className="flex w-full justify-center px-4 py-15.5">
+      <div className="flex w-full max-w-[600px] flex-col items-center justify-center h-[400px] gap-4">
+        <p className="text-error font-semibold text-lg">프로젝트 정보를 불러오는데 실패했습니다.</p>
+        <Button onClick={() => window.location.reload()} variant="border">다시 시도</Button>
+      </div>
+    </div>
+  );
+};
+
+ProjectView.Loading = Loading;
+ProjectView.Error = ErrorFallback;
