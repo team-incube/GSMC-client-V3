@@ -6,5 +6,6 @@ export const useGetDraftEvidence = () => {
   return useSuspenseQuery({
     queryKey: ['evidence', 'draft'],
     queryFn: () => getDraftEvidence(),
+    retry: false,
   });
 };
