@@ -1,7 +1,6 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import type { Metadata } from 'next';
-import localFont from 'next/font/local';
 
 import { Toaster } from 'sonner';
 
@@ -9,13 +8,6 @@ import { QueryProvider } from '@/shared/lib/query';
 import { ScoreDisplayProvider } from '@/shared/provider/ScoreDisplayProvider';
 
 import './globals.css';
-
-const pretendard = localFont({
-  src: '../shared/asset/fonts/pretendard/PretendardVariable.woff2',
-  display: 'swap',
-  weight: '100 900',
-  variable: '--font-pretendard',
-});
 
 export const metadata: Metadata = {
   title: 'GSMC',
@@ -28,7 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={pretendard.variable}>
+    <html lang="ko">
+      <head>
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          as="style"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+        />
+      </head>
       <body>
         <GoogleOAuthProvider clientId={String(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID)}>
           <QueryProvider>

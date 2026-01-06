@@ -1,13 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
-
-import { ProjectScoreEvidenceGroupType } from '@/entities/project/model/project';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { getDraftEvidence } from '../api/getDraftEvidence';
 
-export const useGetDraftEvidence = ({ projectScoreEvidence }: { projectScoreEvidence?: ProjectScoreEvidenceGroupType }) => {
-  return useQuery({
+export const useGetDraftEvidence = () => {
+  return useSuspenseQuery({
     queryKey: ['evidence', 'draft'],
     queryFn: () => getDraftEvidence(),
-    enabled: !projectScoreEvidence,
   });
 };

@@ -1,26 +1,25 @@
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { getPercentScore } from '../api/getPercentScore';
+import { GetPercentScoreResponse } from '../api/getPercentScore';
+import { scoreQueries } from '../api/queries';
 
 export const useGetCombinedPercentScore = ({
   includeApprovedOnly,
 }: {
   includeApprovedOnly: boolean;
 }) => {
-  return useQueries({
+  return useSuspenseQueries({
     queries: [
       {
-        queryKey: ['percentScore', 'class', includeApprovedOnly],
-        queryFn: () => getPercentScore({ type: 'class', includeApprovedOnly }),
+        ...scoreQueries.percent({ type: 'class', includeApprovedOnly }),
       },
       {
-        queryKey: ['percentScore', 'grade', includeApprovedOnly],
-        queryFn: () => getPercentScore({ type: 'grade', includeApprovedOnly }),
+        ...scoreQueries.percent({ type: 'grade', includeApprovedOnly }),
       },
     ],
     combine: (results) => {
-      const classPercentScore = results[0].data;
-      const gradePercentScore = results[1].data;
+      const classPercentScore = results[0].data as GetPercentScoreResponse;
+      const gradePercentScore = results[1].data as GetPercentScoreResponse;
 
       return {
         classPercentScore,

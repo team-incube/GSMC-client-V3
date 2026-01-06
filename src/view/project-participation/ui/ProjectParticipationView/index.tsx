@@ -7,23 +7,12 @@ import { useGetProjectById } from '@/entities/project/model/useGetProjectById';
 import { useGetProjectMyScoreById } from '@/entities/project/model/useGetProjectMyScoreById';
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
 import EvidenceForm from '@/feature/evidence/ui';
+import Button from '@/shared/ui/Button';
 
 export default function ProjectParticipationView() {
   const projectId = Number(useSearchParams().get('projectId'));
-  const { data: projectScoreEvidence, isLoading: isScoreLoading } = useGetProjectMyScoreById({ projectId });
-  const { data: draftEvidence, isLoading: isDraftLoading } = useGetDraftEvidence({ projectScoreEvidence });
-  const { data: project, isLoading: isProjectLoading } = useGetProjectById({ projectId });
-  const { data: student, isLoading: isStudentLoading } = useGetCurrentStudent();
-
-  if (isScoreLoading || isDraftLoading || isProjectLoading || isStudentLoading) {
-    return (
-      <div className="flex w-full justify-center px-4 py-15.5">
-        <div className="flex w-full max-w-[600px] flex-col items-center justify-center h-[400px]">
-          <p className="text-gray-500">데이터를 불러오는 중입니다...</p>
-        </div>
-      </div>
-    );
-  }
+  const { data: project } = useGetProjectById({ projectId });
+  const { data: student } = useGetCurrentStudent();
 
   const isParticipant = project?.participants.some((p) => p.id === student?.id);
 
@@ -37,6 +26,13 @@ export default function ProjectParticipationView() {
       </div>
     );
   }
+
+  return <ProjectParticipationContent projectId={projectId} />;
+}
+
+const ProjectParticipationContent = ({ projectId }: { projectId: number }) => {
+  const { data: projectScoreEvidence } = useGetProjectMyScoreById({ projectId });
+  const { data: draftEvidence } = useGetDraftEvidence();
 
   const initialData = projectScoreEvidence?.evidence ? {
     projectId,
@@ -74,4 +70,39 @@ export default function ProjectParticipationView() {
       </div>
     </div>
   );
-}
+};
+
+const Loading = () => {
+  return (
+    <div className="flex w-full justify-center px-4 py-15.5">
+      <div className="flex w-full max-w-[600px] flex-col items-start animate-pulse">
+        <div className="h-8 w-40 bg-gray-200 rounded mb-9" />
+        <div className="w-full space-y-6">
+          <div className="space-y-2">
+            <div className="h-4 w-20 bg-gray-200 rounded" />
+            <div className="h-12 w-full bg-gray-100 rounded-lg border border-gray-100" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-4 w-20 bg-gray-200 rounded" />
+            <div className="h-40 w-full bg-gray-100 rounded-lg border border-gray-100" />
+          </div>
+          <div className="h-12 w-full bg-gray-200 rounded mt-8" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ErrorFallback = () => {
+  return (
+    <div className="flex w-full justify-center px-4 py-15.5">
+      <div className="flex w-full max-w-[600px] flex-col items-center justify-center h-[400px] gap-4">
+        <p className="text-error font-semibold text-lg">참여 정보를 불러오는데 실패했습니다.</p>
+        <Button onClick={() => window.location.reload()} variant="border">다시 시도</Button>
+      </div>
+    </div>
+  );
+};
+
+ProjectParticipationView.Loading = Loading;
+ProjectParticipationView.Error = ErrorFallback;

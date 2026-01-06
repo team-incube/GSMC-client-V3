@@ -137,3 +137,29 @@ export default function ScoreManagementModal({ setIsModalOpen }: ScoreManagement
     </div>
   );
 }
+
+function Loading({ setIsModalOpen }: { setIsModalOpen: (isOpen: boolean) => void }) {
+  return (
+    <ModalWrapper
+      className="h-[80%] w-full max-w-150 max-sm:max-w-100"
+      onClose={() => setIsModalOpen(false)}
+    >
+      <div className="flex h-full flex-col justify-between gap-5 overflow-hidden">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-8 w-48 animate-pulse rounded bg-gray-200" />
+        </div>
+        <section className="flex flex-col items-start justify-start gap-4 overflow-hidden px-5 py-2">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex w-full flex-col gap-2">
+              <div className="h-6 w-24 animate-pulse rounded bg-gray-100" />
+              <div className="h-14 w-full animate-pulse rounded-lg bg-gray-50/50 border border-gray-100" />
+            </div>
+          ))}
+        </section>
+        <div className="h-12 w-full animate-pulse rounded bg-gray-200" />
+      </div>
+    </ModalWrapper>
+  );
+}
+
+ScoreManagementModal.Loading = Loading;
