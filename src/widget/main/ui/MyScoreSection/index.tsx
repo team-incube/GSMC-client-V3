@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 import { useGetCombinedScoresByCategory } from '@/entities/score/model/useGetCombinedScoresByCategory';
 import { useScoreDisplay } from '@/shared/provider/ScoreDisplayProvider';
@@ -14,7 +14,11 @@ const MyScoreSection = () => {
 
   return (
     <section className="mt-8 sm:mt-12 md:mt-[3.63rem]">
-      {isModalOpen ? <ScoreManagementModal setIsModalOpen={setIsModalOpen} /> : null}
+      {isModalOpen ? (
+        <Suspense fallback={<ScoreManagementModal.Loading setIsModalOpen={setIsModalOpen} />}>
+          <ScoreManagementModal setIsModalOpen={setIsModalOpen} />
+        </Suspense>
+      ) : null}
       <div className="bg-main-100 w-full overflow-hidden rounded-2xl">
         <div className="bg-main-100 flex flex-col items-start justify-between gap-3 px-4 py-4 sm:flex-row sm:items-center sm:gap-0 sm:px-8 sm:py-5 md:px-9 md:py-6">
           <h3 className="text-main-700 text-xl font-semibold sm:text-2xl">내 점수</h3>

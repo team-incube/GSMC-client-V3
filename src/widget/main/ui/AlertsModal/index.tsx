@@ -7,7 +7,7 @@ import { useReadAlertById } from "@/feature/alert/model/useReadAlertById";
 import { cn } from "@/shared/lib/cn";
 
 export default function AlertsModal() {
-  const { data: alerts } = useGetAlerts();
+  const { data: alerts, isLoading } = useGetAlerts();
   const { mutate } = useReadAlertById();
 
   useEffect(() => {
@@ -20,7 +20,19 @@ export default function AlertsModal() {
         <p className="text-lg font-semibold text-left">알림함</p>
       </div>
       <div className="overflow-y-auto">
-        {alerts?.length === 0 ? (
+        {isLoading ? (
+          <div className="flex flex-col animate-pulse">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex flex-col items-start px-5 py-3 border-b border-gray-200 last:border-b-0 space-y-2">
+                <div className="flex justify-between w-full">
+                  <div className="h-5 w-24 bg-gray-200 rounded" />
+                  <div className="h-4 w-16 bg-gray-100 rounded" />
+                </div>
+                <div className="h-4 w-full bg-gray-100 rounded" />
+              </div>
+            ))}
+          </div>
+        ) : alerts?.length === 0 ? (
           <p className="px-5 py-4 text-sm text-gray-500 text-left">알림이 없습니다.</p>
         ) : (
           alerts?.map((alert) => (
