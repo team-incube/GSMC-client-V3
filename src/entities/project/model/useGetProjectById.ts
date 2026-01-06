@@ -1,10 +1,8 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { getProjectById, GetProjectByIdRequest } from '../api/getProjectById';
+import { GetProjectByIdRequest } from '../api/getProjectById';
+import { projectQueries } from '../api/queries';
 
 export const useGetProjectById = ({ projectId }: GetProjectByIdRequest) => {
-  return useSuspenseQuery({
-    queryKey: ['project', projectId],
-    queryFn: () => getProjectById({ projectId }),
-  });
+  return useSuspenseQuery(projectQueries.detail({ projectId }));
 };

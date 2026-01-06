@@ -1,10 +1,8 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { getProjectMyScoreById, GetProjectMyScoreByIdRequest } from '../api/getProjectMyScoreById';
+import { GetProjectMyScoreByIdRequest } from '../api/getProjectMyScoreById';
+import { projectQueries } from '../api/queries';
 
 export const useGetProjectMyScoreById = ({ projectId }: GetProjectMyScoreByIdRequest) => {
-  return useSuspenseQuery({
-    queryKey: ['evidence', 'score', projectId],
-    queryFn: () => getProjectMyScoreById({ projectId }),
-  });
+  return useSuspenseQuery(projectQueries.myScore({ projectId }));
 };
