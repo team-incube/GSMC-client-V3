@@ -11,8 +11,6 @@ import Button from '@/shared/ui/Button';
 
 export default function ProjectParticipationView() {
   const projectId = Number(useSearchParams().get('projectId'));
-  const { data: projectScoreEvidence } = useGetProjectMyScoreById({ projectId });
-  const { data: draftEvidence } = useGetDraftEvidence({ projectScoreEvidence });
   const { data: project } = useGetProjectById({ projectId });
   const { data: student } = useGetCurrentStudent();
 
@@ -28,6 +26,13 @@ export default function ProjectParticipationView() {
       </div>
     );
   }
+
+  return <ProjectParticipationContent projectId={projectId} />;
+}
+
+const ProjectParticipationContent = ({ projectId }: { projectId: number }) => {
+  const { data: projectScoreEvidence } = useGetProjectMyScoreById({ projectId });
+  const { data: draftEvidence } = useGetDraftEvidence();
 
   const initialData = projectScoreEvidence?.evidence ? {
     projectId,
@@ -65,7 +70,7 @@ export default function ProjectParticipationView() {
       </div>
     </div>
   );
-}
+};
 
 const Loading = () => {
   return (

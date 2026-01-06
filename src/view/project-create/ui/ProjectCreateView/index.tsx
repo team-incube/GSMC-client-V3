@@ -4,27 +4,31 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useGetDraftProject } from '@/entities/project/model/useGetDraftProject';
 import { useGetProjectById } from '@/entities/project/model/useGetProjectById';
+import { StudentType } from '@/entities/student/model/student';
 import { useGetCurrentStudent } from '@/entities/student/model/useGetCurrentStudent';
 import ProjectCreateForm from '@/feature/project-create/ui';
 import Button from '@/shared/ui/Button';
 
 export default function ProjectCreateView() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const projectId = Number(searchParams.get('projectId'));
   const isEditMode = !!projectId && projectId > 0;
-
-  const { data: project } = useGetProjectById({ projectId });
-  const { data: draftProject } = useGetDraftProject();
   const { data: student } = useGetCurrentStudent();
 
-  const hasPermission = (() => {
-    if (!isEditMode) return true;
-    if (!project || !student) return false;
-    return project.ownerId === student.id;
-  })();
+  if (isEditMode) {
+    return <ProjectEditViewInternal projectId={projectId} student={student} />;
+  }
 
-  if (isEditMode && !hasPermission) {
+  return <ProjectCreateViewInternal />;
+}
+
+const ProjectEditViewInternal = ({ projectId, student }: { projectId: number, student: StudentType }) => {
+  const router = useRouter();
+  const { data: project } = useGetProjectById({ projectId });
+
+  const hasPermission = project?.ownerId === student?.id;
+
+  if (!hasPermission) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <h1 className="text-main-700 text-titleMedium mb-4">권한 없음</h1>
@@ -34,40 +38,57 @@ export default function ProjectCreateView() {
     );
   }
 
-  const activeProject = isEditMode ? project : draftProject;
-  const isDraft = !isEditMode && !!draftProject;
-
   const initialData = {
-    projectId: isEditMode ? projectId : (draftProject?.id ?? 0),
-    title: activeProject?.title,
-    description: activeProject?.description,
-    files: activeProject?.files,
-    participants: activeProject?.participants,
-    isDraft: isDraft,
+    projectId: projectId,
+    title: project?.title,
+    description: project?.description,
+    files: project?.files,
+    participants: project?.participants,
+    isDraft: false,
   };
 
-  const mode = isEditMode ? 'edit' : 'create';
+  return (
+    <div className="flex w-full justify-center px-4 py-15.5">
+      <div className="flex w-full max-w-[600px] flex-col items-start">
+        <h1 className="text-main-700 text-titleMedium mb-9">프로젝트 수정</h1>
+        <ProjectCreateForm
+          mode="edit"
+          initialData={initialData}
+          actions={{ showDraft: false, showDelete: false }}
+        />
+      </div>
+    </div>
+  );
+};
 
-  const actions = {
-    showDraft: mode === 'edit' ? false : true,
-    showDelete: isDraft,
+const ProjectCreateViewInternal = () => {
+  const { data: draftProject } = useGetDraftProject();
+  const isDraft = !!draftProject;
+
+  const initialData = {
+    projectId: draftProject?.id ?? 0,
+    title: draftProject?.title,
+    description: draftProject?.description,
+    files: draftProject?.files,
+    participants: draftProject?.participants,
+    isDraft: isDraft,
   };
 
   return (
     <div className="flex w-full justify-center px-4 py-15.5">
       <div className="flex w-full max-w-[600px] flex-col items-start">
         <h1 className="text-main-700 text-titleMedium mb-9">
-          {mode === 'edit' ? '프로젝트 수정' : isDraft ? '임시 저장된 프로젝트' : '프로젝트'}
+          {isDraft ? '임시 저장된 프로젝트' : '프로젝트'}
         </h1>
         <ProjectCreateForm
-          mode={mode}
+          mode="create"
           initialData={initialData}
-          actions={actions}
+          actions={{ showDraft: true, showDelete: isDraft }}
         />
       </div>
     </div>
   );
-}
+};
 
 const Loading = () => {
   return (
