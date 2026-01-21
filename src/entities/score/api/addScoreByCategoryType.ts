@@ -7,11 +7,28 @@ export interface AddScoreByCategoryTypeRequest {
   fileId?: number;
 }
 
+const POST_CATEGORIES = [
+  'project-participation',
+  'external-activity',
+  'certificate',
+  'award',
+];
+
 export const addScoreByCategoryType = async ({
   categoryType,
   value,
   fileId,
 }: AddScoreByCategoryTypeRequest): Promise<ScoreType> => {
-  const response = await instance.post(`/scores/${categoryType}`, { value, fileId });
+  if (POST_CATEGORIES.includes(categoryType)) {
+    const response = await instance.post(`/scores/${categoryType}`, {
+      value,
+      fileId,
+    });
+    return response.data;
+  }
+  const response = await instance.put(`/scores/${categoryType}`, {
+    value,
+    fileId,
+  });
   return response.data;
 };
